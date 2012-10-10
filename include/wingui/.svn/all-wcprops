@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/21/trunk/include/wingui
+END
+generic_dialog.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/21/trunk/include/wingui/generic_dialog.h
+END
+main_window.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/21/trunk/include/wingui/main_window.h
+END
+opengl_view.h
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/21/trunk/include/wingui/opengl_view.h
+END
+generic_window.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/21/trunk/include/wingui/generic_window.h
+END
+wingui_gdi.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/21/trunk/include/wingui/wingui_gdi.h
+END
+generic_view.h
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/21/trunk/include/wingui/generic_view.h
+END
