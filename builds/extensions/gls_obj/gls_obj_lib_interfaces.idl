@@ -1,0 +1,53 @@
+//
+// 
+// 
+// This file is part of glScript project.
+//
+//   glScript is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU Lesser General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   glScript is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public License
+//   along with glScript. If not, see <http://www.gnu.org/licenses/>.
+//
+//   Copyright (c) 2012 Bal Bahadur Chettri
+//
+//   Author: Bal Bahadur Chettri (balu.chettri@gmail.com)
+//
+import "oaidl.idl";
+import "ocidl.idl";
+
+import "..\..\..\include\gls_sdk\glscript\gls_ext_lib.idl";
+
+[uuid(C3BACE4B-3E21-48ef-BC9C-1F178B321C38), version(1.0), helpstring("GLS GLU Extension LIB")]
+library LIB_GLS_GLU
+{
+	importlib("stdole2.tlb");
+
+	/* interfaces */
+	interface _GLScriptExtLib;
+
+	[object, uuid(5D7F1498-DA9F-49ee-91A2-0ADACA7AF994), dual, oleautomation, hidden, nonextensible]
+	interface _BoundingBox : IDispatch {
+		[propget] HRESULT width ([out,retval] float *retVal);
+		[propget] HRESULT height ([out,retval] float *retVal);
+		[propget] HRESULT depth ([out,retval] float *retVal);
+	}
+
+	[object, uuid(8035AABF-B40D-4a1f-A77E-38719405B80A), dual, oleautomation, hidden, nonextensible]
+	interface _ObjModel : IDispatch {
+		[propget] HRESULT boundingBox ([out,retval]_BoundingBox **ppbb);
+		HRESULT render ();
+	}
+
+	[object, uuid(D4377D42-A4B8-401a-81BB-7D7EB3F52BFA), dual, oleautomation, hidden, nonextensible]
+	interface _GLS_OBJ_Lib : _GLScriptExtLib {
+		HRESULT load ([in]BSTR path, [out,retval]_ObjModel **model);
+	}/* interface _GLS_OBJ_Lib */
+}

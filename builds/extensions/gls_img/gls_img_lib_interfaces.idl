@@ -1,0 +1,59 @@
+//
+// 
+// 
+// This file is part of glScript project.
+//
+//   glScript is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU Lesser General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   glScript is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Lesser General Public License for more details.
+//
+//   You should have received a copy of the GNU Lesser General Public License
+//   along with glScript. If not, see <http://www.gnu.org/licenses/>.
+//
+//   Copyright (c) 2012 Bal Bahadur Chettri
+//
+//   Author: Bal Bahadur Chettri (balu.chettri@gmail.com)
+//
+import "oaidl.idl";
+import "ocidl.idl";
+
+import "..\..\..\include\gls_sdk\glscript\gls_ext_lib.idl";
+
+[uuid(7CA0CC62-36F8-4ca6-8578-705D56A5943F), version(1.0), helpstring("GLS IMG Extension LIB")]
+library LIB_GLS_IMG
+{
+	importlib("stdole2.tlb");
+
+	/* interfaces */
+	interface _GLScriptExtLib;
+
+	[object, uuid(7F50DDE5-3D37-457c-AFAD-36BEE8B498D5), dual, oleautomation, hidden, nonextensible]
+	interface _Image : IDispatch {
+		[propget] HRESULT x ([out,retval] float *retVal);
+		[propput] HRESULT x ([in] float val);
+		[propget] HRESULT y ([out,retval] float *retVal);
+		[propput] HRESULT y ([in] float val);
+
+		[propget] HRESULT width ([out,retval] float *retVal);
+		[propput] HRESULT width ([in] float val);
+		[propget] HRESULT height ([out,retval] float *retVal);
+		[propput] HRESULT height ([in] float val);
+
+		HRESULT render ();
+	}
+
+	[object, uuid(517BADD8-D2FB-4bc3-AAB2-6C332F321A63), dual, oleautomation, hidden, nonextensible]
+	interface _GLS_IMG_Lib : _GLScriptExtLib {
+		// ver 0.1
+		HRESULT load ([in]BSTR path, [out,retval]_Image **model);
+		// ver 0.3
+		HRESULT loadTexture ([in] BSTR path, [out,retval]long *texid);
+		HRESULT freeTexture ([in]long texid);
+	}/* interface _GLS_IMG_Lib */
+}

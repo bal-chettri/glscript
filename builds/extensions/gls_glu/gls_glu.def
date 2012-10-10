@@ -1,0 +1,6 @@
+LIBRARY	"gls_glu"
+
+EXPORTS
+gls_extension_initialize		PRIVATE
+gls_extension_get_interface		PRIVATE 
+gls_extension_terminate			PRIVATE
