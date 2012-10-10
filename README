@@ -1,0 +1,90 @@
+README
+
+glScript is a script driven OpenGL toolkit. It is a tool that lets you run OpenGL
+programs written in existing scripting languages like JavaScript, VB Script and 
+view its output. It also provides support for creating and integrating your own
+libraries for graphics programming and animation. You can either use OpenGL APIs
+directly from your script or use library APIs for rendering graphics and 
+animation. glScript can be used for 2D/3D graphics applications based on OpenGL. 
+It is a useful tool for anyone interested in 3D graphics programming, OpenGL in 
+particular. It can also be useful for advanced OpenGL programmers for testing their
+code without any need to write a compiled OpenGL program in C/C++.
+
+With glScript, there are no headers to include, no libraries to link, just script 
+and go :-)
+
+glScript is currently available only for Windows platforms. Support for other 
+platforms can be added in the near feature.
+
+DIRECTORY STRUCTURE:
+\bin:	
+	bin is a container folder that replicates the actual installation folder.
+	By default, it contains samples, textures, models and script include files
+	in their respective subfolders. extensions folder is empty initially.
+	When you build 'glsrun' it is placed under this folder (bin). Packaging
+	scripts placed under \setup folder also builds the installer from this 
+	folder.
+
+\builds:
+	Contains projects to build various components like static libraries, 
+	extensions and frontend tools.
+
+\docs:	
+	Contains documentation for the glscript project and SDK. Also contains
+	README and RELEASE-NOTES provided with the installer.
+
+\include:
+	Contains C/C++ include headers required to build glscript.
+
+\src:	
+	Contains C/C++ source files required to build glscript.
+
+\setup:
+	Contains NSIS scripts for creating installers.
+
+\packages:
+	Output folder for installer / distribution packages.
+
+\screenshots:
+	Screenshots of glscript GUI tool (glsrun).
+
+NOTES ON HOW TO BUILD:
+
+Requirements:
+- You will require Visual Studio 2005 or later to build glScript.
+
+i. Go to \builds\glscript folder and open glscript.sln. Select build configuration
+   (DEBUG/RELEASE). Build the project. This will create glscript.lib and glscript.tlb 
+   under \lib folder.
+
+ii. Go to \builds\glsrun folder and open glsrun.sln. Select build configuration
+    same as glscript.sln. Build the project. This will create glsrun.exe under
+    \bin directory.
+
+To build extensions (optional, required for some sample programs):
+
+iii. Go to \builds\ folder. Open folder for the extension you wish to build.
+    For example to build 'glu' extension open gls_glu folder. Open the solution
+    file (for example, gls_glu.sln). Select the build configuration same as used
+    for glscript.sln. Build the project. This will create the extension dll under
+    \bin\extensions (for example, \bin\extensions\gls_glu.dll).
+    Similarly, you can build other extensions too.
+
+NOTES ON HOW TO BUILD SETUP / INSTALLER:
+
+Requirements:
+- You will require NSIS (Nullsoft Sriptable Install System) 2.46 or above to build
+  the glScript setup / installer program.
+
+- You will also require "AppAssocReg" plugin if you want to build the latest version
+  of the installer. You can download this plugin from the Internet and register on 
+  your system before running the setup script.
+
+i. Build all components by following steps in listed under NOTES ON HOW TO BUILD
+   section.
+
+ii. Go to \setup\ folder. Select the latest setup script for e.g. glscript-0.8-beta.nsi,
+    to build the installer for version 0.8 beta release. Right click on the icon, and
+    select Compile NSIS script. If everything compiles successfully, it will generate 
+    the installer under \packages\ directory, for e.g. glscript-0.8-beta-release.exe if
+    you compile glscript-0.8-beta.nsi script.
