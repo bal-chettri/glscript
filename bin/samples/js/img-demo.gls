@@ -1,0 +1,59 @@
+/** img-demo.js Demonstrates the 'img' library extension APIs */
+<# language "JavaScript" #>
+<# include "opengl-constants.js" #>
+
+/* configuration */
+gls.windowTitle = "img demo";
+gls.windowWidth = 512;
+gls.windowHeight = 512;
+gls.viewPortWidth = 512;
+gls.viewPortHeight = 512;
+
+/* load the 'img' library extension */
+var img = gls.require ("img");
+
+console.log ('-------------------- img demo --------------------');
+console.log (
+	'lib name : ' + img.name + ', ' + 
+	'version : ' + (0x00FF & img.version) + '.' + ((0xFF00 & img.version)>>8) 
+);
+console.log ('Press LEFT mouse button change image...');
+
+var images = new Array(3);
+var image_index = 0;
+
+function gls_init () {
+	var assets = ["logo.png", "leaves.bmp", "pastel.bmp", "stones.bmp"];
+	for (var i = 0; i < images.length; i++) {
+		images[i] = img.load ("..\\..\\textures\\" + assets[i]);
+
+		// img library assumes 2D coordinate system when rendering the image
+		// so image must be scaled in 3D coordinate system
+		images[i].width = 1.0;
+		images[i].height = 1.0;
+	}
+	glEnable (GL_TEXTURE_2D);
+}
+
+function gls_renderScene () {
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity ();
+	glClear (GL_COLOR_BUFFER_BIT);
+	
+	// img library uses 2D coordinate system so invert the Y axis in 3D 
+	// coordinate system
+	glScalef (1.0, -1.0, 1.0);
+	
+	// render the currrent image
+	images[image_index].render ();
+
+	flush ();
+}
+
+function gls_mouseDown (btn, x, y) {
+	if (btn == 0) {
+		// cycle through all images
+		image_index = (image_index + 1) % images.length;
+	}
+	gls_renderScene ();
+}

@@ -1,0 +1,46 @@
+/** events-demo.js */
+<# language "JavaScript" #>
+<# include "opengl-constants.js" #>
+
+console.log ("NOTE: Enable the code to test keyboard events...");
+
+function gls_init () {
+	glClearColor (0.7, 0.7, 0.7, 1.0);
+}
+
+function gls_renderScene () {
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity ();
+	
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// draw here
+	
+	gl.flush (); /* flush the scene */
+}
+
+// NOTE: enable the code to test keyboard events...
+
+/* mouse events (optional) */
+
+function gls_mouseDown (button, x, y) {
+	console.log ("gls_mouseDown event: button = " + button + ", x = " + x + ", y = " + y);
+}
+function gls_mouseUp (button, x, y) {
+	console.log ("gls_mouseUp event: button = " + button + ", x = " + x + ", y = " + y);
+}
+function gls_mouseMove (button, x, y) {
+	console.log ("gls_mouseMove event: button = " + button + ", x = " + x + ", y = " + y);
+}
+
+/* keyboard events (optional) */
+
+function gls_keyDown (key) {
+	console.log ("gls_keyDown event: key = " + key);
+}
+function gls_keyUp (key) {
+	console.log ("gls_keyUp event: key = " + key);
+}
+function gls_keyPress (key) {
+	console.log ("gls_keyPress event: key = " + key);
+}

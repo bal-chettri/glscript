@@ -1,0 +1,55 @@
+/** threed-demo.js */
+<# language "JavaScript" #>
+<# include "opengl-constants.js" #>
+
+function gls_init () {
+	glClearColor (0.0, 0.0, 0.0, 1.0);
+}
+
+function gls_renderScene () {	
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity ();
+
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
+
+	glRotatef (0.0, 1.0, 0.0, 0.0);
+	glRotatef (30.0, 0.0, 1.0, 0.0);
+	
+	/* front face */
+	glColor3f (1.0, 1.0, 1.0);
+	glBegin (GL_QUADS);
+		glVertex3f (-0.3, 0.3, 0.0);
+		glVertex3f (-0.3, -0.3, 0.0);
+		glVertex3f (0.3, -0.3, 0.0);
+		glVertex3f (0.3, 0.3, 0.0);
+	glEnd ();
+	
+	/* back */
+	glColor3f (0.0, 0.0, 1.0);
+	glBegin (GL_QUADS);
+		glVertex3f (-0.3, 0.3, -0.3);
+		glVertex3f (-0.3, -0.3, -0.3);
+		glVertex3f (0.3, -0.3, -0.3);
+		glVertex3f (0.3, 0.3, -0.3);
+	glEnd ();
+	
+	/* right */
+	glColor3f (1.0, 0.0, 0.0);
+	glBegin (GL_QUADS);
+		glVertex3d (0.3, 0.3, 0.0);
+		glVertex3d (0.3, -0.3, 0.0);
+		glVertex3d (0.3, -0.3, -0.3);
+		glVertex3d (0.3, 0.3, -0.3);
+	glEnd ();
+
+	/* left */
+	glColor3f (0.0, 1.0, 0.0);
+	glBegin (GL_QUADS);
+		glVertex3d (-0.3, 0.3, -0.3);
+		glVertex3d (-0.3, -0.3, -0.3);
+		glVertex3d (-0.3, -0.3, 0.0);
+		glVertex3d (-0.3, 0.3, 0.0);
+	glEnd ();
+	
+	gl.flush (); /* flush the scene */
+}

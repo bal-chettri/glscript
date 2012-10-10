@@ -1,0 +1,54 @@
+/** rotating-sun-demo.js */
+<# language "JavaScript" #>
+<# include "opengl-constants.js" #>
+
+gls.frameRate = 12;
+gls.animation = true;
+gls.ortho = true;
+
+/* globals */
+var zRot = 0.0;
+var locX = 0, locY = 0;
+
+var vertices = gls.floatArray (
+	"-50, 0.0," + 
+	"50, 0.0," + 
+	"0.0, -50," + 
+	"0.0, 50"
+);
+
+function gls_init () {
+	glClearColor (0.3, 0.3, 0.3, 1.0);
+	glColor3f (1.0, 0.65, 0.1);
+	glEnableClientState (GL_VERTEX_ARRAY);
+}
+
+function gls_renderScene () {
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity ();		
+	glClear (GL_COLOR_BUFFER_BIT);
+
+	glTranslatef (480/2, 320/2, 0.0);
+
+	glVertexPointer (2, GL_FLOAT, 0, vertices);
+	glRotatef (zRot, 0.0, 0.0, 1.0);
+	glTranslatef (locX, locY, 0.0);
+	for (var i=0; i < 15; i++) {		
+		glDrawArrays (GL_LINES, 0, 4);
+		glRotatef (6, 0.0, 0.0, 1.0);
+	}
+	zRot+= 10;
+	
+	flush ();
+}
+
+/* events */
+function gls_mouseDown (button, x, y) {
+	locX = x - (480 / 2);
+	locY = y - (320 / 2);
+}
+
+/* startup */
+console.log (
+"Press LEFT mouse button to move the SUN..."
+);

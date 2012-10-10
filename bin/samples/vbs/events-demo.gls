@@ -1,0 +1,52 @@
+' events-demo.vbs
+<#
+language "VBScript"
+include "opengl-constants.vbs"
+#>
+
+console.log "NOTE: Enable the code to test keyboard events..."
+
+public sub gls_init ()	
+	glClearColor 0.7, 0.7, 0.7, 1.0
+end sub
+
+sub gls_renderScene ()
+	glMatrixMode GL_MODELVIEW
+	glLoadIdentity
+	
+	glClear GL_COLOR_BUFFER_BIT Or GL_DEPTH_BUFFER_BIT
+
+	' draw here
+	
+	gl.flush ' flush the scene
+end sub
+
+' NOTE: enable the code to test keyboard events...
+
+' mouse events (optional)
+
+sub gls_mouseDown (button, x, y)
+	console.log "gls_mouseDown event: button = " + CStr(button) + ", x = " + CStr(x) + ", y = " + CStr(y)
+end sub
+
+sub gls_mouseUp (button, x, y)
+	console.log "gls_mouseUp event: button = " + CStr(button) + ", x = " + CStr(x) + ", y = " + CStr(y)
+end sub 
+
+sub gls_mouseMove (button, x, y)
+	console.log "gls_mouseMove event: button = " + CStr(button) + ", x = " + CStr(x) + ", y = " + CStr(y)
+end sub
+
+' keyboard events (optional)
+
+sub gls_keyDown (key)
+	'console.log "gls_keyDown event: key = " + CStr(key)
+end sub
+
+sub gls_keyUp (key)
+	'console.log "gls_keyUp event: key = " + CStr(key)
+end sub
+
+sub gls_keyPress (key)
+	'console.log "gls_keyPress event: key = " + CStr(key)
+end sub

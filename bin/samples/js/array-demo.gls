@@ -1,0 +1,45 @@
+/** array-demo.js */
+<# language "JavaScript" #>
+
+/* prints array length and data */
+function printArray (arr) {
+	var length, i;
+	
+	length = arr.length;
+	console.log ("Array length: " + length);
+
+	for (i = 0; i < length; i++) {
+		console.log (
+			"Array [" + i + "] = " + arr.get(i)
+		);
+	}
+}
+
+/*******************************************************************/
+
+/* create fixed sized array from string configuration */
+var GLuint_array = gls.intArray ("256,121212,34324,3434,0,0");
+
+/* set last two items */
+GLuint_array.put (4, 212343);
+GLuint_array.put (5, 103434);
+
+/*******************************************************************/
+
+/* create fixed sized array of certain size */
+var GLubyte_array = gls.ubyteArray (5);
+
+/* init array */
+for (var i = 0; i < 5; i++) {
+	GLubyte_array.put ( i, 255 - (i * 2) );
+}
+	
+
+/*******************************************************************/
+/* main */
+
+console.clear ();
+
+printArray (GLuint_array);
+
+printArray (GLubyte_array);

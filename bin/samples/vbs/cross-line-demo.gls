@@ -1,0 +1,16 @@
+' cross-line-demo.vbs
+<#
+language "VBScript"
+include "opengl-constants.vbs"
+#>
+
+sub gls_renderScene()
+	glBegin GL_LINES
+		glVertex3d -0.3, 0.0, 0.0
+		glVertex3d 0.3, 0.0, 0.0
+
+		glVertex3d 0.0, -0.3, 0.0
+		glVertex3d 0.0, 0.3, 0.0
+	glEnd	
+	gl.flush
+end sub

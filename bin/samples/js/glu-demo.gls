@@ -1,0 +1,137 @@
+/** glu-demo.js Demonstrates the 'glu' library extension APIs */
+<# language "JavaScript" #>
+<# include "opengl-constants.js" #>
+
+/* configuration */
+gls.windowTitle = "glu demo";
+
+/* load the 'glu' library extension */
+var glu = gls.require ("glu");
+
+console.log ('-------------------- glu demo --------------------');
+console.log (
+	'lib name : ' + glu.name + ', ' + 
+	'version : ' + (0x00FF & glu.version) + '.' + ((0xFF00 & glu.version)>>8) 
+);
+
+/* quadrices */
+var q1, q2, q3, q4;
+var cur_planex = -1, cur_planey = -1;
+
+/* switches viewport to one of the quadrant on the screen */
+function switchPlane (planex, planey) {
+	var 
+	cx = gls.windowWidth / 2, 
+	cy = gls.windowHeight / 2;
+	
+	/* find aspect ratio */
+	var 
+	aspect_ratio = (cx > cy ? cx / cy : cy / cx),
+	half_aspect_ratio = aspect_ratio / 2.0;
+	
+	/* assumes width > height */
+	var
+	left = -half_aspect_ratio,
+	right = half_aspect_ratio,
+	top = 0.5,
+	bottom = -0.5;
+	
+	/* set viewport */
+	glViewport (cx * planex, cy * planey, cx, cy);
+	
+	/* set 3d projection matrix */
+	glMatrixMode (GL_PROJECTION);
+	glLoadIdentity ();
+	glFrustum (left, right, bottom, top, 0.5, 1.5); 
+	glTranslatef (0.0, 0.0, -1.0);
+
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity ();
+}
+
+function gls_init () {
+	/* create quadrices */
+	q1 = glu.gluNewQuadric ();
+	q2 = glu.gluNewQuadric ();
+	q3 = glu.gluNewQuadric ();
+	q4 = glu.gluNewQuadric ();
+
+	/* set quadric properties */
+	glu.gluQuadricDrawStyle (q1, 100011);	
+	glu.gluQuadricOrientation (q1, 100020);
+	
+	glu.gluQuadricDrawStyle (q2, 100011);	
+	glu.gluQuadricOrientation (q2, 100020);
+	
+	glu.gluQuadricDrawStyle (q3, 100011);	
+	glu.gluQuadricOrientation (q3, 100020);
+	
+	glu.gluQuadricDrawStyle (q4, 100011);	
+	glu.gluQuadricOrientation (q4, 100020);
+
+	console.log ('initialized');
+}
+
+function gls_terminate () {
+	/* delete quadrices */
+	glu.gluDeleteQuadric (q1);
+	glu.gluDeleteQuadric (q2);
+	glu.gluDeleteQuadric (q3);
+	glu.gluDeleteQuadric (q4);
+
+	console.log ('terminated');
+}
+
+function gls_renderScene () {
+	switchPlane (0, 0);
+		if (cur_planex == 0 && cur_planey == 0)
+			glColor4f (0.5, 0.0, 0.0, 1.0);	
+		else
+			glColor4f (0.5, 0.5, 0.5, 1.0);	
+		glRotatef (30.0, 1.0, 0.0, 0.0);
+		glRotatef (30.0, 0.0, 1.0, 0.0);
+		glu.gluSphere (q1, 0.5, 20, 20);
+		
+	switchPlane (0, 1);
+		if (cur_planex == 0 && cur_planey == 1)
+			glColor4f (0.3, 0.8, 0.3, 1.0);	
+		else
+			glColor4f (0.5, 0.5, 0.5, 1.0);			
+		glRotatef (30.0, 1.0, 0.0, 0.0);
+		glRotatef (30.0, 0.0, 1.0, 0.0);
+		glu.gluPartialDisk (q2, 0.03, 0.6, 40, 20, 0.0, 270.0);
+		
+	switchPlane (1, 0);
+		if (cur_planex == 1 && cur_planey == 0)
+			glColor4f (0.0, 0.0, 1.0, 1.0);	
+		else
+			glColor4f (0.5, 0.5, 0.5, 1.0);	
+		glRotatef (30.0, 1.0, 0.0, 0.0);
+		glRotatef (30.0, 0.0, 1.0, 0.0);
+		glu.gluDisk (q3, 0.03, 0.6, 40, 20);
+		
+	switchPlane (1, 1);
+		if (cur_planex == 1 && cur_planey == 1)
+			glColor4f (1.0, 1.0, 1.0, 1.0);	
+		else
+			glColor4f (0.5, 0.5, 0.5, 1.0);	
+		glRotatef (30, 1.0, 0.0, 0.0);
+		glRotatef (30.0, 0.0, 1.0, 0.0);
+		glu.gluCylinder (q4, 0.2, 0.2, 0.5, 20, 20);
+	
+	flush ();
+
+	console.log ('rendered');
+}
+
+function gls_mouseMove (button, x, y) {
+	var
+	planex = parseInt (x / (gls.windowWidth / 2)), 
+	planey = parseInt ((gls.windowHeight - y) / (gls.windowHeight / 2));
+	
+	if (cur_planex != planex || cur_planey != planey) {
+		cur_planex = planex;
+		cur_planey = planey;
+		gls_renderScene ();
+	}
+}

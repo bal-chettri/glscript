@@ -1,0 +1,125 @@
+/** glu-nurbs-demo.js Demonstrates nurbs surface using 'glu' library extension */
+<# language "JavaScript" #>
+<# include "opengl-constants.js" #>
+
+var GLU_SAMPLING_TOLERANCE  = 100203;
+var GLU_DISPLAY_MODE        = 100204;
+
+var GLU_FILL                = 100012;
+var GLU_POINT               = 100010;
+var GLU_LINE                = 100011;
+var GLU_FILL                = 100012;
+var GLU_SILHOUETTE          = 100013;
+
+/* configuration */
+gls.windowWidth = 500;
+gls.windowHeight = 500;
+gls.viewportWidth = 500;
+gls.viewportHeight = 500;
+gls.ortho = false;
+gls.animation = true;
+gls.frameRate = 30;
+
+// load 'glu' library
+var glu = gls.require ("glu");
+
+// globals
+var theNurb;
+var ctlpoints = gls.floatArray (4 * 4 * 3);
+var knots = gls.floatArray ("0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0");	
+var xrot = 0;
+var yrot = 0;
+
+function setElem(arr,i,j,k,val) {
+	arr.put (
+		(i * 3 * 4) + (j * 3) + k,
+		val
+	);
+}
+function getElem(arr,i,j,k) {
+	arr.get (
+		(i * 3 * 4) + (j * 3) + k
+	);
+}
+
+function initSurface() {
+   var u, v;
+   for (u = 0; u < 4; u++) {
+      for (v = 0; v < 4; v++) {	 
+ 		 setElem (ctlpoints, u, v, 0, 2.0 * (parseFloat(u) - 1.5));
+		 setElem (ctlpoints, u, v, 1, 2.0 * (parseFloat(v) - 0.5));
+         if ( (u == 1 || u == 2) && (v == 1 || v == 2)) {
+			setElem (ctlpoints, u, v, 2, 3.0);
+         } else {
+			setElem (ctlpoints, u, v, 2, -3.0);
+         }
+      }
+   }
+}
+
+function gls_init() {
+   var mat_diffuse = gls.floatArray ("0.7, 0.7, 0.7, 1.0");
+   var mat_specular = gls.floatArray ("1.0, 1.0, 1.0, 1.0");
+   var mat_shininess = gls.floatArray ("100.0");
+
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+   glMaterialfv (GL_FRONT, GL_DIFFUSE, mat_diffuse);
+   glMaterialfv (GL_FRONT, GL_SPECULAR, mat_specular);
+   glMaterialfv (GL_FRONT, GL_SHININESS, mat_shininess);
+
+   glPolygonMode (GL_FRONT, GL_LINE);
+   
+   glEnable (GL_LIGHTING);
+   glEnable (GL_LIGHT0);
+   glEnable (GL_DEPTH_TEST);
+   glEnable (GL_NORMALIZE);
+   glEnable (GL_AUTO_NORMAL);
+   
+   initSurface ();
+
+   theNurb = glu.gluNewNurbsRenderer();
+   glu.gluNurbsProperty (theNurb, GLU_SAMPLING_TOLERANCE, 25.0);
+   glu.gluNurbsProperty (theNurb, GLU_DISPLAY_MODE, GLU_FILL);
+}
+
+function gls_terminate() {
+	glu.gluDeleteNurbsRenderer (theNurb);
+}
+
+function gls_renderScene() {	
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity();
+	
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// rotate and scale
+	glScalef (0.09, 0.09, 0.09);
+	glRotatef (xrot, 1.0, 0.0, 0.0);
+	glRotatef (yrot, 0.0, 1.0, 0.0);
+	xrot = (xrot + 3) % 360;
+	yrot = (yrot + 3) % 360;
+
+	// draw the nurbs surface
+	glu.gluBeginSurface (theNurb);
+	glu.gluNurbsSurface (theNurb, 8, knots, 8, knots, 
+							4 * 3, 3, ctlpoints, 
+							4, 4, GL_MAP2_VERTEX_3);
+	glu.gluEndSurface (theNurb);
+	
+	gl.flush();
+}
+
+function gls_keyPress (key) {
+   switch (key) {
+      case 'c':
+      case 'C':
+         showPoints = !showPoints;
+         gls_renderScene();
+         break;
+      case 27:
+         // exit(0);
+         break;
+      default:
+         break;
+   }
+}

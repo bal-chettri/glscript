@@ -1,0 +1,58 @@
+' rotating-sun-demo.vbs
+<#
+language "VBScript"
+include "opengl-constants.vbs"
+#>
+
+gls.frameRate = 12
+gls.animation = True
+gls.ortho = True
+
+' globals
+Dim zRot, locX, locY
+
+zRot = 0.0
+locX = 0.0
+locY = 0.0
+
+Sub gls_init ()
+	glClearColor 0.3, 0.3, 0.3, 1.0
+	glColor3f 1.0, 0.65, 0.1
+End Sub
+
+Sub gls_renderScene ()	
+	glMatrixMode GL_MODELVIEW
+	glLoadIdentity
+	glClear GL_COLOR_BUFFER_BIT
+
+	glTranslatef 480/2, 320/2, 0.0
+
+	glRotatef zRot, 0.0, 0.0, 1.0
+	glTranslatef locX, locY, 0.0
+	
+	Dim i
+	For i=0 To 14
+		glBegin GL_LINES
+			glVertex2f -50, 0.0
+			glVertex2f 50, 0.0
+			glVertex2f 0.0, -50
+			glVertex2f 0.0, 50
+		glEnd
+		glRotatef 6, 0.0, 0.0, 1.0
+	Next
+	
+	zRot = zRot + 10
+	
+	flush
+End Sub
+
+' events
+Sub gls_mouseDown (button, x, y)
+	locX = CInt(x) - (480 / 2)
+	locY = CInt(y) - (320 / 2)
+
+	call gls_renderScene ()
+End Sub
+
+' startup
+console.log "Press LEFT mouse button to move the SUN..."

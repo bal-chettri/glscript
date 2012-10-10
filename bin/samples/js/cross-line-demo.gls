@@ -1,0 +1,17 @@
+/** cross-line-demo.js */
+<# language "JavaScript" #>
+<# include "opengl-constants.js" #>
+
+function gls_renderScene () {
+	glBegin ( GL_LINES );
+		//glColor4f (1.0, 0.0, 0.0, 1.0);
+		
+		glVertex3d (-0.3, 0.0, 0.0);
+		glVertex3d (0.3, 0.0, 0.0);
+
+		glVertex3d (0.0, -0.3, 0.0);
+		glVertex3d (0.0, 0.3, 0.0);
+	glEnd ();
+	
+	gl.flush ();	
+}

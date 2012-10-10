@@ -1,0 +1,147 @@
+' glu-demo.vbs Demonstrates the 'glu' library extension APIs
+<# language "VBScript" #>
+<# include "opengl-constants.vbs" #>
+
+' configuration
+gls.windowTitle = "glu demo"
+
+' load the 'glu' library extension
+Set glu = gls.require ("glu")
+
+console.log "-------------------- glu demo --------------------"
+
+console.log _
+"lib name : " & glu.name & ", " & _
+"version : " & (&H00FF And glu.version) & "." & ((&HFF00 And glu.version) \ (2^8)) 
+
+' quadrices
+Dim q1, q2, q3, q4
+Dim cur_planex, cur_planey
+
+cur_planex = -1: cur_planey = -1
+
+' switches viewport to one of the quadrant on the screen
+Sub switchPlane (planex, planey)
+	Dim cx, cy
+	cx = gls.windowWidth / 2
+	cy = gls.windowHeight / 2
+	
+	' find aspect ratio
+	Dim aspect_ratio, half_aspect_ratio
+	If cx > cy Then
+		aspect_ratio = cx / cy
+	Else
+		aspect_ratio = cy / cx
+	End If
+	half_aspect_ratio = aspect_ratio / 2.0
+	
+	' assumes width > height
+	Dim left, top, right, bottom
+	left = -half_aspect_ratio
+	right = half_aspect_ratio
+	top = 0.5
+	bottom = -0.5
+	
+	' set viewport
+	glViewport cx * planex, cy * planey, cx, cy
+	
+	' set 3d projection matrix
+	glMatrixMode GL_PROJECTION
+	glLoadIdentity
+	glFrustum left, right, bottom, top, 0.5, 1.5
+	glTranslatef 0.0, 0.0, -1.0
+
+	glMatrixMode GL_MODELVIEW
+	glLoadIdentity
+End Sub
+
+Sub gls_init
+	' create quadrices
+	q1 = glu.gluNewQuadric
+	q2 = glu.gluNewQuadric
+	q3 = glu.gluNewQuadric
+	q4 = glu.gluNewQuadric
+
+	' set quadric properties
+	glu.gluQuadricDrawStyle q1, 100011
+	glu.gluQuadricOrientation q1, 100020
+	
+	glu.gluQuadricDrawStyle q2, 100011
+	glu.gluQuadricOrientation q2, 100020
+	
+	glu.gluQuadricDrawStyle q3, 100011
+	glu.gluQuadricOrientation q3, 100020
+	
+	glu.gluQuadricDrawStyle q4, 100011
+	glu.gluQuadricOrientation q4, 100020
+
+	console.log "initialized"
+End Sub
+
+Sub gls_terminate
+	' delete quadrices
+	glu.gluDeleteQuadric q1
+	glu.gluDeleteQuadric q2
+	glu.gluDeleteQuadric q3
+	glu.gluDeleteQuadric q4
+
+	console.log "terminated"
+End Sub
+
+Sub gls_renderScene
+	switchPlane 0, 0
+		If (cur_planex = 0 And cur_planey = 0) Then
+			glColor4f 0.5, 0.0, 0.0, 1.0
+		Else
+			glColor4f 0.5, 0.5, 0.5, 1.0
+		End If
+		glRotatef 30.0, 1.0, 0.0, 0.0
+		glRotatef 30.0, 0.0, 1.0, 0.0
+		glu.gluSphere q1, 0.5, 20, 20
+		
+	switchPlane 0, 1
+		If (cur_planex = 0 And cur_planey = 1) Then
+			glColor4f 0.3, 0.8, 0.3, 1.0
+		Else
+			glColor4f 0.5, 0.5, 0.5, 1.0
+		End If		
+		glRotatef 30.0, 1.0, 0.0, 0.0
+		glRotatef 30.0, 0.0, 1.0, 0.0
+		glu.gluPartialDisk q2, 0.03, 0.6, 40, 20, 0.0, 270.0
+		
+	switchPlane 1, 0
+		If (cur_planex = 1 And cur_planey = 0) Then
+			glColor4f 0.0, 0.0, 1.0, 1.0
+		Else
+			glColor4f 0.5, 0.5, 0.5, 1.0
+		End If		
+		glRotatef 30.0, 1.0, 0.0, 0.0
+		glRotatef 30.0, 0.0, 1.0, 0.0
+		glu.gluDisk q3, 0.03, 0.6, 40, 20
+		
+	switchPlane 1, 1
+		If (cur_planex = 1 And cur_planey = 1) Then
+			glColor4f 1.0, 1.0, 1.0, 1.0
+		Else
+			glColor4f 0.5, 0.5, 0.5, 1.0
+		End If		
+		glRotatef 30, 1.0, 0.0, 0.0
+		glRotatef 30.0, 0.0, 1.0, 0.0
+		glu.gluCylinder q4, 0.2, 0.2, 0.5, 20, 20
+	
+	Call flush
+
+	console.log "rendered"
+End Sub
+
+Sub gls_mouseMove (button, x, y)
+	Dim planex, planey
+	planex = CInt (CInt(x) \ (gls.windowWidth / 2))
+	planey = CInt ((gls.windowHeight - CInt(y)) \ (gls.windowHeight / 2))
+	
+	If (cur_planex <> planex Or cur_planey <> planey) Then
+		cur_planex = planex
+		cur_planey = planey
+		gls_renderScene
+	End If
+End Sub

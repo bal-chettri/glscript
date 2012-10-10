@@ -1,0 +1,66 @@
+' img-demo.js Demonstrates the 'img' library extension APIs
+<# language "VBScript" #>
+<# include "opengl-constants.vbs" #>
+
+' configuration
+gls.windowTitle = "img demo"
+gls.windowWidth = 512
+gls.windowHeight = 512
+gls.viewPortWidth = 512
+gls.viewPortHeight = 512
+
+' load the 'img' library extension
+Set img = gls.require ("img")
+
+console.log "-------------------- img demo --------------------"
+
+console.log _
+"lib name : " & img.name & ", " & _
+"version : " & (&H00FF And img.version) & "." & ((&HFF00 And img.version) \ (2^8)) 
+
+console.log "Press LEFT mouse button change image..."
+
+Dim images(3) ' 0..3
+Dim image_index
+image_index = 0
+
+Sub gls_init
+	Dim assets(3)
+	assets(0) = "logo.png"
+	assets(1) = "leaves.bmp"
+	assets(2) = "pastel.bmp"
+	assets(3) = "stones.bmp"
+
+	Dim i
+	For i = 0 to UBound(assets)
+		Set images(i) = img.load ("..\..\textures\" + assets(i))
+		' img library assumes 2D coordinate system when rendering the image
+		' so image must be scaled in 3D coordinate system
+		images(i).width = 1.0
+		images(i).height = 2.0
+	Next
+	glEnable GL_TEXTURE_2D
+End Sub
+
+Sub gls_renderScene
+	glMatrixMode GL_MODELVIEW
+	glLoadIdentity
+	glClear GL_COLOR_BUFFER_BIT
+	
+	' img library uses 2D coordinate system so invert the Y axis in 3D 
+	' coordinate system
+	glScalef 1.0, -1.0, 1.0
+	
+	' render the currrent image
+	images(image_index).render
+
+	flush
+End Sub
+
+Sub gls_mouseDown (btn, x, y)
+	If CInt(btn) = 0 Then
+		' cycle through all images
+		image_index = (image_index + 1) Mod (UBound(images) + 1)
+	End If
+	gls_renderScene
+End Sub

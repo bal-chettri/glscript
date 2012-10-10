@@ -1,0 +1,3 @@
+<# language "VBScript" #>
+
+console.log "This program does nothing except saying Hello glScript!"

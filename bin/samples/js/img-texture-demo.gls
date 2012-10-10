@@ -1,0 +1,44 @@
+/** img-texture-demo.js */
+<# language "JavaScript" #>
+<# include "opengl-constants.js" #>
+
+var img = gls.require ("img");
+var texid;
+
+var vertices = gls.floatArray ("-0.5,0.5, -0.5,-0.5, 0.5,-0.5, 0.5,0.5");
+var tex_coords = gls.floatArray ("0.0,0.0, 0.0,1.0, 1.0,1.0, 1.0,0.0");
+var indices = gls.ushortArray ("0,1,2,0,2,3");
+
+// gls.ortho = false;
+
+function gls_init () {
+	glEnable (GL_TEXTURE_2D);
+	texid = img.loadTexture ("..\\..\\textures\\leaves.bmp");
+}
+
+function gls_terminate () {
+	img.freeTexture (texid);
+}
+
+function gls_renderScene() {
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity ();
+	glClear (GL_COLOR_BUFFER_BIT);
+
+	//console.log ("" + texid);
+	glBindTexture (GL_TEXTURE_2D, 0);
+	glBindTexture (GL_TEXTURE_2D, texid);
+
+	glEnableClientState (GL_VERTEX_ARRAY);
+	glEnableClientState (GL_TEXTURE_COORD_ARRAY);
+
+	glVertexPointer (2, GL_FLOAT, 0, vertices);
+	glTexCoordPointer (2, GL_FLOAT, 0, tex_coords);
+
+	glDrawElements (GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+
+	glDisableClientState (GL_VERTEX_ARRAY);
+	glDisableClientState (GL_TEXTURE_COORD_ARRAY);
+
+	flush();
+}

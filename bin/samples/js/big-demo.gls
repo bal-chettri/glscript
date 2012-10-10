@@ -1,0 +1,101 @@
+/** big-demo.js */
+<# language "JavaScript" #>
+<# include "opengl-constants.js" #>
+
+gls.animation = true;
+gls.frameRate = 1;
+
+var view_rotX = 45.0;
+var view_rotY = 45.0;
+
+function gls_init () {
+	glClearColor (0.0, 0.0, 0.0, 1.0);
+}
+
+function gls_renderScene () {	
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity ();
+
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	glRotatef (view_rotX, 1.0, 0.0, 0.0);
+	glRotatef (view_rotY, 0.0, 1.0, 0.0);
+	
+	var GRID_LINES = 10;
+	var GRID_SIZE = 0.2;
+	var GRID_HALF_LEN = 0.8;
+	var grid_z = 0.0;
+	var grid_i;
+	
+	glBegin (GL_LINES);
+		for (grid_i = 0; grid_i < GRID_LINES / 2; grid_i++) {
+			glVertex3f (-GRID_HALF_LEN, 0.0, -(grid_i * GRID_SIZE));
+			glVertex3f (GRID_HALF_LEN, 0.0, -(grid_i * GRID_SIZE));
+		}
+		for (grid_i = 1; grid_i < GRID_LINES / 2; grid_i++) {
+			glVertex3f (-GRID_HALF_LEN, 0.0, (grid_i * GRID_SIZE));
+			glVertex3f (GRID_HALF_LEN, 0.0, (grid_i * GRID_SIZE));
+		}
+		
+		for (grid_i = 0; grid_i < GRID_LINES / 2; grid_i++) {
+			glVertex3f (-(grid_i * GRID_SIZE), 0.0, -GRID_HALF_LEN);
+			glVertex3f (-(grid_i * GRID_SIZE), 0.0, GRID_HALF_LEN);
+		}
+		for (grid_i = 1; grid_i < GRID_LINES / 2; grid_i++) {
+			glVertex3f ((grid_i * GRID_SIZE), 0.0, -GRID_HALF_LEN);
+			glVertex3f ((grid_i * GRID_SIZE), 0.0, GRID_HALF_LEN);
+		}
+	glEnd ();
+	
+	//view_rotX = (view_rotX + 3) % 360;
+	view_rotY = (view_rotY + 3) % 360;
+	gl.flush ();	
+}
+
+function gls_renderScene1 () {	
+	glMatrixMode (GL_MODELVIEW);
+	glLoadIdentity ();
+
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
+
+	glRotatef (0.0, 1.0, 0.0, 0.0);
+	glRotatef (30.0, 0.0, 1.0, 0.0);
+	
+	/* front face */
+	glColor3f (1.0, 1.0, 1.0);
+	glBegin (GL_QUADS);
+		glVertex3f (-0.3, 0.3, 0.0);
+		glVertex3f (-0.3, -0.3, 0.0);
+		glVertex3f (0.3, -0.3, 0.0);
+		glVertex3f (0.3, 0.3, 0.0);
+	glEnd ();
+	
+	/* back */
+	glColor3f (0.0, 0.0, 1.0);
+	glBegin (GL_QUADS);
+		glVertex3f (-0.3, 0.3, -0.3);
+		glVertex3f (-0.3, -0.3, -0.3);
+		glVertex3f (0.3, -0.3, -0.3);
+		glVertex3f (0.3, 0.3, -0.3);
+	glEnd ();
+	
+	/* right */
+	glColor3f (1.0, 0.0, 0.0);
+	glBegin (GL_QUADS);
+		glVertex3d (0.3, 0.3, 0.0);
+		glVertex3d (0.3, -0.3, 0.0);
+		glVertex3d (0.3, -0.3, -0.3);
+		glVertex3d (0.3, 0.3, -0.3);
+	glEnd ();
+
+	/* left */
+	glColor3f (0.0, 1.0, 0.0);
+	glBegin (GL_QUADS);
+		glVertex3d (-0.3, 0.3, -0.3);
+		glVertex3d (-0.3, -0.3, -0.3);
+		glVertex3d (-0.3, -0.3, 0.0);
+		glVertex3d (-0.3, 0.3, 0.0);
+	glEnd ();
+	
+	gl.flush (); /* flush the scene */
+}

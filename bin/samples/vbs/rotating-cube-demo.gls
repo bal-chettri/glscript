@@ -1,0 +1,69 @@
+' rotating-cube-demo.vbs
+<#
+language "VBScript"
+include "opengl-constants.vbs"
+#>
+
+gls.frameRate = 12
+gls.animation = True
+
+Dim xRot, yRot
+xRot = 30.0
+yRot = 30.0
+
+sub gls_init ()
+	glClearColor 0.0, 0.0, 0.0, 1.0
+	glEnable GL_DEPTH_TEST
+end sub
+
+sub gls_renderScene ()
+	glMatrixMode GL_MODELVIEW
+	glLoadIdentity
+
+	glClear GL_COLOR_BUFFER_BIT Or GL_DEPTH_BUFFER_BIT
+
+	glRotatef xRot, 1.0, 0.0, 0.0
+	glRotatef yRot, 0.0, 1.0, 0.0
+	glScalef 1.4, 1.4, 1.4
+	
+	' front face
+	glColor3f 1.0, 1.0, 1.0
+	glBegin GL_QUADS
+		glVertex3f -0.2, 0.2, 0.2
+		glVertex3f -0.2, -0.2, 0.2
+		glVertex3f 0.2, -0.2, 0.2
+		glVertex3f 0.2, 0.2, 0.2
+	glEnd
+	
+	' back
+	glColor3f 0.0, 0.0, 1.0
+	glBegin GL_QUADS
+		glVertex3f -0.2, 0.2, -0.2
+		glVertex3f -0.2, -0.2, -0.2
+		glVertex3f 0.2, -0.2, -0.2
+		glVertex3f 0.2, 0.2, -0.2
+	glEnd
+	
+	' right
+	glColor3f 1.0, 0.0, 0.0
+	glBegin GL_QUADS
+		glVertex3d 0.2, 0.2, 0.2
+		glVertex3d 0.2, -0.2, 0.2
+		glVertex3d 0.2, -0.2, -0.2
+		glVertex3d 0.2, 0.2, -0.2
+	glEnd
+
+	' left
+	glColor3f 0.0, 1.0, 0.0
+	glBegin GL_QUADS
+		glVertex3d -0.2, 0.2, -0.2
+		glVertex3d -0.2, -0.2, -0.2
+		glVertex3d -0.2, -0.2, 0.2
+		glVertex3d -0.2, 0.2, 0.2
+	glEnd
+	
+	gl.flush' flush the scene
+	
+	xRot = (xRot + 6) Mod 360
+	yRot = (yRot + 6) Mod 360
+end sub

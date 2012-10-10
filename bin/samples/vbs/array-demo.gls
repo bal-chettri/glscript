@@ -1,0 +1,45 @@
+' array-demo.gbs
+<# language "VBScript" #>
+
+' prints array length and data
+Sub printArray (arr)
+	Dim length, i
+	
+	length = arr.length
+	console.log "Array length: " & length
+
+	For i = 0 To length - 1
+		console.log "Array [" & i & "] = " & CLng(arr.get(i))
+	Next
+End Sub
+
+'*******************************************************************
+
+' create fixed sized array from string configuration */
+Dim GLuint_array
+Set GLuint_array = gls.intArray ("256,121212,34324,3434,0,0")
+
+' set last two items
+GLuint_array.put 4, 212343
+GLuint_array.put 5, 103434
+
+'*******************************************************************
+
+' create fixed sized array of certain size
+Dim GLubyte_array
+Set GLubyte_array = gls.ubyteArray (5)
+
+' init array
+For i = 0 To 4
+	GLubyte_array.put i, 255 - (i * 2)
+Next
+	
+
+'*******************************************************************
+' main
+
+console.clear
+
+printArray GLuint_array
+
+printArray GLubyte_array

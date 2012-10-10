@@ -1,0 +1,108 @@
+<# language "VBScript" #>
+<# include "opengl-constants.vbs" #>
+
+' settings...
+Const MODEL_NAME = "shuttle"
+Const AUTO_ROTATE = False
+Const WINCX = 480
+Const WINCY = 320
+
+' gls configuration...
+gls.windowTitle = "obj demo"
+If AUTO_ROTATE Then
+	gls.animation = True
+End If
+gls.windowWidth = WINCX
+gls.windowHeight = WINCY
+gls.viewPortWidth = WINC
+gls.viewPortHeight = WINCY
+
+' global vars...
+Dim xRot, yRot, scale
+' mouse rotation...
+Dim flagMouseDown, mouseStartX, mouseStartY, prevXRot, prevYRot
+
+' init vars
+xRot = yRot = 0.0
+scale = 1.0
+flagMouseDown = False
+
+console.clear
+console.log "-------------------- obj demo --------------------"
+
+' load the "obj" extension
+Set obj = gls.require ("obj")
+
+console.log _
+"lib name : " & obj.name & ", " & _
+"version : " & (&H00FF And obj.version) & "." & ((&HFF00 And obj.version) \ (2^8)) 
+
+' load the MODEL
+Set model = obj.load ("..\..\models\" + MODEL_NAME + ".obj")
+
+' calculate scale factor to display the model at proper visible size
+scale = 0.8 / model.boundingBox.height
+
+Sub gls_init
+	' init OpenGL settings
+	glClearColor 0.4, 0.4, 0.4, 1.0
+	glEnable GL_DEPTH_TEST
+	glEnable GL_LIGHTING
+	glEnable GL_LIGHT0
+	glLightfv GL_LIGHT0, GL_POSITION, gls.floatArray("0.1, 0.0, 0.0, 1.0")
+	glShadeModel GL_FLAT
+	glPolygonMode GL_FRONT, GL_FILL
+	glPolygonMode GL_BACK, GL_FILL
+	glMaterialfv GL_FRONT, GL_DIFFUSE, gls.floatArray("0.01, 0.01, 0.5")
+	glMaterialfv GL_FRONT, GL_AMBIENT, gls.floatArray("0.0, 0.0, 0.5")
+	glMaterialfv GL_FRONT, GL_SPECULAR, gls.floatArray("0.0, 0.0, 0.0")
+End Sub
+
+Sub gls_renderScene
+	glMatrixMode GL_MODELVIEW
+	glLoadIdentity
+	
+	glClear GL_COLOR_BUFFER_BIT Or GL_DEPTH_BUFFER_BIT
+	
+	glScalef scale, scale, scale
+	glRotatef xRot, 1.0, 0.0, 0.0
+	glRotatef yRot, 0.0, 1.0, 0.0
+	
+	model.render
+	
+	If AUTO_ROTATE Then
+		xRot = (xRot + 3) Mod 360
+		yRot = (yRot + 3) Mod 360
+	End If
+	
+	gl.flush
+End Sub
+
+Sub gls_mouseDown (button, x, y)
+	If (Not AUTO_ROTATE) Then
+		flagMouseDown = True
+
+		mouseStartX = CInt(x)
+		mouseStartY = CInt(y)
+	
+		prevXRot = xRot
+		prevYRot = yRot
+	End If
+End Sub
+
+Sub gls_mouseMove (button, x, y)
+	If (Not AUTO_ROTATE) And flagMouseDown Then
+		Dim deltaX, deltaY
+		deltaX = CInt(x) - mouseStartX
+		deltaY = CInt(y) - mouseStartY
+		
+		xRot = prevXRot + ((deltaY / WINCY) * 360.0)
+		yRot = prevYRot + ((deltaX / WINCX) * 360.0)
+		
+		gls_renderScene
+	End If
+End Sub
+
+Sub gls_mouseUp (button, x, y)
+	flagMouseDown = false
+End Sub
