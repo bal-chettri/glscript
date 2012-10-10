@@ -2,6 +2,7 @@
 *.slo
 *.lo
 *.o
+*.obj
 
 # Compiled Dynamic libraries
 *.so
@@ -10,3 +11,12 @@
 *.lai
 *.la
 *.a
+
+# Visual Studio Project User Options
+*.user
+
+# VC++ Intellisese Database
+*.ncb
+
+Incremental Linker file
+*.ilk
