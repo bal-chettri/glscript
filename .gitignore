@@ -18,5 +18,8 @@
 # VC++ Intellisese Database
 *.ncb
 
-Incremental Linker file
+# Incremental Linker file
 *.ilk
+
+# Subversion file
+*.svn
