@@ -29,121 +29,121 @@ using namespace objparser;
 
 /* skip wite space in single line */
 const char *Utils::SkipWhite (const char *s) {
-	while ( *s && (*s == ' ' || *s == '\t') ) {
-		s++;
-	}
-	return s;
+    while ( *s && (*s == ' ' || *s == '\t') ) {
+        s++;
+    }
+    return s;
 }
 
 /* skip all blank lines */
 const char *Utils::SkipBlankLines (const char *s) {
-	while ( *s && 
-			(*s == '\r' && *(s+1) == '\n') ||
-			(*s == '\n' && *(s+1) == '\r') ||
-			(*s == '\r') || 
-			(*s == '\n')
-			) {
-		++s;
-		if (*s == '\r' || *s == '\n') {
-			++s;
-		}
-	}
-	return s;
+    while ( *s && 
+            (*s == '\r' && *(s+1) == '\n') ||
+            (*s == '\n' && *(s+1) == '\r') ||
+            (*s == '\r') || 
+            (*s == '\n')
+            ) {
+        ++s;
+        if (*s == '\r' || *s == '\n') {
+            ++s;
+        }
+    }
+    return s;
 }
 
 /* skips a single line i.e. moves s to start of the next line */
 const char *Utils::SkipLine (const char *s) {
-	while ( *s ) {
-		if (
-			(*s == '\r' && *(s+1) == '\n') ||
-			(*s == '\n' && *(s+1) == '\r') ||
-			(*s == '\r') || 
-			(*s == '\n')
-			) {
+    while ( *s ) {
+        if (
+            (*s == '\r' && *(s+1) == '\n') ||
+            (*s == '\n' && *(s+1) == '\r') ||
+            (*s == '\r') || 
+            (*s == '\n')
+            ) {
 
-			++s;
-			if (*s == '\r' || *s == '\n') {
-				++s;
-			}
-			break;
-		}
-		++s;
-	}
+            ++s;
+            if (*s == '\r' || *s == '\n') {
+                ++s;
+            }
+            break;
+        }
+        ++s;
+    }
 
-	return s;
+    return s;
 }
 
 /* returns a flag to indicate if s points to end of line */
 bool Utils::IsEndOfLine (const char *s) {
-	if (
-		(*s == '\r' && *(s+1) == '\n') ||
-		(*s == '\n' && *(s+1) == '\r') ||
-		(*s == '\r') || 
-		(*s == '\n') ||
-		(*s == '\0')
-		) {
-		
-		return true;
-	}
+    if (
+        (*s == '\r' && *(s+1) == '\n') ||
+        (*s == '\n' && *(s+1) == '\r') ||
+        (*s == '\r') || 
+        (*s == '\n') ||
+        (*s == '\0')
+        ) {
+        
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 char *Utils::TrimComment (char *str) {
-	char *s = str;
-	while (*s && *s != '#') {
-		++s;
-	}
-	if (*s == '#') {
-		*s = '\0';
-	}
-	return str;
+    char *s = str;
+    while (*s && *s != '#') {
+        ++s;
+    }
+    if (*s == '#') {
+        *s = '\0';
+    }
+    return str;
 }
 
 /* parses a GLshort integer */
 bool Utils::ParseInt (const char **ps, GLshort &value) {
-	const char *s = *ps;
-	int int_value;
+    const char *s = *ps;
+    int int_value;
 
-	while ( ::isdigit(*s) ) {
-		++s;
-	}
+    while ( ::isdigit(*s) ) {
+        ++s;
+    }
 
-	size_t length = (s - *ps);
-	if (length) {
-		int_value = atoi (*ps);
-		
-		// #TODO bounds check on value for GLshort
-		value = GLshort (int_value);
+    size_t length = (s - *ps);
+    if (length) {
+        int_value = atoi (*ps);
+        
+        // #TODO bounds check on value for GLshort
+        value = GLshort (int_value);
 
-		*ps = s;
-		return true;
-	}
+        *ps = s;
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 // parses a vertex
 bool Utils::ParseVertex (const char *s, VERTEX &v) {
-	s = Utils::SkipWhite (s);
+    s = Utils::SkipWhite (s);
 
-	int status = sscanf (s, "%f %f %f", &v.x, &v.y, &v.z);
+    int status = sscanf (s, "%f %f %f", &v.x, &v.y, &v.z);
 
-	if (status == EOF || status != 3) {
-		return false;
-	}
+    if (status == EOF || status != 3) {
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool Utils::ParseVertex2D (const char *s, GLfloat &x, GLfloat &y) {
-	s = Utils::SkipWhite (s);
+    s = Utils::SkipWhite (s);
 
-	int status = sscanf (s, "%f %f", &x, &y);
+    int status = sscanf (s, "%f %f", &x, &y);
 
-	if (status == EOF || status != 2) {
-		return false;
-	}
+    if (status == EOF || status != 2) {
+        return false;
+    }
 
-	return true;
+    return true;
 }

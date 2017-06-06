@@ -28,12 +28,12 @@
 extern HINSTANCE _hAppInstance;
 
 MainWindow::MainWindow (int resourceId) {
-	m_showToolbar = TRUE;
-	m_showStatusbar = TRUE;
+    m_showToolbar = TRUE;
+    m_showStatusbar = TRUE;
 
-	m_resourceId = resourceId;
+    m_resourceId = resourceId;
 
-	m_isMainWnd = TRUE;
+    m_isMainWnd = TRUE;
 }
 
 MainWindow::~MainWindow () {
@@ -41,69 +41,69 @@ MainWindow::~MainWindow () {
 
 /* operations */
 void MainWindow::ShowToolbar (BOOL flag) {
-	if (m_showToolbar != flag) {
-		if (m_showToolbar = flag) {
+    if (m_showToolbar != flag) {
+        if (m_showToolbar = flag) {
 
-		} else {
+        } else {
 
-		}
-	}
+        }
+    }
 }
 
 void MainWindow::ShowStatusbar (BOOL flag) {
-	if (m_showStatusbar != flag) {
-		if (m_showStatusbar = flag) {
+    if (m_showStatusbar != flag) {
+        if (m_showStatusbar = flag) {
 
-		} else {
+        } else {
 
-		}
-	}
+        }
+    }
 }
 
 BOOL MainWindow::GetOpenFilePath (LPTSTR filePathBuffer, int maxFilePathBuffer, LPCTSTR lpstrFilter, 
-									int filterIndex, LPCTSTR lpszDefExt)
+                                    int filterIndex, LPCTSTR lpszDefExt)
 {
-	filePathBuffer[0] = _T('\0');
+    filePathBuffer[0] = _T('\0');
 
-	OPENFILENAME openFileStruct;
-	memset (&openFileStruct, 0, sizeof(openFileStruct));
-	openFileStruct.lStructSize = sizeof(openFileStruct);
-	openFileStruct.hwndOwner = GetHandle ();
-	openFileStruct.hInstance = _hAppInstance;
-	openFileStruct.lpstrFilter = lpstrFilter;
-	openFileStruct.nFilterIndex = filterIndex;
-	openFileStruct.lpstrFile = filePathBuffer;
-	openFileStruct.nMaxFile = maxFilePathBuffer;
-	openFileStruct.lpstrInitialDir = NULL;
-	openFileStruct.lpstrTitle = NULL;
-	openFileStruct.Flags = OFN_ENABLESIZING | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
-	openFileStruct.lpstrDefExt = lpszDefExt;
+    OPENFILENAME openFileStruct;
+    memset (&openFileStruct, 0, sizeof(openFileStruct));
+    openFileStruct.lStructSize = sizeof(openFileStruct);
+    openFileStruct.hwndOwner = GetHandle ();
+    openFileStruct.hInstance = _hAppInstance;
+    openFileStruct.lpstrFilter = lpstrFilter;
+    openFileStruct.nFilterIndex = filterIndex;
+    openFileStruct.lpstrFile = filePathBuffer;
+    openFileStruct.nMaxFile = maxFilePathBuffer;
+    openFileStruct.lpstrInitialDir = NULL;
+    openFileStruct.lpstrTitle = NULL;
+    openFileStruct.Flags = OFN_ENABLESIZING | OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
+    openFileStruct.lpstrDefExt = lpszDefExt;
 
-	BOOL ret = ::GetOpenFileName (&openFileStruct);
-	return ret;
+    BOOL ret = ::GetOpenFileName (&openFileStruct);
+    return ret;
 }
 
 BOOL MainWindow::GetSaveAsFilePath (LPTSTR filePathBuffer, int maxFilePathBuffer, LPCTSTR lpstrFilter, 
-									int filterIndex, LPCTSTR lpszDefExt)
+                                    int filterIndex, LPCTSTR lpszDefExt)
 {
-	OPENFILENAME openFileStruct;
+    OPENFILENAME openFileStruct;
 
-	filePathBuffer[0] = _T('\0');
+    filePathBuffer[0] = _T('\0');
 
-	memset (&openFileStruct, 0, sizeof(openFileStruct));
-	openFileStruct.lStructSize = sizeof(openFileStruct);
-	openFileStruct.hwndOwner = GetHandle ();
-	openFileStruct.hInstance = _hAppInstance;
-	openFileStruct.lpstrFilter = lpstrFilter;
-	openFileStruct.nFilterIndex = filterIndex;
-	openFileStruct.lpstrFile = filePathBuffer;
-	openFileStruct.nMaxFile = maxFilePathBuffer;
-	openFileStruct.lpstrInitialDir = NULL;
-	openFileStruct.lpstrTitle = NULL;
-	openFileStruct.Flags = OFN_ENABLESIZING | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
-	openFileStruct.lpstrDefExt = lpszDefExt;
+    memset (&openFileStruct, 0, sizeof(openFileStruct));
+    openFileStruct.lStructSize = sizeof(openFileStruct);
+    openFileStruct.hwndOwner = GetHandle ();
+    openFileStruct.hInstance = _hAppInstance;
+    openFileStruct.lpstrFilter = lpstrFilter;
+    openFileStruct.nFilterIndex = filterIndex;
+    openFileStruct.lpstrFile = filePathBuffer;
+    openFileStruct.nMaxFile = maxFilePathBuffer;
+    openFileStruct.lpstrInitialDir = NULL;
+    openFileStruct.lpstrTitle = NULL;
+    openFileStruct.Flags = OFN_ENABLESIZING | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
+    openFileStruct.lpstrDefExt = lpszDefExt;
 
-	return ::GetSaveFileName (&openFileStruct);
+    return ::GetSaveFileName (&openFileStruct);
 }
 
 void MainWindow::UpdateUI () {
@@ -111,30 +111,30 @@ void MainWindow::UpdateUI () {
 
 // overridables
 void MainWindow::GetClassStyle (WNDCLASSEX &wcex) {
-	// fill in defaults
-	GenericWindow::GetClassStyle (wcex);
+    // fill in defaults
+    GenericWindow::GetClassStyle (wcex);
 
-	wcex.lpszClassName = _T("_gls_main_window");
-	wcex.lpszMenuName = MAKEINTRESOURCE(m_resourceId);
-	wcex.hIcon = ::LoadIcon (_hAppInstance, MAKEINTRESOURCE(m_resourceId));
-	wcex.hIconSm = ::LoadIcon (_hAppInstance, MAKEINTRESOURCE(m_resourceId));
+    wcex.lpszClassName = _T("_gls_main_window");
+    wcex.lpszMenuName = MAKEINTRESOURCE(m_resourceId);
+    wcex.hIcon = ::LoadIcon (_hAppInstance, MAKEINTRESOURCE(m_resourceId));
+    wcex.hIconSm = ::LoadIcon (_hAppInstance, MAKEINTRESOURCE(m_resourceId));
 }
 
 BOOL MainWindow::CreateToolbar () {
-	return TRUE;
+    return TRUE;
 }
 
 // protected
 BOOL MainWindow::CreateStatusbar () {
-	return TRUE;
+    return TRUE;
 }
 
 void MainWindow::OnCreate () {
-	GenericWindow::OnCreate ();
+    GenericWindow::OnCreate ();
 
-	UpdateUI ();
+    UpdateUI ();
 }
 
 void MainWindow::OnResize (int cx, int cy) {
-	GenericWindow::OnResize (cx, cy);
+    GenericWindow::OnResize (cx, cy);
 }

@@ -48,7 +48,7 @@ using namespace gls;
 
 // internal structures...
 struct FILE_SOURCE_LOADER_RESULT : public ASYNCH_CALL_RESULT {
-	sys_tchar path [260];
+    sys_tchar path [260];
 };
 
 // prototypes of internal functions...
@@ -64,10 +64,10 @@ static DWORD WINAPI LoadFileScriptSourceAsync (LPVOID param);
 ///////////////////////////////////////////////////////////////////////////////
 //
 sys_wchar *ScriptFileSourceLoader::LoadScriptSource (const sys_tchar *url) {
-	if (!url) {
-		return NULL;
-	}
-	return LoadFileScriptSourceSync (url);
+    if (!url) {
+        return NULL;
+    }
+    return LoadFileScriptSourceSync (url);
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -78,48 +78,48 @@ sys_wchar *ScriptFileSourceLoader::LoadScriptSource (const sys_tchar *url) {
 //
 // Loads script source from a disk file
 //
-// url:			filesystem path of the script source.
-// callback:	Callback to invoke when the loading of file completes.
-// context:		Context for the source loader to be passed back to the callback.
+// url:         filesystem path of the script source.
+// callback:    Callback to invoke when the loading of file completes.
+// context:     Context for the source loader to be passed back to the callback.
 //
 // Returns true if successfuly, false otherwise.
 //
 bool ScriptFileSourceLoader::LoadScriptSource (const sys_tchar *url, const ASYNCH_CALLBACK callback,
-												 void *context)
+                                                 void *context)
 {
-	// make sure we have all valid arguments. context may be NULL by default.
-	if (!url || !callback) {
-		return false; // invalid arguments provided
-	}
+    // make sure we have all valid arguments. context may be NULL by default.
+    if (!url || !callback) {
+        return false; // invalid arguments provided
+    }
 
-	// initialize result for the file loader thread
-	FILE_SOURCE_LOADER_RESULT *pResult;
-	pResult = (FILE_SOURCE_LOADER_RESULT *) asynch_create_result (sizeof(FILE_SOURCE_LOADER_RESULT), 
-																		callback, context);
-	if (pResult == NULL) {
-		return false;
-	}
-	
-	sys_tstrcpy (pResult->path, url);
-	
+    // initialize result for the file loader thread
+    FILE_SOURCE_LOADER_RESULT *pResult;
+    pResult = (FILE_SOURCE_LOADER_RESULT *) asynch_create_result (sizeof(FILE_SOURCE_LOADER_RESULT), 
+                                                                        callback, context);
+    if (pResult == NULL) {
+        return false;
+    }
+    
+    sys_tstrcpy (pResult->path, url);
+    
 #ifdef WIN32
-	// Start the file loader thread
-	HANDLE hThread = ::CreateThread (NULL, 
-									0/*default stack size*/, 
-									LoadFileScriptSourceAsync, 
-									(LPVOID)pResult, 
-									0/*creation flags*/, 
-									NULL);
-	if (hThread == NULL) {
-		return false; // failed to start the background thread
-	}
+    // Start the file loader thread
+    HANDLE hThread = ::CreateThread (NULL, 
+                                    0/*default stack size*/, 
+                                    LoadFileScriptSourceAsync, 
+                                    (LPVOID)pResult, 
+                                    0/*creation flags*/, 
+                                    NULL);
+    if (hThread == NULL) {
+        return false; // failed to start the background thread
+    }
 #else
-	// #TODO: create thread on non Win32 paltforms
+    // #TODO: create thread on non Win32 paltforms
 #endif
 
-	// thread was successfully started that will return the script 
-	// source using the callback
-	return true;
+    // thread was successfully started that will return the script 
+    // source using the callback
+    return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -128,63 +128,63 @@ bool ScriptFileSourceLoader::LoadScriptSource (const sys_tchar *url, const ASYNC
 ///////////////////////////////////////////////////////////////////////////////
 //
 static sys_wchar *LoadFileScriptSourceSync (const sys_tchar *path) {
-	ASSERT(path);
+    ASSERT(path);
 
-	// open the script file
-	FILE *fp = ::_tfopen (path, _tx("rb"));
-	if (fp == NULL) {
-		return NULL;
-	}
+    // open the script file
+    FILE *fp = ::_tfopen (path, _tx("rb"));
+    if (fp == NULL) {
+        return NULL;
+    }
 
-	// get file length
-	long file_size = getfilelength ( getfileno(fp) );
+    // get file length
+    long file_size = getfilelength ( getfileno(fp) );
 
-	// file buffer 
-	char *ascii_buffer;
-	if (file_size == 0)  {
-		ascii_buffer = new char [1];
-	} else {
-		// allocate buffer to read the file contents
-		ascii_buffer = new char [file_size + 1];
-	}
-	if (ascii_buffer == NULL) {
-		// failed to allocate memory for the file buffer
-		fclose (fp);
-		return NULL;
-	}
+    // file buffer 
+    char *ascii_buffer;
+    if (file_size == 0)  {
+        ascii_buffer = new char [1];
+    } else {
+        // allocate buffer to read the file contents
+        ascii_buffer = new char [file_size + 1];
+    }
+    if (ascii_buffer == NULL) {
+        // failed to allocate memory for the file buffer
+        fclose (fp);
+        return NULL;
+    }
 
-	// read script file content into the ascii buffer
-	if (file_size == 0)  {
-		ascii_buffer [0] = '\0';
-	} else {
-		// read file contents
-		fread (ascii_buffer, file_size, 1, fp);
-		ascii_buffer [file_size] = '\0';
-	}
+    // read script file content into the ascii buffer
+    if (file_size == 0)  {
+        ascii_buffer [0] = '\0';
+    } else {
+        // read file contents
+        fread (ascii_buffer, file_size, 1, fp);
+        ascii_buffer [file_size] = '\0';
+    }
 
-	// close the file when done
-	fclose (fp);
+    // close the file when done
+    fclose (fp);
 
-	// convert ascii script to wide string format
-	wchar_t *wstr_buff = NULL;
-	if (ascii_buffer) {
-		// allocate buffer for wide string
-		wstr_buff = new wchar_t [file_size + 1];
-		if (wstr_buff == NULL) {
-			delete ascii_buffer;
-			return NULL;
-		}
-		// convert ascii to wide string
-		size_t dummy;
-		::mbstowcs_s (&dummy, wstr_buff, file_size + 1, 
-						reinterpret_cast<const char *>(ascii_buffer), 
-						file_size);
-		// delete the ascii buffer when done
-		delete ascii_buffer;
-	}
+    // convert ascii script to wide string format
+    wchar_t *wstr_buff = NULL;
+    if (ascii_buffer) {
+        // allocate buffer for wide string
+        wstr_buff = new wchar_t [file_size + 1];
+        if (wstr_buff == NULL) {
+            delete ascii_buffer;
+            return NULL;
+        }
+        // convert ascii to wide string
+        size_t dummy;
+        ::mbstowcs_s (&dummy, wstr_buff, file_size + 1, 
+                        reinterpret_cast<const char *>(ascii_buffer), 
+                        file_size);
+        // delete the ascii buffer when done
+        delete ascii_buffer;
+    }
 
-	// return the script source
-	return wstr_buff;
+    // return the script source
+    return wstr_buff;
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -193,26 +193,26 @@ static sys_wchar *LoadFileScriptSourceSync (const sys_tchar *path) {
 ///////////////////////////////////////////////////////////////////////////////
 //
 static DWORD WINAPI LoadFileScriptSourceAsync (LPVOID param) {
-	DWORD ret;
-	// retrieve the asynch result
-	FILE_SOURCE_LOADER_RESULT *asynch_result;
-	asynch_result = reinterpret_cast<FILE_SOURCE_LOADER_RESULT*>(param);
+    DWORD ret;
+    // retrieve the asynch result
+    FILE_SOURCE_LOADER_RESULT *asynch_result;
+    asynch_result = reinterpret_cast<FILE_SOURCE_LOADER_RESULT*>(param);
 
-	// load the script source using synchronous loader function
-	wchar_t *wstr_buff = LoadFileScriptSourceSync (asynch_result->path);
-	if (wstr_buff == NULL) {
-		asynch_result->status = 0;
-		asynch_result->data = NULL;
-		ret = -1;
-	} else {
-		asynch_result->status = 1;
-		asynch_result->data = wstr_buff;		
-		ret = 0;
-	}	
-	
-	// post the asynch result and return
-	asynch_post_result (asynch_result);
-	return ret;
+    // load the script source using synchronous loader function
+    wchar_t *wstr_buff = LoadFileScriptSourceSync (asynch_result->path);
+    if (wstr_buff == NULL) {
+        asynch_result->status = 0;
+        asynch_result->data = NULL;
+        ret = -1;
+    } else {
+        asynch_result->status = 1;
+        asynch_result->data = wstr_buff;        
+        ret = 0;
+    }   
+    
+    // post the asynch result and return
+    asynch_post_result (asynch_result);
+    return ret;
 }
 ///////////////////////////////////////////////////////////////////////////////
 #endif

@@ -39,85 +39,85 @@ GLSExtensionLib::~GLSExtensionLib () {
 /* _GLScript_ExtLib implementation */
 
 HRESULT STDMETHODCALLTYPE GLSExtensionLib::get_name (BSTR *pValue) {
-	*pValue = ::SysAllocString (L"img");
-	return NOERROR;
+    *pValue = ::SysAllocString (L"img");
+    return NOERROR;
 }
 
 HRESULT STDMETHODCALLTYPE GLSExtensionLib::get_version (short *pValue) {
-	*pValue = GLS_VERSION_MAKE_SHORT(GLS_IMG_LIB_VER_MAJ,GLS_IMG_LIB_VER_MIN);
-	return NOERROR;
+    *pValue = GLS_VERSION_MAKE_SHORT(GLS_IMG_LIB_VER_MAJ,GLS_IMG_LIB_VER_MIN);
+    return NOERROR;
 }
 
 /* _GLSExtensionLib implementation */
 
 HRESULT STDMETHODCALLTYPE GLSExtensionLib::load (BSTR path, _Image **image) {
-	HRESULT hr;
-	
-	hr = GLS_IMG_Image_Factory.CreateInstance (NULL, IID__Image, (LPVOID *)image);
+    HRESULT hr;
+    
+    hr = GLS_IMG_Image_Factory.CreateInstance (NULL, IID__Image, (LPVOID *)image);
 
-	if (SUCCEEDED(hr)) {
-		GLS_IMG_Image *image_obj = reinterpret_cast<GLS_IMG_Image *>(*image);
+    if (SUCCEEDED(hr)) {
+        GLS_IMG_Image *image_obj = reinterpret_cast<GLS_IMG_Image *>(*image);
 
-		UINT length = ::SysStringLen(path);
-		char *szmbs_path = new char [ length + 1];
-		::wcstombs (szmbs_path, path, length);
-		szmbs_path [length] = '\0';
+        UINT length = ::SysStringLen(path);
+        char *szmbs_path = new char [ length + 1];
+        ::wcstombs (szmbs_path, path, length);
+        szmbs_path [length] = '\0';
 
-		// initialize the model from the model file. On failure, free the object.
-		if (!image_obj->_Init (szmbs_path)) {
-			(*image)->Release ();
-			*image = NULL;
-			hr = E_FAIL;
-		}
+        // initialize the model from the model file. On failure, free the object.
+        if (!image_obj->_Init (szmbs_path)) {
+            (*image)->Release ();
+            *image = NULL;
+            hr = E_FAIL;
+        }
 
-		delete szmbs_path;
-	}
+        delete szmbs_path;
+    }
 
-	return hr;
+    return hr;
 }
 
 HRESULT STDMETHODCALLTYPE GLSExtensionLib::loadTexture (BSTR path, long *texid) {
-	UINT length = ::SysStringLen(path);
-	char *szmbs_path = new char [length + 1];
-	::wcstombs (szmbs_path, path, length);
-	szmbs_path [length] = '\0';
+    UINT length = ::SysStringLen(path);
+    char *szmbs_path = new char [length + 1];
+    ::wcstombs (szmbs_path, path, length);
+    szmbs_path [length] = '\0';
 
-	GLuint textid = SOIL_load_OGL_texture (
-		szmbs_path,
-		SOIL_LOAD_AUTO,
-		SOIL_CREATE_NEW_ID,
-		SOIL_FLAG_MIPMAPS | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
-	);
-	
-	delete szmbs_path;
+    GLuint textid = SOIL_load_OGL_texture (
+        szmbs_path,
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_MIPMAPS | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT
+    );
+    
+    delete szmbs_path;
 
-	/* check for an error during the load process */
-	if( 0 == textid ) {
-		printf ( "SOIL loading error: '%s'\n", SOIL_last_result() );
-		return E_FAIL;
-	}
+    /* check for an error during the load process */
+    if( 0 == textid ) {
+        printf ( "SOIL loading error: '%s'\n", SOIL_last_result() );
+        return E_FAIL;
+    }
 
-	*texid = (long)texid;
+    *texid = (long)texid;
 
-	return NOERROR;	
+    return NOERROR; 
 }
 
 HRESULT STDMETHODCALLTYPE GLSExtensionLib::freeTexture (long texid) {
-	GLuint textid = (GLuint)texid;
+    GLuint textid = (GLuint)texid;
 
-	::glDeleteTextures (1, &textid);
+    ::glDeleteTextures (1, &textid);
 
-	return NOERROR;
+    return NOERROR;
 }
 
 /* externs */
 const IID *_GLSExtensionLib_IIDs[] = 
 {
-	&IID_IUnknown,
-	&IID_IDispatch,
-	&IID__GLScriptExtLib,
-	&IID__GLS_IMG_Lib,
-	NULL
+    &IID_IUnknown,
+    &IID_IDispatch,
+    &IID__GLScriptExtLib,
+    &IID__GLS_IMG_Lib,
+    NULL
 };
 
 ClassFactory<GLSExtensionLib> GLSExtensionLib_Factory;

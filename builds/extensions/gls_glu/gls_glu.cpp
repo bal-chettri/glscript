@@ -34,11 +34,11 @@ DWORD _comObjCount;
 // GLSExtensionLife Life time management
 //
 GLSExtensionLife::GLSExtensionLife () {
-	_tlsIndex = ::TlsAlloc ();
+    _tlsIndex = ::TlsAlloc ();
 }
 
 GLSExtensionLife::~GLSExtensionLife () {
-	::TlsFree (_tlsIndex);
+    ::TlsFree (_tlsIndex);
 }
 
 //
@@ -47,57 +47,57 @@ GLSExtensionLife::~GLSExtensionLife () {
 
 // gls_extension_initialize. Initializes the extension.
 GLS_EXTENSION_API bool GLS_API_CALL gls_extension_initialize (gls::ExtensionHost *pExtensionHost) {
-	// Allocate and initialize thread specific data
-	GLS_EXT_DATA *pData = new GLS_EXT_DATA ();
-	if (!pData) {
-		return false;
-	}
-	pData->pExtensionHost = pExtensionHost;
-	pData->pExtension = NULL;
+    // Allocate and initialize thread specific data
+    GLS_EXT_DATA *pData = new GLS_EXT_DATA ();
+    if (!pData) {
+        return false;
+    }
+    pData->pExtensionHost = pExtensionHost;
+    pData->pExtension = NULL;
 
-	// Save thread specific data in the TLS
-	::TlsSetValue (_tlsIndex, (LPVOID)pData);
+    // Save thread specific data in the TLS
+    ::TlsSetValue (_tlsIndex, (LPVOID)pData);
 
-	return true;
+    return true;
 }
 
 // gls_extension_get_interface. Returns the extension interface
 GLS_EXTENSION_API gls::Extension *GLS_API_CALL gls_extension_get_interface () {
-	LPVOID pVoid = ::TlsGetValue (_tlsIndex);
+    LPVOID pVoid = ::TlsGetValue (_tlsIndex);
 
-	GLS_EXT_DATA *pData = reinterpret_cast<GLS_EXT_DATA *>(pVoid);
+    GLS_EXT_DATA *pData = reinterpret_cast<GLS_EXT_DATA *>(pVoid);
 
-	if (pData->pExtension == NULL) {
-		pData->pExtension = new GLSExtensionImp (pData->pExtensionHost);
-	}
+    if (pData->pExtension == NULL) {
+        pData->pExtension = new GLSExtensionImp (pData->pExtensionHost);
+    }
 
-	return pData->pExtension;
+    return pData->pExtension;
 }
 
 // gls_extension_terminate. Terminates the extension
 GLS_EXTENSION_API void GLS_API_CALL gls_extension_terminate (void) {
 
-	LPVOID pVoid = ::TlsGetValue (_tlsIndex);
+    LPVOID pVoid = ::TlsGetValue (_tlsIndex);
 
-	GLS_EXT_DATA *pData = reinterpret_cast<GLS_EXT_DATA *>(pVoid);
+    GLS_EXT_DATA *pData = reinterpret_cast<GLS_EXT_DATA *>(pVoid);
 
-	if (pData->pExtension) {
-		delete pData->pExtension;
-	}
+    if (pData->pExtension) {
+        delete pData->pExtension;
+    }
 
-	if (pData) {
-		delete  pData;
-	}
+    if (pData) {
+        delete  pData;
+    }
 
-	::TlsSetValue (_tlsIndex, NULL);
+    ::TlsSetValue (_tlsIndex, NULL);
 }
 
 // DLLMain. Defines the DLL Entry point
 BOOL WINAPI DllMain (HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
-	if (fdwReason == DLL_PROCESS_ATTACH) {
-		_hAppInstance = hinstDLL;
-	}
+    if (fdwReason == DLL_PROCESS_ATTACH) {
+        _hAppInstance = hinstDLL;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 

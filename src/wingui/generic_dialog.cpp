@@ -27,116 +27,116 @@
 extern HINSTANCE _hAppInstance;
 
 GenericDialog::GenericDialog (int resourceId) {
-	m_resourceId = resourceId;
-	m_flagModal = FALSE;
-	m_pParent = NULL;
+    m_resourceId = resourceId;
+    m_flagModal = FALSE;
+    m_pParent = NULL;
 
-	GenericWindow::m_isDialog = TRUE;
+    GenericWindow::m_isDialog = TRUE;
 }
 
 INT_PTR GenericDialog::ShowModal (GenericWindow *pParent) {
-	m_flagModal = TRUE;
-	m_pParent = pParent;
+    m_flagModal = TRUE;
+    m_pParent = pParent;
 
-	return ::DialogBoxParam (_hAppInstance, MAKEINTRESOURCE(m_resourceId),
-								pParent ? pParent->GetHandle() : NULL,
-								(DLGPROC)GenericWindow::_dlgProc, 
-								(LPARAM) this );	
+    return ::DialogBoxParam (_hAppInstance, MAKEINTRESOURCE(m_resourceId),
+                                pParent ? pParent->GetHandle() : NULL,
+                                (DLGPROC)GenericWindow::_dlgProc, 
+                                (LPARAM) this );    
 }
 
 void GenericDialog::ShowModalLess (GenericWindow *pParent)
 {
-	if (!m_hWnd) {
-		m_flagModal = FALSE;
-		m_pParent = pParent;
-		::CreateDialogParam ( _hAppInstance, MAKEINTRESOURCE(m_resourceId),
-									pParent ? pParent->GetHandle() : NULL, 
-									(DLGPROC)_dlgProc, (LPARAM) this );
-	}
+    if (!m_hWnd) {
+        m_flagModal = FALSE;
+        m_pParent = pParent;
+        ::CreateDialogParam ( _hAppInstance, MAKEINTRESOURCE(m_resourceId),
+                                    pParent ? pParent->GetHandle() : NULL, 
+                                    (DLGPROC)_dlgProc, (LPARAM) this );
+    }
 }
 
 void GenericDialog::CloseDialog (INT_PTR result) {
-	if (IsModal()) {
-		::EndDialog (m_hWnd, result);
-	} else {
-		::DestroyWindow (m_hWnd);
-	}
+    if (IsModal()) {
+        ::EndDialog (m_hWnd, result);
+    } else {
+        ::DestroyWindow (m_hWnd);
+    }
 }
 
 void GenericDialog::SetControlText (int id, LPCTSTR lpszText) {
-	WINGUI_ASSERT (
-		::SetDlgItemText (m_hWnd, id, lpszText)
-		);
+    WINGUI_ASSERT (
+        ::SetDlgItemText (m_hWnd, id, lpszText)
+        );
 }
 
 void GenericDialog::GetControlText (int id, LPTSTR lpszBuff, int maxLength) {
-	WINGUI_ASSERT (
-		GetDlgItemText (m_hWnd, id, lpszBuff, maxLength)
-		);
+    WINGUI_ASSERT (
+        GetDlgItemText (m_hWnd, id, lpszBuff, maxLength)
+        );
 }
 
 void GenericDialog::CenterDialog () {
-	HWND m_hWndDlg = m_hWnd;
-	HWND hWndParent = NULL;
+    HWND m_hWndDlg = m_hWnd;
+    HWND hWndParent = NULL;
 
-	if (m_pParent) hWndParent = m_pParent->GetHandle();
-	if (!hWndParent) hWndParent = ::GetDesktopWindow ();
+    if (m_pParent) hWndParent = m_pParent->GetHandle();
+    if (!hWndParent) hWndParent = ::GetDesktopWindow ();
 
-	if (hWndParent) {
-		RECT rectDlg, rectParent;
-		::GetWindowRect ( m_hWndDlg, &rectDlg );
-		::GetWindowRect ( hWndParent, &rectParent );
+    if (hWndParent) {
+        RECT rectDlg, rectParent;
+        ::GetWindowRect ( m_hWndDlg, &rectDlg );
+        ::GetWindowRect ( hWndParent, &rectParent );
 
-		POINT offset = {
-			rectParent.left + (rectParent.right - rectParent.left) / 2 - (rectDlg.right - rectDlg.left) / 2,
-			rectParent.top + (rectParent.bottom - rectParent.top) / 2 - (rectDlg.bottom - rectDlg.top) / 2
-		};
+        POINT offset = {
+            rectParent.left + (rectParent.right - rectParent.left) / 2 - (rectDlg.right - rectDlg.left) / 2,
+            rectParent.top + (rectParent.bottom - rectParent.top) / 2 - (rectDlg.bottom - rectDlg.top) / 2
+        };
 
-		::MoveWindow (m_hWndDlg, offset.x, offset.y, rectDlg.right - rectDlg.left,
-						rectDlg.bottom - rectDlg.top, 
-						IsWindowVisible(m_hWndDlg) );
-	}
+        ::MoveWindow (m_hWndDlg, offset.x, offset.y, rectDlg.right - rectDlg.left,
+                        rectDlg.bottom - rectDlg.top, 
+                        IsWindowVisible(m_hWndDlg) );
+    }
 }
 
 INT_PTR GenericDialog::HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam) {
-	switch (msg) {
-	case WM_INITDIALOG:
-		return OnInitDialog ();
+    switch (msg) {
+    case WM_INITDIALOG:
+        return OnInitDialog ();
 
-	default:
-		return GenericWindow::HandleDialogMessage (msg, wParam, lParam);
-	}
+    default:
+        return GenericWindow::HandleDialogMessage (msg, wParam, lParam);
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 /* message handlers */
 
 void GenericDialog::OnCommand (int cmdId) {
-	if (cmdId == IDOK)
-		OnOkButton ();
-	else if (cmdId == IDCANCEL)
-		OnCancelButton ();
-	else
-		GenericWindow::OnCommand (cmdId);
+    if (cmdId == IDOK)
+        OnOkButton ();
+    else if (cmdId == IDCANCEL)
+        OnCancelButton ();
+    else
+        GenericWindow::OnCommand (cmdId);
 }
 
 INT_PTR GenericDialog::OnInitDialog () {
-	// Set WS_EX_LAYERED on this window 
-	/*SetWindowLong(m_hWnd, 
+    // Set WS_EX_LAYERED on this window 
+    /*SetWindowLong(m_hWnd, 
               GWL_EXSTYLE, 
               GetWindowLong(m_hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
 
-	// Make this window 70% alpha
-	SetLayeredWindowAttributes(m_hWnd, 0, (255 * 50) / 100, LWA_ALPHA);
-	*/
+    // Make this window 70% alpha
+    SetLayeredWindowAttributes(m_hWnd, 0, (255 * 50) / 100, LWA_ALPHA);
+    */
 
-	CenterDialog ();
+    CenterDialog ();
 
-	if (!IsModal () && !::IsWindowVisible(m_hWnd)) {
-		::ShowWindow (m_hWnd, SW_SHOW);
-		::UpdateWindow (m_hWnd);
-	}
+    if (!IsModal () && !::IsWindowVisible(m_hWnd)) {
+        ::ShowWindow (m_hWnd, SW_SHOW);
+        ::UpdateWindow (m_hWnd);
+    }
 
-	return TRUE;
+    return TRUE;
 }

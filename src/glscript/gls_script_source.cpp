@@ -30,9 +30,9 @@ using namespace gls;
 ///////////////////////////////////////////////////////////////////////////////
 //
 ScriptSource::ScriptSource ( const sys_tchar *base_url, 
-								const sys_tchar *filename, 
-								const sys_wchar *code, size_t code_length,
-								bool auto_free_code /*= true*/ ) 
+                                const sys_tchar *filename, 
+                                const sys_wchar *code, size_t code_length,
+                                bool auto_free_code /*= true*/ ) 
 : m_str_base_url(base_url),
   m_str_file_name(filename),
   m_wstr_code(code),
@@ -46,9 +46,9 @@ ScriptSource::ScriptSource ( const sys_tchar *base_url,
 ///////////////////////////////////////////////////////////////////////////////
 //
 ScriptSource::~ScriptSource () {
-	if (m_auto_free_code) {
-		delete m_wstr_code;
-	}
+    if (m_auto_free_code) {
+        delete m_wstr_code;
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -56,13 +56,13 @@ ScriptSource::~ScriptSource () {
 ///////////////////////////////////////////////////////////////////////////////
 //
 const tstring ScriptSource::GetFileExtensionName () const {
-	// check for the script file extension
-	size_t npos = m_str_file_name.find (_tx("."));
-	if (npos < 0) {
-		return tstring(_tx(""));
-	}
+    // check for the script file extension
+    size_t npos = m_str_file_name.find (_tx("."));
+    if (npos < 0) {
+        return tstring(_tx(""));
+    }
 
-	const tstring ret = m_str_file_name.substr (npos + 1);	
-	return ret;
+    const tstring ret = m_str_file_name.substr (npos + 1);  
+    return ret;
 }
 ///////////////////////////////////////////////////////////////////////////////

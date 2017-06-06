@@ -42,157 +42,157 @@ using namespace gls;
 
 // define gls extension name prefix
 #if defined(WIN32)
-	#define EXT_MOD_NAME_PREFIX				"gls_"
+    #define EXT_MOD_NAME_PREFIX             "gls_"
 #else
-	#define EXT_MOD_NAME_PREFIX				"lib"
+    #define EXT_MOD_NAME_PREFIX             "lib"
 #endif
 
 // define extension name for gls extension modules
 #if defined(WIN32)
-	#define EXT_MOD_EXT_NAME				"dll"
+    #define EXT_MOD_EXT_NAME                "dll"
 #else
-	#define EXT_MOD_EXT_NAME				"so"
+    #define EXT_MOD_EXT_NAME                "so"
 #endif
 
 // Define extension specific macros
 #if defined(WIN32)
-	#define EXT_LOAD(N)				::LoadLibraryA(libPath);
+    #define EXT_LOAD(N)             ::LoadLibraryA(libPath);
 #else
-	#define EXT_LOAD(N)				NULL
+    #define EXT_LOAD(N)             NULL
 #endif
 
 #if defined(WIN32)
-	#define EXT_UNLOAD(M)			::FreeLibrary(M)
+    #define EXT_UNLOAD(M)           ::FreeLibrary(M)
 #else
-	#define EXT_UNLOAD(M)			
+    #define EXT_UNLOAD(M)           
 #endif
 
 // Returns entry point of function in the extension module
 #if defined(WIN32)
-	#define EXT_ENTRY_POINT(M,P,N)	P = (pfn_##N)::GetProcAddress(M, #N)
+    #define EXT_ENTRY_POINT(M,P,N)  P = (pfn_##N)::GetProcAddress(M, #N)
 #else
-	#define EXT_ENTRY_POINT(P,N)	P = NULL
+    #define EXT_ENTRY_POINT(P,N)    P = NULL
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
 // loads a gls extension. #TODO: Robust name to path resolution.
 GLS_EXTENSION_MODULE *gls::gls_extension_load (
-												const char *name, 
-												unsigned long req_options, 
-												ExtensionHost *pHost
-												) 
+                                                const char *name, 
+                                                unsigned long req_options, 
+                                                ExtensionHost *pHost
+                                                ) 
 {
-	// validate name
-	size_t lenName = strlen(name);
-	if (lenName == 0 || lenName > GLS_EXTENSION_MAX_PATH_LEN) {
-		return NULL;
-	}
+    // validate name
+    size_t lenName = strlen(name);
+    if (lenName == 0 || lenName > GLS_EXTENSION_MAX_PATH_LEN) {
+        return NULL;
+    }
 
-	// make lib path; keep enough space for path expanding {
-	// char libPath [GLS_EXTENSION_MAX_LIB_NAME_LEN + 50];
-	char libPath [MAX_PATH];
+    // make lib path; keep enough space for path expanding {
+    // char libPath [GLS_EXTENSION_MAX_LIB_NAME_LEN + 50];
+    char libPath [MAX_PATH];
 #ifdef GLS_EXTENSION_LOAD_TREAT_NAME_AS_PATH
-	strcpy (libPath, name);
+    strcpy (libPath, name);
 #else
-	sprintf (libPath, "extensions\\%s%s.%s", 
-			EXT_MOD_NAME_PREFIX, name, EXT_MOD_EXT_NAME
-			);
+    sprintf (libPath, "extensions\\%s%s.%s", 
+            EXT_MOD_NAME_PREFIX, name, EXT_MOD_EXT_NAME
+            );
 #endif
-	// } make lib path
+    // } make lib path
 
-	// load the extension module	
+    // load the extension module    
 #ifdef WIN32
-	HMODULE hExtMod = EXT_LOAD(libPath);
+    HMODULE hExtMod = EXT_LOAD(libPath);
 #else
-	void *hExtMod = NULL;
+    void *hExtMod = NULL;
 #endif
 
-	if (hExtMod == NULL) {
-		return NULL; // failed to load the module
-	}
+    if (hExtMod == NULL) {
+        return NULL; // failed to load the module
+    }
 
-	// get extension module entry points
-	pfn_gls_extension_initialize		pfn_ext_init;
-	pfn_gls_extension_terminate			pfn_ext_term;
-	pfn_gls_extension_get_interface		pfn_ext_get_int;	
+    // get extension module entry points
+    pfn_gls_extension_initialize        pfn_ext_init;
+    pfn_gls_extension_terminate         pfn_ext_term;
+    pfn_gls_extension_get_interface     pfn_ext_get_int;    
 
-	EXT_ENTRY_POINT (hExtMod, pfn_ext_init, gls_extension_initialize);
-	EXT_ENTRY_POINT (hExtMod, pfn_ext_term, gls_extension_terminate);
-	EXT_ENTRY_POINT (hExtMod, pfn_ext_get_int, gls_extension_get_interface);
+    EXT_ENTRY_POINT (hExtMod, pfn_ext_init, gls_extension_initialize);
+    EXT_ENTRY_POINT (hExtMod, pfn_ext_term, gls_extension_terminate);
+    EXT_ENTRY_POINT (hExtMod, pfn_ext_get_int, gls_extension_get_interface);
 
-	// check for missing exports
-	if (!pfn_ext_init || !pfn_ext_term || !pfn_ext_get_int) {
-		EXT_UNLOAD(hExtMod);
-		return NULL;
-	}
+    // check for missing exports
+    if (!pfn_ext_init || !pfn_ext_term || !pfn_ext_get_int) {
+        EXT_UNLOAD(hExtMod);
+        return NULL;
+    }
 
-	// try to initialize the extension
-	if (!pfn_ext_init (pHost)) {
-		EXT_UNLOAD(hExtMod);
-		return NULL; // failed to initialize the extension
-	}
+    // try to initialize the extension
+    if (!pfn_ext_init (pHost)) {
+        EXT_UNLOAD(hExtMod);
+        return NULL; // failed to initialize the extension
+    }
 
-	// get the extension interface and query extension capabilities
-	Extension *pExtension = pfn_ext_get_int ();
-	if (pExtension == NULL) {
-		EXT_UNLOAD(hExtMod);
-		return NULL;
-	}
-	
-	// get extension's interface version
-	unsigned short ext_int_ver = pExtension->GetInterfaceVersion ();
-	unsigned char ext_int_ver_maj, ext_int_ver_min;
-	ext_int_ver_maj = GLS_VERSION_GET_MAJOR(ext_int_ver);
-	ext_int_ver_min = GLS_VERSION_GET_MINOR(ext_int_ver);
+    // get the extension interface and query extension capabilities
+    Extension *pExtension = pfn_ext_get_int ();
+    if (pExtension == NULL) {
+        EXT_UNLOAD(hExtMod);
+        return NULL;
+    }
+    
+    // get extension's interface version
+    unsigned short ext_int_ver = pExtension->GetInterfaceVersion ();
+    unsigned char ext_int_ver_maj, ext_int_ver_min;
+    ext_int_ver_maj = GLS_VERSION_GET_MAJOR(ext_int_ver);
+    ext_int_ver_min = GLS_VERSION_GET_MINOR(ext_int_ver);
 
-	// check for minimum interface version; extension's interface version
-	// must be atleast equal to the required interface version
-	unsigned char req_int_ver_maj, req_int_ver_min;
-	req_int_ver_maj = 0;
-	req_int_ver_min = 1;
-	if ( (ext_int_ver_maj < req_int_ver_maj) ||
-		 (ext_int_ver_maj == req_int_ver_maj && ext_int_ver_min < req_int_ver_min)
-		 ) {
-		EXT_UNLOAD(hExtMod); // extension interface version is lower than required
-		return NULL;
-	}
+    // check for minimum interface version; extension's interface version
+    // must be atleast equal to the required interface version
+    unsigned char req_int_ver_maj, req_int_ver_min;
+    req_int_ver_maj = 0;
+    req_int_ver_min = 1;
+    if ( (ext_int_ver_maj < req_int_ver_maj) ||
+         (ext_int_ver_maj == req_int_ver_maj && ext_int_ver_min < req_int_ver_min)
+         ) {
+        EXT_UNLOAD(hExtMod); // extension interface version is lower than required
+        return NULL;
+    }
 
-	// query extension capabilities
-	unsigned long capabilities = pExtension->GetCapabilities ();
-	if ( (capabilities & req_options) != req_options ) {
-		EXT_UNLOAD(hExtMod); // one or more capability not supported
-		return NULL;
-	}
+    // query extension capabilities
+    unsigned long capabilities = pExtension->GetCapabilities ();
+    if ( (capabilities & req_options) != req_options ) {
+        EXT_UNLOAD(hExtMod); // one or more capability not supported
+        return NULL;
+    }
 
-	// query lib features
-	GLS_EXTENSION_LIB_INFO libInfo;
-	void *pLibInterface;
-	if (req_options & GLS_EXTENSION_LIBRARY) {
-		pExtension->GetLibInfo (&libInfo);
-		pLibInterface = pExtension->GetLibInterface ();
-		if (pLibInterface == NULL) {
-			EXT_UNLOAD(hExtMod); // library interface not returned
-			return NULL;
-		}
-	}
+    // query lib features
+    GLS_EXTENSION_LIB_INFO libInfo;
+    void *pLibInterface;
+    if (req_options & GLS_EXTENSION_LIBRARY) {
+        pExtension->GetLibInfo (&libInfo);
+        pLibInterface = pExtension->GetLibInterface ();
+        if (pLibInterface == NULL) {
+            EXT_UNLOAD(hExtMod); // library interface not returned
+            return NULL;
+        }
+    }
 
-	// alloc a new extension module instance and return it
-	GLS_EXTENSION_MODULE *pExtMod = new GLS_EXTENSION_MODULE ();
-	memset (pExtMod, 0, sizeof(GLS_EXTENSION_MODULE));
+    // alloc a new extension module instance and return it
+    GLS_EXTENSION_MODULE *pExtMod = new GLS_EXTENSION_MODULE ();
+    memset (pExtMod, 0, sizeof(GLS_EXTENSION_MODULE));
 
-	strcpy ( pExtMod->path, name );
-	pExtMod->interfaceVersion = ext_int_ver;
-	pExtMod->capabilities = capabilities;
-	pExtMod->hModule = (void *)hExtMod;
-	pExtMod->pExtInterface = pExtension;
+    strcpy ( pExtMod->path, name );
+    pExtMod->interfaceVersion = ext_int_ver;
+    pExtMod->capabilities = capabilities;
+    pExtMod->hModule = (void *)hExtMod;
+    pExtMod->pExtInterface = pExtension;
 
-	if (req_options & GLS_EXTENSION_LIBRARY) {
-		memcpy (&pExtMod->libInfo, &libInfo, sizeof(GLS_EXTENSION_LIB_INFO));
-		// pExtMod->pLibInterface = reinterpret_cast<_GLScriptExtLib *> (pLibInterface);
-		pExtMod->pLibInterface = pLibInterface;
-	}
+    if (req_options & GLS_EXTENSION_LIBRARY) {
+        memcpy (&pExtMod->libInfo, &libInfo, sizeof(GLS_EXTENSION_LIB_INFO));
+        // pExtMod->pLibInterface = reinterpret_cast<_GLScriptExtLib *> (pLibInterface);
+        pExtMod->pLibInterface = pLibInterface;
+    }
 
-	return pExtMod;
+    return pExtMod;
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -200,26 +200,26 @@ GLS_EXTENSION_MODULE *gls::gls_extension_load (
 /////////////////////////////////////////////////////////////////////////////////
 // unloads a gls extension
 void gls::gls_extension_unload (GLS_EXTENSION_MODULE *pExtMod) {
-	// Relese Library interface if requried
-	if (pExtMod->pLibInterface != NULL) {
+    // Relese Library interface if requried
+    if (pExtMod->pLibInterface != NULL) {
 #ifdef WIN32
-		reinterpret_cast<_GLScriptExtLib *>(pExtMod->pLibInterface)->Release ();
+        reinterpret_cast<_GLScriptExtLib *>(pExtMod->pLibInterface)->Release ();
 #endif
-	}
+    }
 
-	HMODULE hExtMod = (HMODULE)pExtMod->hModule;
+    HMODULE hExtMod = (HMODULE)pExtMod->hModule;
 
-	// pExtMod->pExtInterface has no reference management and need not be released.
+    // pExtMod->pExtInterface has no reference management and need not be released.
 
-	// tell the extension to terminate
-	pfn_gls_extension_terminate pfn_ext_term;
-	EXT_ENTRY_POINT (hExtMod, pfn_ext_term, gls_extension_terminate);
-	pfn_ext_term ();
+    // tell the extension to terminate
+    pfn_gls_extension_terminate pfn_ext_term;
+    EXT_ENTRY_POINT (hExtMod, pfn_ext_term, gls_extension_terminate);
+    pfn_ext_term ();
 
-	// free the extension module
-	EXT_UNLOAD(hExtMod);
+    // free the extension module
+    EXT_UNLOAD(hExtMod);
 
-	// delete module instance
-	delete pExtMod;
+    // delete module instance
+    delete pExtMod;
 }
 ///////////////////////////////////////////////////////////////////////////////

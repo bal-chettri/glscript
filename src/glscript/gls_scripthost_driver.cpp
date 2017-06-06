@@ -32,7 +32,7 @@ using namespace gls;
 ///////////////////////////////////////////////////////////////////////////////
 //
 ScriptHostDriver::ScriptHostDriver () {
-	m_pGLScriptHost = NULL;
+    m_pGLScriptHost = NULL;
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -41,17 +41,17 @@ ScriptHostDriver::ScriptHostDriver () {
 //
 ScriptHostDriver::~ScriptHostDriver () {
 #if defined(WIN32)
-	if (m_pGLScriptHost) {
-		
-		// #NOTE: reinterpret_cast to GLScriptHost_Win32 does not map to correct vtable,
-		// but C cast do
-		// GLScriptHost_Win32 *pScriptHostWin32 = reinterpret_cast<GLScriptHost_Win32 *>(m_pGLScriptHost);
+    if (m_pGLScriptHost) {
+        
+        // #NOTE: reinterpret_cast to GLScriptHost_Win32 does not map to correct vtable,
+        // but C cast do
+        // GLScriptHost_Win32 *pScriptHostWin32 = reinterpret_cast<GLScriptHost_Win32 *>(m_pGLScriptHost);
 
-		GLScriptHost_Win32 *pScriptHostWin32 = (GLScriptHost_Win32 *)m_pGLScriptHost;
-		pScriptHostWin32->Release ();
-	}
+        GLScriptHost_Win32 *pScriptHostWin32 = (GLScriptHost_Win32 *)m_pGLScriptHost;
+        pScriptHostWin32->Release ();
+    }
 #else
-	// #TODO: cleanup script host on other platforms
+    // #TODO: cleanup script host on other platforms
 #endif
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,11 +60,11 @@ ScriptHostDriver::~ScriptHostDriver () {
 ///////////////////////////////////////////////////////////////////////////////
 //
 ScriptHost *ScriptHostDriver::GetScriptHost () {
-	if (!m_pGLScriptHost) {
-		LoadScriptHost ();
-	}
+    if (!m_pGLScriptHost) {
+        LoadScriptHost ();
+    }
 
-	return m_pGLScriptHost;
+    return m_pGLScriptHost;
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -73,20 +73,20 @@ ScriptHost *ScriptHostDriver::GetScriptHost () {
 //
 bool ScriptHostDriver::LoadScriptHost () {
 #if defined(WIN32)
-	HRESULT hr;
-	GLScriptHost_Win32 *pScriptHostWin32;
-	hr = GLScriptHost_Win32_Factory.CreateInstance (
-			NULL, 
-			IID_IUnknown, 
-			(LPVOID *)&pScriptHostWin32
-			);
-	if (SUCCEEDED(hr)) {
-		m_pGLScriptHost = pScriptHostWin32;
-	}
+    HRESULT hr;
+    GLScriptHost_Win32 *pScriptHostWin32;
+    hr = GLScriptHost_Win32_Factory.CreateInstance (
+            NULL, 
+            IID_IUnknown, 
+            (LPVOID *)&pScriptHostWin32
+            );
+    if (SUCCEEDED(hr)) {
+        m_pGLScriptHost = pScriptHostWin32;
+    }
 #else
-	m_pGLScriptHost = NULL; // #TODO: load and init internal script host
+    m_pGLScriptHost = NULL; // #TODO: load and init internal script host
 #endif
 
-	return (m_pGLScriptHost != NULL);
+    return (m_pGLScriptHost != NULL);
 }
 ///////////////////////////////////////////////////////////////////////////////

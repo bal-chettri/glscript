@@ -24,133 +24,133 @@
 #include <glsrun/glview.h>
 
 GLView::GLView (gls::ScriptHostDriver *pScriptHostDriver) {
-	m_pScriptHostDriver = pScriptHostDriver;
+    m_pScriptHostDriver = pScriptHostDriver;
 }
 
 GLView::~GLView () {
 }
 
 void GLView::PostRenderSceneEvent () {
-	m_pScriptHostDriver->GetScriptHost()->InvokeScriptMethod ( 
-		_T("gls_renderScene"), 
-		NULL, 
-		0
-		);
+    m_pScriptHostDriver->GetScriptHost()->InvokeScriptMethod ( 
+        _T("gls_renderScene"), 
+        NULL, 
+        0
+        );
 }
 
 void GLView::PostMouseEvent (LPCTSTR lpszEventName, int button, int x, int y) {
-	VARIANTARG params[3];
-	int i;
+    VARIANTARG params[3];
+    int i;
 
-	// init params
-	for (i = 0; i < 3; i++) {
-		::VariantInit (params + i);
-	}
+    // init params
+    for (i = 0; i < 3; i++) {
+        ::VariantInit (params + i);
+    }
 
-	params[2].vt = VT_INT;
-	params[2].intVal = button;
+    params[2].vt = VT_INT;
+    params[2].intVal = button;
 
-	params[1].vt = VT_INT;
-	params[1].intVal = x;
+    params[1].vt = VT_INT;
+    params[1].intVal = x;
 
-	params[0].vt = VT_INT;
-	params[0].intVal = y;
+    params[0].vt = VT_INT;
+    params[0].intVal = y;
 
-	// invoke script method for the event
-	m_pScriptHostDriver->GetScriptHost()->InvokeScriptMethod ( 
-		lpszEventName, 
-		params, 
-		sizeof(params)/sizeof(params[0]) 
-		);
+    // invoke script method for the event
+    m_pScriptHostDriver->GetScriptHost()->InvokeScriptMethod ( 
+        lpszEventName, 
+        params, 
+        sizeof(params)/sizeof(params[0]) 
+        );
 
-	// cleanup
-	for (i = 0; i < 3; i++) {
-		::VariantClear (params + i);
-	}
+    // cleanup
+    for (i = 0; i < 3; i++) {
+        ::VariantClear (params + i);
+    }
 }
 
 /* message handlers */
 
 void GLView::OnEraseBackground (HDC hdc, PAINTSTRUCT &ps) {
-	OpenGLView::OnEraseBackground (hdc, ps);
+    OpenGLView::OnEraseBackground (hdc, ps);
 
-	// Note: PostRenderSceneEvent() is can cause an effect such that gls_renderScene is called at 
-	// very higher rate different than its current frame rate. This usually happens when the window 
-	// is uncovered from an overlapping window or from the edge of the desktop screen.
+    // Note: PostRenderSceneEvent() is can cause an effect such that gls_renderScene is called at 
+    // very higher rate different than its current frame rate. This usually happens when the window 
+    // is uncovered from an overlapping window or from the edge of the desktop screen.
 
-	PostRenderSceneEvent ();
+    PostRenderSceneEvent ();
 }
 
 void GLView::OnMouseDown (int shift, int button, int x, int y) {
-	PostMouseEvent (_tx("gls_mouseDown"), button, x, y);
+    PostMouseEvent (_tx("gls_mouseDown"), button, x, y);
 }
 
 void GLView::OnMouseUp (int shift, int button, int x, int y) {
-	PostMouseEvent (_tx("gls_mouseUp"), button, x, y);
+    PostMouseEvent (_tx("gls_mouseUp"), button, x, y);
 }
 
 void GLView::OnMouseMove (int shift, int button, int x, int y) {
-	PostMouseEvent (_tx("gls_mouseMove"), button, x, y);
+    PostMouseEvent (_tx("gls_mouseMove"), button, x, y);
 }
 
 void GLView::OnKeyUp (int virtKey) {
-	// #TODO: enable this
-	return;
+    // #TODO: enable this
+    return;
 
-	VARIANTARG params[1];
+    VARIANTARG params[1];
 
-	::VariantInit (params + 0);
-	params[0].vt = VT_INT;
-	params[0].intVal = virtKey;
+    ::VariantInit (params + 0);
+    params[0].vt = VT_INT;
+    params[0].intVal = virtKey;
 
-	// invoke script method for the event
-	m_pScriptHostDriver->GetScriptHost()->InvokeScriptMethod ( 
-		_tx("gls_keyUp"), 
-		params, 
-		sizeof(params)/sizeof(params[0]) 
-		);
+    // invoke script method for the event
+    m_pScriptHostDriver->GetScriptHost()->InvokeScriptMethod ( 
+        _tx("gls_keyUp"), 
+        params, 
+        sizeof(params)/sizeof(params[0]) 
+        );
 }
 
 void GLView::OnKeyDown (int virtKey) {
-	return;
+    return;
 
-	VARIANTARG params[1];
+    VARIANTARG params[1];
 
-	::VariantInit (params + 0);
-	params[0].vt = VT_INT;
-	params[0].intVal = virtKey;
+    ::VariantInit (params + 0);
+    params[0].vt = VT_INT;
+    params[0].intVal = virtKey;
 
-	// invoke script method for the event
-	m_pScriptHostDriver->GetScriptHost()->InvokeScriptMethod ( 
-		_tx("gls_keyDown"), 
-		params, 
-		sizeof(params)/sizeof(params[0]) 
-		);
+    // invoke script method for the event
+    m_pScriptHostDriver->GetScriptHost()->InvokeScriptMethod ( 
+        _tx("gls_keyDown"), 
+        params, 
+        sizeof(params)/sizeof(params[0]) 
+        );
 }
 
 void GLView::OnKeyPress (int virtKey, int repeatCount) {
-	return;
+    return;
 
-	VARIANTARG params[1];
+    VARIANTARG params[1];
 
-	::VariantInit (params + 0);
-	params[0].vt = VT_INT;
-	params[0].intVal = virtKey;
+    ::VariantInit (params + 0);
+    params[0].vt = VT_INT;
+    params[0].intVal = virtKey;
 
-	// invoke script method for the event
-	m_pScriptHostDriver->GetScriptHost()->InvokeScriptMethod ( 
-		_tx("gls_keyPress"), 
-		params, 
-		sizeof(params)/sizeof(params[0]) 
-		);
+    // invoke script method for the event
+    m_pScriptHostDriver->GetScriptHost()->InvokeScriptMethod ( 
+        _tx("gls_keyPress"), 
+        params, 
+        sizeof(params)/sizeof(params[0]) 
+        );
 }
 
 void GLView::OnResize (int cx, int cy) {
-	OpenGLView::OnResize (cx, cy);
+    OpenGLView::OnResize (cx, cy);
 
-	PostRenderSceneEvent ();
+    PostRenderSceneEvent ();
 }
 
 void GLView::OnCommand (int cmdid) {
-	OpenGLView::OnCommand (cmdid);	
+    OpenGLView::OnCommand (cmdid);  
 }

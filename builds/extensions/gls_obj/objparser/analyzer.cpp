@@ -21,7 +21,7 @@
 //   Author: Bal Bahadur Chettri (balu.chettri@gmail.com)
 //
 
-/* analyzer.cpp		Implements the objparser::Analyzer base abstract class */
+/* analyzer.cpp     Implements the objparser::Analyzer base abstract class */
 
 #include "stdafx.h"
 #include "objparser.h"
@@ -31,38 +31,38 @@ using namespace objparser;
 // Analyzer class definition...
 
 Analyzer::Analyzer () {
-	// Reset is virtual so don't call it here to do these
-	m_count_vertices = 0;
-	m_count_extra_vertices = 0;
-	m_count_normals = 0;
-	m_count_texture_vertices = 0;
-	m_count_faces = 0;	
-	m_required_memory = 0;
-	m_error_code = 0;
+    // Reset is virtual so don't call it here to do these
+    m_count_vertices = 0;
+    m_count_extra_vertices = 0;
+    m_count_normals = 0;
+    m_count_texture_vertices = 0;
+    m_count_faces = 0;  
+    m_required_memory = 0;
+    m_error_code = 0;
 }
 
 Analyzer::~Analyzer () {
-	Reset ();
+    Reset ();
 }
 
 void Analyzer::Reset () {
-	m_count_vertices = 0;
-	m_count_extra_vertices = 0;
-	m_count_normals = 0;
-	m_count_texture_vertices = 0;
-	m_count_faces = 0;
-	m_required_memory = 0;
-	m_error_code = 0;
+    m_count_vertices = 0;
+    m_count_extra_vertices = 0;
+    m_count_normals = 0;
+    m_count_texture_vertices = 0;
+    m_count_faces = 0;
+    m_required_memory = 0;
+    m_error_code = 0;
 
-	index_hash.Reset ();
+    index_hash.Reset ();
 
-	m_external_references.clear ();
+    m_external_references.clear ();
 }
 
 void Analyzer::CalculateRequiredMemory () {
-	size_t count_elements = m_count_faces * 3;
+    size_t count_elements = m_count_faces * 3;
 
-	m_required_memory =
-		(m_count_vertices + m_count_extra_vertices ) * sizeof(VERTEX_DATA) +
-		(count_elements * sizeof(GLushort));
+    m_required_memory =
+        (m_count_vertices + m_count_extra_vertices ) * sizeof(VERTEX_DATA) +
+        (count_elements * sizeof(GLushort));
 }

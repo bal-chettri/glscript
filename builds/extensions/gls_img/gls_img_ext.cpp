@@ -31,74 +31,74 @@
 
 /* get version number of the interface */
 unsigned short GLSExtensionImp::GetInterfaceVersion () {
-	return GLS_VERSION_MAKE_SHORT(0,1);
+    return GLS_VERSION_MAKE_SHORT(0,1);
 }
 
 /* get full version number of the extension */
 unsigned long GLSExtensionImp::GetExtensionVersion () {
-	return GLS_VERSION_MAKE_LONG(
-			GLS_IMG_EXT_VER_MAJ,GLS_IMG_EXT_VER_MIN,
-			GLS_IMG_EXT_VER_REV,GLS_IMG_EXT_VER_BUILD
-		);
+    return GLS_VERSION_MAKE_LONG(
+            GLS_IMG_EXT_VER_MAJ,GLS_IMG_EXT_VER_MIN,
+            GLS_IMG_EXT_VER_REV,GLS_IMG_EXT_VER_BUILD
+        );
 }
 
 /* get capabilities of the extension */
-unsigned long GLSExtensionImp::GetCapabilities (void) {	
-	return GLS_EXTENSION_LIBRARY;
+unsigned long GLSExtensionImp::GetCapabilities (void) { 
+    return GLS_EXTENSION_LIBRARY;
 }
 
 /* get the author's name */
 const wchar_t *GLSExtensionImp::GetAuthorName (void) {
-	return L"Bal Bahadur Chettri";
+    return L"Bal Bahadur Chettri";
 }
 
 /* get vendor's name */
 const wchar_t *GLSExtensionImp::GetVendorName (void) {
-	return L"Bal Bahadur Chettri";
+    return L"Bal Bahadur Chettri";
 }
 
 /* create the plugin window */
 void *GLSExtensionImp::CreatePluginWindow (void) {
-	return NULL;
+    return NULL;
 }
 
 /* handle the glScript event */
 long GLSExtensionImp::HandleEvent (gls::GLS_EVENT *p_event) {
-	return 0;
+    return 0;
 }
 
 /* get extension library info */
 void GLSExtensionImp::GetLibInfo (gls::GLS_EXTENSION_LIB_INFO *p_lib_info) {
-	strcpy (p_lib_info->name, "img");
-	p_lib_info->version = GLS_VERSION_MAKE_SHORT(GLS_IMG_LIB_VER_MAJ,GLS_IMG_LIB_VER_MIN);
+    strcpy (p_lib_info->name, "img");
+    p_lib_info->version = GLS_VERSION_MAKE_SHORT(GLS_IMG_LIB_VER_MAJ,GLS_IMG_LIB_VER_MIN);
 }
 
 /* get interface to the extension library. In Win platforms this should return 
 _GLScriptExtLib interface for the library. */
 void *GLSExtensionImp::GetLibInterface () {
-	GLSExtensionLib *libInt = NULL;
-	_GLScriptExtLib *pScriptLib = NULL;
-	HRESULT hr;
+    GLSExtensionLib *libInt = NULL;
+    _GLScriptExtLib *pScriptLib = NULL;
+    HRESULT hr;
 
-	hr = GLSExtensionLib_Factory.CreateInstance (NULL, IID__GLScriptExtLib, (LPVOID *)&libInt);
+    hr = GLSExtensionLib_Factory.CreateInstance (NULL, IID__GLScriptExtLib, (LPVOID *)&libInt);
 
-	if (FAILED(hr)) {
-		return NULL;
-	}
+    if (FAILED(hr)) {
+        return NULL;
+    }
 
-	pScriptLib = libInt;
+    pScriptLib = libInt;
 
-	return pScriptLib;
+    return pScriptLib;
 }
 
 /** Return the timer callback procedure. @see GetRenderProc */
 gls::GLS_TIMER_PROC GLSExtensionImp::GetTimerProc () {
-	return NULL;
+    return NULL;
 }
 
 /** Returns the render callback procedure. @see GetTimerProc */
 gls::GLS_RENDER_PROC GLSExtensionImp::GetRenderProc () {
-	return NULL;
+    return NULL;
 }
 
 /* } GLS_EXTENSION_INTERFACE ver 1 */

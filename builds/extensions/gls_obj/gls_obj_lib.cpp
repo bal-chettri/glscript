@@ -38,51 +38,51 @@ GLSExtensionLib::~GLSExtensionLib () {
 /* _GLScript_ExtLib implementation */
 
 HRESULT STDMETHODCALLTYPE GLSExtensionLib::get_name (BSTR *pValue) {
-	*pValue = ::SysAllocString (L"obj");
-	return NOERROR;
+    *pValue = ::SysAllocString (L"obj");
+    return NOERROR;
 }
 
 HRESULT STDMETHODCALLTYPE GLSExtensionLib::get_version (short *pValue) {
-	*pValue = GLS_VERSION_MAKE_SHORT(0,1);
-	return NOERROR;
+    *pValue = GLS_VERSION_MAKE_SHORT(0,1);
+    return NOERROR;
 }
 
 /* _GLS_OBJ_Lib implementation */
 
 HRESULT STDMETHODCALLTYPE GLSExtensionLib::load (BSTR path, _ObjModel **model) {
-	HRESULT hr;
-	
-	hr = GLS_OBJ_Model_Factory.CreateInstance (NULL, IID__ObjModel, (LPVOID *)model);
+    HRESULT hr;
+    
+    hr = GLS_OBJ_Model_Factory.CreateInstance (NULL, IID__ObjModel, (LPVOID *)model);
 
-	if (SUCCEEDED(hr)) {
-		GLS_OBJ_Model *model_obj = reinterpret_cast<GLS_OBJ_Model *>(*model);
+    if (SUCCEEDED(hr)) {
+        GLS_OBJ_Model *model_obj = reinterpret_cast<GLS_OBJ_Model *>(*model);
 
-		UINT length = ::SysStringLen(path);
-		char *szmbs_path = new char [ length + 1];
-		::wcstombs (szmbs_path, path, length);
-		szmbs_path [length] = '\0';
+        UINT length = ::SysStringLen(path);
+        char *szmbs_path = new char [ length + 1];
+        ::wcstombs (szmbs_path, path, length);
+        szmbs_path [length] = '\0';
 
-		// initialize the model from the model file. On failure, free the object.
-		if (!model_obj->_InitModel (szmbs_path)) {
-			(*model)->Release ();
-			*model = NULL;
-			hr = E_FAIL;
-		}
+        // initialize the model from the model file. On failure, free the object.
+        if (!model_obj->_InitModel (szmbs_path)) {
+            (*model)->Release ();
+            *model = NULL;
+            hr = E_FAIL;
+        }
 
-		delete szmbs_path;
-	}
+        delete szmbs_path;
+    }
 
-	return hr;
+    return hr;
 }
 
 /* externs */
 const IID *_GLSExtensionLib_IIDs[] = 
 {
-	&IID_IUnknown,
-	&IID_IDispatch,
-	&IID__GLScriptExtLib,
-	&IID__GLS_OBJ_Lib,
-	NULL
+    &IID_IUnknown,
+    &IID_IDispatch,
+    &IID__GLScriptExtLib,
+    &IID__GLS_OBJ_Lib,
+    NULL
 };
 
 ClassFactory<GLSExtensionLib> GLS_OBJ_Lib_Factory;

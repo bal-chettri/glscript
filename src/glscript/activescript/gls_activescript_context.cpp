@@ -27,18 +27,18 @@
 
 // define externs...
 const IID *GLScript_Context_IIDs[] = {
-	&IID_IUnknown,
-	&IID_IDispatch,
-	&IID__GLScript_Context,
-	NULL
+    &IID_IUnknown,
+    &IID_IDispatch,
+    &IID__GLScript_Context,
+    NULL
 };
 
 // GLScript_GlContext implementation...
 
 HRESULT STDMETHODCALLTYPE GLScript_Context::flush () {
-	GLScriptHost_Win32 *pHost = reinterpret_cast<GLScriptHost_Win32 *>(GetParent());
-	::SwapBuffers (pHost->m_windowContext.hdc);
-	return NOERROR;
+    GLScriptHost_Win32 *pHost = reinterpret_cast<GLScriptHost_Win32 *>(GetParent());
+    ::SwapBuffers (pHost->m_windowContext.hdc);
+    return NOERROR;
 }
 
 #endif // WIN32

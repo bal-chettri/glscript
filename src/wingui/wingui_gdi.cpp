@@ -26,32 +26,32 @@
 
 BOOL Font::Create (LPCTSTR lpszFaceName, int size, HDC hRefDC, LONG lfWeight) 
 {
-	Delete ();
+    Delete ();
 
-	LOGFONT logfont;
-	memset (&logfont, 0, sizeof(logfont));
-	logfont.lfCharSet = DEFAULT_CHARSET;
-	logfont.lfHeight = size;
-	logfont.lfWeight = lfWeight;
-	lstrcpyn (logfont.lfFaceName, lpszFaceName,
-			sizeof(logfont.lfFaceName) - 1);
+    LOGFONT logfont;
+    memset (&logfont, 0, sizeof(logfont));
+    logfont.lfCharSet = DEFAULT_CHARSET;
+    logfont.lfHeight = size;
+    logfont.lfWeight = lfWeight;
+    lstrcpyn (logfont.lfFaceName, lpszFaceName,
+            sizeof(logfont.lfFaceName) - 1);
 
-	HDC hdc = hRefDC == NULL ? ::GetDC (NULL) : hRefDC;
-	if (!hdc) return FALSE;
-	
-	// lfHeight must be scaled based on passed DC units
-	POINT pt, ptOrg = {0, 0};
-	pt.y = ::GetDeviceCaps (hdc, LOGPIXELSY) * logfont.lfHeight;
-	pt.y/= 72;    // 72 points/inch, 10 decipoints/point
-	::DPtoLP (hdc, &pt, 1);
-	::DPtoLP (hdc, &ptOrg, 1);
-	logfont.lfHeight = -abs(pt.y - ptOrg.y);
+    HDC hdc = hRefDC == NULL ? ::GetDC (NULL) : hRefDC;
+    if (!hdc) return FALSE;
+    
+    // lfHeight must be scaled based on passed DC units
+    POINT pt, ptOrg = {0, 0};
+    pt.y = ::GetDeviceCaps (hdc, LOGPIXELSY) * logfont.lfHeight;
+    pt.y/= 72;    // 72 points/inch, 10 decipoints/point
+    ::DPtoLP (hdc, &pt, 1);
+    ::DPtoLP (hdc, &ptOrg, 1);
+    logfont.lfHeight = -abs(pt.y - ptOrg.y);
 
-	if (hRefDC == NULL) ::ReleaseDC (NULL, hdc);
+    if (hRefDC == NULL) ::ReleaseDC (NULL, hdc);
 
-	// create the point font
-	m_hFont = ::CreateFontIndirect (&logfont);
-	return m_hFont != NULL;
+    // create the point font
+    m_hFont = ::CreateFontIndirect (&logfont);
+    return m_hFont != NULL;
 }
 
 
@@ -60,36 +60,36 @@ BOOL Font::Create (LPCTSTR lpszFaceName, int size, HDC hRefDC, LONG lfWeight)
 
 BOOL MemoryBitmap::Create (int cx, int cy, HDC hRefDC)
 {
-	Dispose ();
+    Dispose ();
 
-	if ( !(m_hDC = ::CreateCompatibleDC (hRefDC)) )
-		return FALSE;
+    if ( !(m_hDC = ::CreateCompatibleDC (hRefDC)) )
+        return FALSE;
 
-	// load the imagesheet bitmap from the app resource
-	if ( !(m_hBitmap = ::CreateCompatibleBitmap (hRefDC, cx, cy)) )
-	{
-		::DeleteDC (m_hDC);
-		m_hDC = NULL;
-		return FALSE;
-	}
+    // load the imagesheet bitmap from the app resource
+    if ( !(m_hBitmap = ::CreateCompatibleBitmap (hRefDC, cx, cy)) )
+    {
+        ::DeleteDC (m_hDC);
+        m_hDC = NULL;
+        return FALSE;
+    }
 
-	// save current bitmap and select the image sheet bitmap into the DC
-	m_hOldBitmap = ::SelectObject (m_hDC, (HGDIOBJ) m_hBitmap);
+    // save current bitmap and select the image sheet bitmap into the DC
+    m_hOldBitmap = ::SelectObject (m_hDC, (HGDIOBJ) m_hBitmap);
 
-	return TRUE;
+    return TRUE;
 }
 
 void MemoryBitmap::Dispose ()
 {
-	if (m_hDC != NULL)
-	{
-		::SelectObject (m_hDC, m_hOldBitmap);
-		::DeleteObject ((HGDIOBJ)m_hBitmap);
+    if (m_hDC != NULL)
+    {
+        ::SelectObject (m_hDC, m_hOldBitmap);
+        ::DeleteObject ((HGDIOBJ)m_hBitmap);
 
-		m_hBitmap = NULL;
-		m_hOldBitmap = NULL;
+        m_hBitmap = NULL;
+        m_hOldBitmap = NULL;
 
-		DeleteDC (m_hDC);
-		m_hDC = NULL;
-	}
+        DeleteDC (m_hDC);
+        m_hDC = NULL;
+    }
 }

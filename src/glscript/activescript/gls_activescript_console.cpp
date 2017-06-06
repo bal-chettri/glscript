@@ -30,61 +30,61 @@ using namespace gls;
 
 // define externs...
 const IID *GLScript_Console_IIDs[] = {
-	&IID_IUnknown,
-	&IID_IDispatch,
-	&IID__GLScript_Console,
-	NULL
+    &IID_IUnknown,
+    &IID_IDispatch,
+    &IID__GLScript_Console,
+    NULL
 };
 
 // GLScript_Console class definition...
 
 HRESULT STDMETHODCALLTYPE GLScript_Console::log (VARIANT msg) {
-	return _log (msg, GLScriptLogTypeMessage);
+    return _log (msg, GLScriptLogTypeMessage);
 }
 
 HRESULT STDMETHODCALLTYPE GLScript_Console::warn (VARIANT msg) {
-	return _log (msg, GLScriptLogTypeWarning);
+    return _log (msg, GLScriptLogTypeWarning);
 }
 
 HRESULT STDMETHODCALLTYPE GLScript_Console::error (VARIANT msg) {
-	return _log (msg, GLScriptLogTypeError);
+    return _log (msg, GLScriptLogTypeError);
 }
 
 HRESULT STDMETHODCALLTYPE GLScript_Console::clear () {
-	GLScriptHost_Win32 *pHost = reinterpret_cast<GLScriptHost_Win32 *>(GetParent());
-	if (pHost->m_pEventListener != NULL) {
-		pHost->m_pEventListener->ScriptHost_OnLogClear ();
-	}
-	return NOERROR;
+    GLScriptHost_Win32 *pHost = reinterpret_cast<GLScriptHost_Win32 *>(GetParent());
+    if (pHost->m_pEventListener != NULL) {
+        pHost->m_pEventListener->ScriptHost_OnLogClear ();
+    }
+    return NOERROR;
 }
 
 HRESULT GLScript_Console::_log (const VARIANT &msg, GLSCRIPT_LOGTYPE log_type) {
-	if (msg.vt == VT_BSTR) {
-		GLScriptHost_Win32 *pHost = reinterpret_cast<GLScriptHost_Win32 *>(GetParent());
+    if (msg.vt == VT_BSTR) {
+        GLScriptHost_Win32 *pHost = reinterpret_cast<GLScriptHost_Win32 *>(GetParent());
 
-		if (pHost->m_pEventListener != NULL) {
-			sys_tchar *message;
+        if (pHost->m_pEventListener != NULL) {
+            sys_tchar *message;
 
-			#if defined(_UNICODE) || defined(UNICODE)
-				message = msg.bstrVal;
-			#else
-				UINT length = SysStringLength (msg.bstrVal);
-				message = new sys_char [length + 1];
-				wcstombcs (message, msg.bstrVal, length);
-				message [length] = '\0';
-			#endif
-			
-			pHost->m_pEventListener->ScriptHost_OnLogMessage (message, log_type);
+            #if defined(_UNICODE) || defined(UNICODE)
+                message = msg.bstrVal;
+            #else
+                UINT length = SysStringLength (msg.bstrVal);
+                message = new sys_char [length + 1];
+                wcstombcs (message, msg.bstrVal, length);
+                message [length] = '\0';
+            #endif
+            
+            pHost->m_pEventListener->ScriptHost_OnLogMessage (message, log_type);
 
-			#if !defined(_UNICODE) && !defined(UNICODE)
-				delete message;
-			#endif
-		}
+            #if !defined(_UNICODE) && !defined(UNICODE)
+                delete message;
+            #endif
+        }
 
-		return NOERROR;
-	} else {
-		return E_INVALIDARG;
-	}
+        return NOERROR;
+    } else {
+        return E_INVALIDARG;
+    }
 }
 
 #endif // WIN32

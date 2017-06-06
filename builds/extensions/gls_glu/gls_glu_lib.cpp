@@ -36,13 +36,13 @@ GLSExtensionLib::~GLSExtensionLib () {
 /* _GLScript_ExtLib implementation */
 
 HRESULT STDMETHODCALLTYPE GLSExtensionLib::get_name (BSTR *pValue) {
-	*pValue = ::SysAllocString (L"glu");
-	return NOERROR;
+    *pValue = ::SysAllocString (L"glu");
+    return NOERROR;
 }
 
 HRESULT STDMETHODCALLTYPE GLSExtensionLib::get_version (short *pValue) {
-	*pValue = GLS_VERSION_MAKE_SHORT(GLS_GLU_LIB_VER_MAJ,GLS_GLU_LIB_VER_MIN);
-	return NOERROR;
+    *pValue = GLS_VERSION_MAKE_SHORT(GLS_GLU_LIB_VER_MAJ,GLS_GLU_LIB_VER_MIN);
+    return NOERROR;
 }
 
 /* _GLS_GLU_Lib implementation */
@@ -50,11 +50,11 @@ HRESULT STDMETHODCALLTYPE GLSExtensionLib::get_version (short *pValue) {
 /* externs */
 const IID *_GLSExtensionLib_IIDs[] = 
 {
-	&IID_IUnknown,
-	&IID_IDispatch,
-	&IID__GLScriptExtLib,
-	&IID__GLS_GLU_Lib,
-	NULL
+    &IID_IUnknown,
+    &IID_IDispatch,
+    &IID__GLScriptExtLib,
+    &IID__GLS_GLU_Lib,
+    NULL
 };
 
 ClassFactory<GLSExtensionLib> GLSExtensionLib_Factory;
