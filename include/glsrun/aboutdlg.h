@@ -27,13 +27,13 @@
 
 class AboutDialog : public GenericDialog {
 public:
-	AboutDialog ();
-	// ~AboutDialog ();
+    AboutDialog ();
+    // ~AboutDialog ();
 
 protected:
-	INT_PTR OnInitDialog ();
-	void OnCommand (int cmdId);
-	void OpenURL (LPCTSTR lpszUrl);
+    INT_PTR OnInitDialog ();
+    void OnCommand (int cmdId);
+    void OpenURL (LPCTSTR lpszUrl);
 };
 
 #endif /* __GLSCRIPT_GUI_ABOUTDLG_H */

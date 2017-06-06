@@ -37,64 +37,64 @@ extern DWORD _comObjCount;
 template <class _T>
 class ClassFactory : public IClassFactory {
 public:
-	/* IUnknown implementation */
+    /* IUnknown implementation */
 
-	/** Queries for requested interface and returns it if it is implemented. */
-	virtual HRESULT STDMETHODCALLTYPE QueryInterface (REFIID riid, LPVOID *ppV) {
-		if ( IsEqualIID (riid, IID_IUnknown) || IsEqualIID (riid, IID_IClassFactory) ) {
-			*ppV = this;
-			return NOERROR;
-		}
+    /** Queries for requested interface and returns it if it is implemented. */
+    virtual HRESULT STDMETHODCALLTYPE QueryInterface (REFIID riid, LPVOID *ppV) {
+        if ( IsEqualIID (riid, IID_IUnknown) || IsEqualIID (riid, IID_IClassFactory) ) {
+            *ppV = this;
+            return NOERROR;
+        }
 
-		*ppV = NULL;
-		return E_NOINTERFACE;
-	}
+        *ppV = NULL;
+        return E_NOINTERFACE;
+    }
 
-	/** Increments the reference count. */
-	virtual ULONG STDMETHODCALLTYPE AddRef () {
-		return 1;
-	}
+    /** Increments the reference count. */
+    virtual ULONG STDMETHODCALLTYPE AddRef () {
+        return 1;
+    }
 
-	/** Decrements the reference count. */
-	virtual ULONG STDMETHODCALLTYPE Release () {
-		return 1;
-	}
+    /** Decrements the reference count. */
+    virtual ULONG STDMETHODCALLTYPE Release () {
+        return 1;
+    }
 
-	/* IClassFactory implementation */
+    /* IClassFactory implementation */
 
-	/** Creates an instance of template type _T and returns the requested interface if the object implements it. */
-	virtual HRESULT STDMETHODCALLTYPE CreateInstance (LPUNKNOWN pUnkOuter, REFIID riid, LPVOID *ppV) {
-		*ppV = NULL;
+    /** Creates an instance of template type _T and returns the requested interface if the object implements it. */
+    virtual HRESULT STDMETHODCALLTYPE CreateInstance (LPUNKNOWN pUnkOuter, REFIID riid, LPVOID *ppV) {
+        *ppV = NULL;
 
-		if (pUnkOuter != NULL) {
-			return CLASS_E_NOAGGREGATION;
-		}
+        if (pUnkOuter != NULL) {
+            return CLASS_E_NOAGGREGATION;
+        }
 
-		_T *pObj =  new _T;
-		if (!pObj) {
-			return E_OUTOFMEMORY;
-		}
+        _T *pObj =  new _T;
+        if (!pObj) {
+            return E_OUTOFMEMORY;
+        }
 
-		// increment global object count
-		::InterlockedIncrement ((LONG *)&_comObjCount);
+        // increment global object count
+        ::InterlockedIncrement ((LONG *)&_comObjCount);
 
-		pObj->AddRef ();
-		HRESULT hr = pObj->QueryInterface (riid, ppV);	
-		pObj->Release ();
+        pObj->AddRef ();
+        HRESULT hr = pObj->QueryInterface (riid, ppV);  
+        pObj->Release ();
 
-		return hr;
-	}
+        return hr;
+    }
 
-	/** Increments or decrements the object lock counter. */
-	virtual HRESULT STDMETHODCALLTYPE LockServer (BOOL fLock) {
-		if (fLock) {
-			InterlockedIncrement ((LONG *)&_comLockCount);
-		} else {
-			InterlockedDecrement ((LONG *)&_comLockCount);
-		}
+    /** Increments or decrements the object lock counter. */
+    virtual HRESULT STDMETHODCALLTYPE LockServer (BOOL fLock) {
+        if (fLock) {
+            InterlockedIncrement ((LONG *)&_comLockCount);
+        } else {
+            InterlockedDecrement ((LONG *)&_comLockCount);
+        }
 
-		return NOERROR;
-	}
+        return NOERROR;
+    }
 };
 
 #endif /* __com_class_factory_h */

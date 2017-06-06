@@ -28,28 +28,28 @@
 
 class GLView : public OpenGLView {
 public:
-	GLView (gls::ScriptHostDriver *pScriptHostDriver);
-	virtual ~GLView ();
+    GLView (gls::ScriptHostDriver *pScriptHostDriver);
+    virtual ~GLView ();
 
 protected:
-	/* message handlers */
-	virtual void OnEraseBackground (HDC hdc, PAINTSTRUCT &ps);
+    /* message handlers */
+    virtual void OnEraseBackground (HDC hdc, PAINTSTRUCT &ps);
 
-	virtual void OnMouseDown (int shift, int button, int x, int y);
-	virtual void OnMouseUp (int shift, int button, int x, int y);
-	virtual void OnMouseMove (int shift, int button, int x, int y);
-	virtual void OnKeyDown (int virtkey);
-	virtual void OnKeyUp (int virtkey);
-	virtual void OnKeyPress (int virtkey, int repeatCount);
-	virtual void OnResize (int cx, int cy);
-	virtual void OnCommand (int cmdid);
+    virtual void OnMouseDown (int shift, int button, int x, int y);
+    virtual void OnMouseUp (int shift, int button, int x, int y);
+    virtual void OnMouseMove (int shift, int button, int x, int y);
+    virtual void OnKeyDown (int virtkey);
+    virtual void OnKeyUp (int virtkey);
+    virtual void OnKeyPress (int virtkey, int repeatCount);
+    virtual void OnResize (int cx, int cy);
+    virtual void OnCommand (int cmdid);
 
 public:
-	void PostRenderSceneEvent ();
-	void PostMouseEvent (LPCTSTR lpszEventName, int button, int x, int y);
+    void PostRenderSceneEvent ();
+    void PostMouseEvent (LPCTSTR lpszEventName, int button, int x, int y);
 
 protected:
-	gls::ScriptHostDriver *m_pScriptHostDriver;
+    gls::ScriptHostDriver *m_pScriptHostDriver;
 };
 
 #endif /* __GLSCRIPT_GUI_GLVIEW_H */

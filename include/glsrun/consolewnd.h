@@ -28,62 +28,62 @@
 
 class ConsoleWnd : public GenericWindow {
 public:
-	enum LogType {
-		logMessage,
-		logWarning,
-		logError
-	};
+    enum LogType {
+        logMessage,
+        logWarning,
+        logError
+    };
 public:
-	ConsoleWnd ();
-	virtual ~ConsoleWnd ();
+    ConsoleWnd ();
+    virtual ~ConsoleWnd ();
 
 public:
-	BOOL Create ();
+    BOOL Create ();
 
-	void Log (LPCTSTR lpszText, LogType type);
-	void LogMessage (LPCTSTR lpszText) {
-		Log (lpszText, logMessage);
-	}
-	void LogWarning (LPCTSTR lpszText) {
-		Log (lpszText, logWarning);
-	}
-	void LogError (LPCTSTR lpszText) {
-		Log (lpszText, logError);
-	}
+    void Log (LPCTSTR lpszText, LogType type);
+    void LogMessage (LPCTSTR lpszText) {
+        Log (lpszText, logMessage);
+    }
+    void LogWarning (LPCTSTR lpszText) {
+        Log (lpszText, logWarning);
+    }
+    void LogError (LPCTSTR lpszText) {
+        Log (lpszText, logError);
+    }
 
-	void Clear ();
-	void CopyToClipboard (BOOL copyAll = TRUE);	
+    void Clear ();
+    void CopyToClipboard (BOOL copyAll = TRUE); 
 
 protected:
-	// internal helper methods
-	void SetOutputTextAttributes (LogType logType);
-	void Output (LPCTSTR lpszText);
-	void OutputEnd ();
-	void ScrollMessages ();
-	void PositionCursorAtEnd ();
-	void SelectAll ();
+    // internal helper methods
+    void SetOutputTextAttributes (LogType logType);
+    void Output (LPCTSTR lpszText);
+    void OutputEnd ();
+    void ScrollMessages ();
+    void PositionCursorAtEnd ();
+    void SelectAll ();
 
 protected:
-	// overrides
-	void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
+    // overrides
+    void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
 
-	// message handlers
-	virtual void OnCreate ();
-	virtual void OnPreDestroy ();
-	virtual void OnResize (int cx, int cy);
-	virtual void OnGotFocus ();
-	virtual void OnClose (BOOL &cancel);
-	virtual void OnCommand (int cmdId);	
+    // message handlers
+    virtual void OnCreate ();
+    virtual void OnPreDestroy ();
+    virtual void OnResize (int cx, int cy);
+    virtual void OnGotFocus ();
+    virtual void OnClose (BOOL &cancel);
+    virtual void OnCommand (int cmdId); 
 
 private:
-	HMENU m_hContextMenu;
-	Font m_hFont;
-	HWND m_hWndEdit;
-	WNDPROC m_prevEditWndProc;
-	static LRESULT CALLBACK EditWindowProc (HWND hWnd, UINT msg, WPARAM, LPARAM);
-	
+    HMENU m_hContextMenu;
+    Font m_hFont;
+    HWND m_hWndEdit;
+    WNDPROC m_prevEditWndProc;
+    static LRESULT CALLBACK EditWindowProc (HWND hWnd, UINT msg, WPARAM, LPARAM);
+    
 protected:
-	size_t m_lineCount;
+    size_t m_lineCount;
 };
 
 #endif /* __GLSCRIPT_RUN_CONSOLE_WND_H */

@@ -28,42 +28,42 @@
 /* An SDI style main window for implementing app's main window */
 class MainWindow : public GenericWindow {
 public:
-	/* ctors */
-	
-	// default construction
-	MainWindow (int resourceId);
+    /* ctors */
+    
+    // default construction
+    MainWindow (int resourceId);
 
-	virtual ~MainWindow ();
+    virtual ~MainWindow ();
 
 public:
-	// operations
-	void ShowToolbar (BOOL flag = TRUE);
-	void ShowStatusbar (BOOL flag = TRUE);
+    // operations
+    void ShowToolbar (BOOL flag = TRUE);
+    void ShowStatusbar (BOOL flag = TRUE);
 
-	BOOL GetOpenFilePath (LPTSTR filePathBuffer, int maxFilePathBuffer, LPCTSTR lpstrFilter, 
-							int filterIndex, LPCTSTR lpszDefExt);
+    BOOL GetOpenFilePath (LPTSTR filePathBuffer, int maxFilePathBuffer, LPCTSTR lpstrFilter, 
+                            int filterIndex, LPCTSTR lpszDefExt);
 
-	BOOL GetSaveAsFilePath (LPTSTR filePathBuffer, int maxFilePathBuffer, 
-								LPCTSTR lpstrFilter, int filterIndex, LPCTSTR lpszDefExt);
+    BOOL GetSaveAsFilePath (LPTSTR filePathBuffer, int maxFilePathBuffer, 
+                                LPCTSTR lpstrFilter, int filterIndex, LPCTSTR lpszDefExt);
 
-	// overridables
-	virtual void GetClassStyle (WNDCLASSEX &wcex);
-	virtual void UpdateUI ();
-
-protected:
-	BOOL CreateToolbar ();
-	BOOL CreateStatusbar ();
+    // overridables
+    virtual void GetClassStyle (WNDCLASSEX &wcex);
+    virtual void UpdateUI ();
 
 protected:
-	// message handlers
-	virtual void OnCreate ();
-	virtual void OnResize (int cx, int cy);
+    BOOL CreateToolbar ();
+    BOOL CreateStatusbar ();
 
 protected:
-	// data members
-	BOOL m_showToolbar;
-	BOOL m_showStatusbar;
-	int m_resourceId;
+    // message handlers
+    virtual void OnCreate ();
+    virtual void OnResize (int cx, int cy);
+
+protected:
+    // data members
+    BOOL m_showToolbar;
+    BOOL m_showStatusbar;
+    int m_resourceId;
 };
 
 #endif /* __wingui_main_window_h */

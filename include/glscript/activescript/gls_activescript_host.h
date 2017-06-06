@@ -53,82 +53,82 @@ extern ClassFactory<GLScriptHost_Win32> GLScriptHost_Win32_Factory;
 
 // GLScriptHost_Win32 class...
 class GLScriptHost_Win32 :
-		public AutomationComObject<IUnknown, GLScriptHost_Win32_IIDs>,
-		public gls::ScriptHost
+        public AutomationComObject<IUnknown, GLScriptHost_Win32_IIDs>,
+        public gls::ScriptHost
 {
-	// ScriptHost functions...
-public:	
-	void SetEventListener (gls::ScriptHostEvents *pEventListener);
-	void RemoveEventListener ();
-	gls::GLSCRIPT_HOST_STATE GetState ();
-	bool SetWindowContext (gls::GLSCRIPT_WINDOW_CONTEXT *context);
-	bool SetScriptSource (gls::ScriptSource *pScriptSource);
-	bool ExecuteScriptConfigurationPhase ();
-	bool ExecuteScriptRenderPhase ();
-	bool PauseRenderLoop ();
-	bool ResumeRenderLoop ();
-	bool InvokeScriptMethod (const sys_tchar *method_name, gls::GLSCRIPT_PARAM *arr_params, 
-								int count_params);
-	void UnloadScript ();
+    // ScriptHost functions...
+public: 
+    void SetEventListener (gls::ScriptHostEvents *pEventListener);
+    void RemoveEventListener ();
+    gls::GLSCRIPT_HOST_STATE GetState ();
+    bool SetWindowContext (gls::GLSCRIPT_WINDOW_CONTEXT *context);
+    bool SetScriptSource (gls::ScriptSource *pScriptSource);
+    bool ExecuteScriptConfigurationPhase ();
+    bool ExecuteScriptRenderPhase ();
+    bool PauseRenderLoop ();
+    bool ResumeRenderLoop ();
+    bool InvokeScriptMethod (const sys_tchar *method_name, gls::GLSCRIPT_PARAM *arr_params, 
+                                int count_params);
+    void UnloadScript ();
 
 protected:
-	/* ctor */
-	GLScriptHost_Win32();
-	virtual ~GLScriptHost_Win32 ();
+    /* ctor */
+    GLScriptHost_Win32();
+    virtual ~GLScriptHost_Win32 ();
 
 protected:
-	// protected internal functions	
+    // protected internal functions 
 
-	/** Loads the active scripting engine object */
-	bool LoadScriptEngine ();
+    /** Loads the active scripting engine object */
+    bool LoadScriptEngine ();
 
-	/** Unloads the active scripting engine object */
-	void UnloadScriptEngine ();
+    /** Unloads the active scripting engine object */
+    void UnloadScriptEngine ();
 
-	/** Initializes the script engine and script site objects to their default state */
-	bool InitScriptEngine ();
+    /** Initializes the script engine and script site objects to their default state */
+    bool InitScriptEngine ();
 
-	/** Sets the internal state of the host object */
-	void SetState (gls::GLSCRIPT_HOST_STATE state);
+    /** Sets the internal state of the host object */
+    void SetState (gls::GLSCRIPT_HOST_STATE state);
 
-	/** Generates a host error message to the event listener */
-	inline void RaiseHostError (LPCTSTR lpszErrorMessage);
+    /** Generates a host error message to the event listener */
+    inline void RaiseHostError (LPCTSTR lpszErrorMessage);
 
-	/** Retursn the CLSID of script engine to use for the current script source */
-	BOOL GetScriptEngineCLSID (LPCLSID pclsid);
+    /** Retursn the CLSID of script engine to use for the current script source */
+    BOOL GetScriptEngineCLSID (LPCLSID pclsid);
 
-	/** Returns the script engine CLSID from the language name */
-	BOOL GetScriptEngineCLSIDFromProgID (LPCTSTR language, LPCLSID clsid);
+    /** Returns the script engine CLSID from the language name */
+    BOOL GetScriptEngineCLSIDFromProgID (LPCTSTR language, LPCLSID clsid);
 
-	/** Returns the script engine CLSID from the file extension */
-	BOOL GetScriptEngineCLSIDFromFileExtension (LPCTSTR lpszExtension, LPCLSID clsid);	
+    /** Returns the script engine CLSID from the file extension */
+    BOOL GetScriptEngineCLSIDFromFileExtension (LPCTSTR lpszExtension, LPCLSID clsid);  
 
 private:
-	// current script source object
-	gls::ScriptSource				*m_pScriptSource;	// script source object
-	
-	// script engine and context info
-	IActiveScript					*m_pScriptEngine;	// scripting engine
-	gls::ScriptHostEvents	*m_pEventListener;	// host event listener
-	gls::GLSCRIPT_HOST_STATE		m_state;			// host state
-	gls::GLSCRIPT_WINDOW_CONTEXT	m_windowContext;	// GL window context
-	bool							m_error;			// error flag
-	
-	GLScript_ActiveScriptSite		m_site;				// IActiveScriptSite object
-	GLScript_ExtensionHost			m_ext_host;			// ExtensionHost object
+    // current script source object
+    gls::ScriptSource               *m_pScriptSource;   // script source object
+    
+    // script engine and context info
+    IActiveScript                   *m_pScriptEngine;   // scripting engine
+    gls::ScriptHostEvents   *m_pEventListener;  // host event listener
+    gls::GLSCRIPT_HOST_STATE        m_state;            // host state
+    gls::GLSCRIPT_WINDOW_CONTEXT    m_windowContext;    // GL window context
+    bool                            m_error;            // error flag
+    
+    GLScript_ActiveScriptSite       m_site;             // IActiveScriptSite object
+    GLScript_ExtensionHost          m_ext_host;         // ExtensionHost object
 
-	// glScript scripting objects
-	GLScript_Engine					m_engine;			// gls
-	GLScript_Context				m_glContext;		// gl
-	GLScript_Console				m_console;			// console
+    // glScript scripting objects
+    GLScript_Engine                 m_engine;           // gls
+    GLScript_Context                m_glContext;        // gl
+    GLScript_Console                m_console;          // console
 
-	// all sub objects are friend classes
-	friend class GLScript_ActiveScriptSite;
-	friend class GLScript_ExtensionHost;
-	friend class GLScript_Context;
-	friend class GLScript_Engine;
-	friend class GLScript_Console;
-	friend class ClassFactory<GLScriptHost_Win32>;
+    // all sub objects are friend classes
+    friend class GLScript_ActiveScriptSite;
+    friend class GLScript_ExtensionHost;
+    friend class GLScript_Context;
+    friend class GLScript_Engine;
+    friend class GLScript_Console;
+    friend class ClassFactory<GLScriptHost_Win32>;
 };
 
 #endif /* __GLSCRIPT_ACTIVESCRIPT_HOST_H__ */

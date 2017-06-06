@@ -34,18 +34,18 @@ bool gls_comvariant_get_##_TN##_value(VARIANT *,_RT *);
 
 #define GLS_COMVARIANT_FUNC_BEGIN(_TN) \
 bool gls_comvariant_get_##_TN##_value(VARIANT *pVariant, _CPPTYPE *pValue) { \
-	switch (pVariant->vt) {
+    switch (pVariant->vt) {
 
 #define GLS_COMVARIANT_FUNC_TYPECHECK(_VT,_VF) \
-	case _VT: \
-		*pValue = (_CPPTYPE)pVariant->_VF; \
-		break;
+    case _VT: \
+        *pValue = (_CPPTYPE)pVariant->_VF; \
+        break;
 
 #define GLS_COMVARIANT_FUNC_END() \
-	default: \
-		return false; \
-	} /*end switch*/ \
-	return true; \
+    default: \
+        return false; \
+    } /*end switch*/ \
+    return true; \
 }
 
 /*

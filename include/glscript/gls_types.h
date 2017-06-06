@@ -26,7 +26,7 @@
 #include <glscript/gls_macros.h>
 
 // define current glscript version
-#define GLS_VERSION		GLS_VERSION_MAKE_LONG(0,0,0,8)
+#define GLS_VERSION     GLS_VERSION_MAKE_LONG(0,0,0,8)
 
 // define calling convention for dynamic extension modules
 #if defined (WIN32)

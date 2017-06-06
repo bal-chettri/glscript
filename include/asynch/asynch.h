@@ -25,7 +25,7 @@
 
 /* define message id for asynchronous callbacks */
 #ifdef WIN32
-#define ASYNCH_CALL_MSG			(WM_USER + 0x0001)
+#define ASYNCH_CALL_MSG         (WM_USER + 0x0001)
 #endif
 
 /* define procedure type for asynchronous callbacks. */
@@ -33,11 +33,11 @@ typedef void (* ASYNCH_CALLBACK) (long status, void *data, void *context);
 
 /** ASYNCH_CALL_RESULT structure */
 typedef struct _ASYNCH_CALL_RESULT {
-	unsigned long target_thread_id;
-	ASYNCH_CALLBACK callback;
-	void *context;
-	long status;
-	void *data;	
+    unsigned long target_thread_id;
+    ASYNCH_CALLBACK callback;
+    void *context;
+    long status;
+    void *data; 
 }ASYNCH_CALL_RESULT;
 
 #ifdef __cplusplus

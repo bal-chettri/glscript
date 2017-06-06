@@ -30,53 +30,53 @@ using namespace std;
 /* A base genreic version of win32 view */
 class GenericView : public GenericWindow {
 public:
-	/* constructors */
+    /* constructors */
 
-	// default construction
-	GenericView ();	
+    // default construction
+    GenericView (); 
 
-	// dtor
-	virtual ~GenericView ();
+    // dtor
+    virtual ~GenericView ();
 
 public:
-	// operations
-	virtual BOOL Create (int x, int y, int cx, int cy);
-	virtual BOOL Create (const RECT &rect);	
+    // operations
+    virtual BOOL Create (int x, int y, int cx, int cy);
+    virtual BOOL Create (const RECT &rect); 
 
-	// view management
-	void AddSubView (GenericView *subView);
-	void RemoveSubView (GenericView *subView);
-	void RemoveAllSubViews ();
-	void GenericView::CenterView (GenericWindow *pParent);
-	void SetOpacity (float opacity);
-	void SetDoubleBuffered (BOOL flag = TRUE);
+    // view management
+    void AddSubView (GenericView *subView);
+    void RemoveSubView (GenericView *subView);
+    void RemoveAllSubViews ();
+    void GenericView::CenterView (GenericWindow *pParent);
+    void SetOpacity (float opacity);
+    void SetDoubleBuffered (BOOL flag = TRUE);
 
-	HDC GetCachedDC () {
-		return m_hDC;
-	}
+    HDC GetCachedDC () {
+        return m_hDC;
+    }
 
-	/* rendering */
-	// calls CalcLayout () and invalidates the view
-	void RefreshView ();
-	// invalidates the view
-	void RedrawView ();
-	// compute layout for rendering data
-	virtual void CalcLayout () { }
-
-protected:
-	virtual void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
-	virtual void GetClassStyle (WNDCLASSEX &wcex);
-
-	virtual void OnCreate ();
-	virtual void OnPreDestroy ();
-	virtual void OnResize (int cx, int cy);
+    /* rendering */
+    // calls CalcLayout () and invalidates the view
+    void RefreshView ();
+    // invalidates the view
+    void RedrawView ();
+    // compute layout for rendering data
+    virtual void CalcLayout () { }
 
 protected:
-	// data members	
-	float m_opacity;							// background opacity
-	HDC m_hDC;									// cached window DC for performance
-	BOOL m_isDoubleBuffered;					// use double buffered window
-	list<GenericView *>m_subViews;				// child / sub views
+    virtual void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
+    virtual void GetClassStyle (WNDCLASSEX &wcex);
+
+    virtual void OnCreate ();
+    virtual void OnPreDestroy ();
+    virtual void OnResize (int cx, int cy);
+
+protected:
+    // data members 
+    float m_opacity;                            // background opacity
+    HDC m_hDC;                                  // cached window DC for performance
+    BOOL m_isDoubleBuffered;                    // use double buffered window
+    list<GenericView *>m_subViews;              // child / sub views
 }; 
 
 #endif /* __wingui_generic_view_h */

@@ -32,69 +32,69 @@ namespace gls {
 /** ScriptSource class. Manages script source code. */
 class ScriptSource : public RefObject {
 public:
-	/** 
-	 * ScriptSource constructor. 
-	 * @param strBaseURL base URL of the script's content source
-	 * @param strFileName File name of the script source
-	 * @param wstrCode Pointer to the script source code
-	 * @param codeLength length of the script source code in characters
-	 * @param autoFreeCode Flag to indicate the code should be freed automatically
-	 */
-	ScriptSource (const sys_tchar *base_url, const sys_tchar *filename, 
-					const sys_wchar *code, size_t code_length,
-					bool auto_free_code = true);
+    /** 
+     * ScriptSource constructor. 
+     * @param strBaseURL base URL of the script's content source
+     * @param strFileName File name of the script source
+     * @param wstrCode Pointer to the script source code
+     * @param codeLength length of the script source code in characters
+     * @param autoFreeCode Flag to indicate the code should be freed automatically
+     */
+    ScriptSource (const sys_tchar *base_url, const sys_tchar *filename, 
+                    const sys_wchar *code, size_t code_length,
+                    bool auto_free_code = true);
 
-	/** ScriptSource destructor. The destructor automatically frees the code
-	    if autoFreeCode paramter is true in the constructor otherwise the caller
-		need to free it explicitly. */
-	virtual ~ScriptSource ();
+    /** ScriptSource destructor. The destructor automatically frees the code
+        if autoFreeCode paramter is true in the constructor otherwise the caller
+        need to free it explicitly. */
+    virtual ~ScriptSource ();
 
-	// public methods...
+    // public methods...
 public:
 
-	/** Returns the base URL of the script's content source */
-	const tstring &GetBaseURL () const {
-		return m_str_base_url;
-	}
-	
-	/** Returns the file name of the script source */
-	const tstring &GetFileName () const {
-		return m_str_file_name;
-	}
+    /** Returns the base URL of the script's content source */
+    const tstring &GetBaseURL () const {
+        return m_str_base_url;
+    }
+    
+    /** Returns the file name of the script source */
+    const tstring &GetFileName () const {
+        return m_str_file_name;
+    }
 
-	/** Returns the extension name of the script source's file */
-	const tstring GetFileExtensionName () const;
+    /** Returns the extension name of the script source's file */
+    const tstring GetFileExtensionName () const;
 
-	/** Returns the base pointer to the script source code */
-	const sys_wchar *GetCode() {
-		return m_wstr_code;
-	}
+    /** Returns the base pointer to the script source code */
+    const sys_wchar *GetCode() {
+        return m_wstr_code;
+    }
 
-	/** Returns the length of the script source code in characters */
-	size_t GetLength () const {
-		return m_code_length;
-	}
+    /** Returns the length of the script source code in characters */
+    size_t GetLength () const {
+        return m_code_length;
+    }
 
-	/** Returns the langauge of the script */
-	const tstring &GetLanguage () const {
-		return m_language;
-	}
+    /** Returns the langauge of the script */
+    const tstring &GetLanguage () const {
+        return m_language;
+    }
 
-	/** Sets the lagnauge of the script */
-	void SetLanguage (const sys_tchar *language) {
-		m_language = language;
-	}
-	void SetLanguage (const tstring &language) {
-		m_language = language;
-	}
+    /** Sets the lagnauge of the script */
+    void SetLanguage (const sys_tchar *language) {
+        m_language = language;
+    }
+    void SetLanguage (const tstring &language) {
+        m_language = language;
+    }
 
 private:
-	tstring		m_str_base_url;				/** base URL of script's content source */
-	tstring		m_str_file_name;			/** file name of the script source */
-	tstring		m_language;					/** language of the script */
-	const		sys_wchar *m_wstr_code;		/** base pointer the script source code */
-	size_t		m_code_length;				/** length of the code in characters */
-	bool		m_auto_free_code;			/** auto free flag */
+    tstring     m_str_base_url;             /** base URL of script's content source */
+    tstring     m_str_file_name;            /** file name of the script source */
+    tstring     m_language;                 /** language of the script */
+    const       sys_wchar *m_wstr_code;     /** base pointer the script source code */
+    size_t      m_code_length;              /** length of the code in characters */
+    bool        m_auto_free_code;           /** auto free flag */
 };
 
 }; // gls namesapce 

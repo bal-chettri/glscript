@@ -1,9 +1,9 @@
 /**
- * sysport.h		Portable type definitions and macros for universal string manipulation.
+ * sysport.h        Portable type definitions and macros for universal string manipulation.
  *
- * Version:			1.0
+ * Version:         1.0
  *
- * Author:			Bal Bahadur Chettri (balu.chettri@gmail.com)
+ * Author:          Bal Bahadur Chettri (balu.chettri@gmail.com)
  *
  * Copyright (c) 2011 Bal Bahadur Chettri
  *

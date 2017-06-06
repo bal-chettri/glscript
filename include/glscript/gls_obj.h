@@ -33,64 +33,64 @@ namespace gls {
  */
 class RefObject {
 protected:
-	// ctor. Intially, referece count is set to 1.
-	RefObject () : 
-		 m_ref_count(1) 
-	{ }
+    // ctor. Intially, referece count is set to 1.
+    RefObject () : 
+         m_ref_count(1) 
+    { }
 
-	// dtor. This must be virtual so we can `delete this`.
-	virtual ~RefObject() {
-		assert(m_ref_count == 0);
-	}
+    // dtor. This must be virtual so we can `delete this`.
+    virtual ~RefObject() {
+        assert(m_ref_count == 0);
+    }
 
 public:
-	/** AddRef. Adds a reference */
-	virtual unsigned long AddRef () {
-		return ++m_ref_count;
-	}
+    /** AddRef. Adds a reference */
+    virtual unsigned long AddRef () {
+        return ++m_ref_count;
+    }
 
-	/** Release. Releases a reference */
-	virtual unsigned long Release () {
-		unsigned long val = --m_ref_count;
-		if (m_ref_count == 0) {
-			delete this;
-		}
-		return val;
-	}
+    /** Release. Releases a reference */
+    virtual unsigned long Release () {
+        unsigned long val = --m_ref_count;
+        if (m_ref_count == 0) {
+            delete this;
+        }
+        return val;
+    }
 
 private:
-	unsigned long m_ref_count;
+    unsigned long m_ref_count;
 };
 
 /** ContainedRefObject class. Contained or aggregated referenced object type. */
 class ContainedRefObject : public RefObject {
 protected:
-	ContainedRefObject (RefObject *parent) 
-		: m_parent(parent) 
-	{ }
+    ContainedRefObject (RefObject *parent) 
+        : m_parent(parent) 
+    { }
 
-	ContainedRefObject (size_t my_offset) {
-		m_parent = reinterpret_cast<RefObject *>((unsigned char *)this - my_offset);
-	}
-
-public:
-	virtual unsigned long AddRef () {
-		return m_parent->AddRef ();
-	}
-
-	virtual unsigned long Release () {
-		return m_parent->Release ();
-	}
+    ContainedRefObject (size_t my_offset) {
+        m_parent = reinterpret_cast<RefObject *>((unsigned char *)this - my_offset);
+    }
 
 public:
-	// This does not require Release() to be called on the returned parent object 
-	// pointer The caller may, however, Addref it if it needs to use it further.
-	RefObject *GetParent() {
-		return m_parent;
-	}
+    virtual unsigned long AddRef () {
+        return m_parent->AddRef ();
+    }
+
+    virtual unsigned long Release () {
+        return m_parent->Release ();
+    }
+
+public:
+    // This does not require Release() to be called on the returned parent object 
+    // pointer The caller may, however, Addref it if it needs to use it further.
+    RefObject *GetParent() {
+        return m_parent;
+    }
 
 protected:
-	RefObject *m_parent;
+    RefObject *m_parent;
 };
 
 }; // gls namesapce

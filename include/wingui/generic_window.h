@@ -24,94 +24,94 @@
   #define __wingui_generic_window_h
 
 #if defined (DEBUG) || defined(_DEBUG)
- #define WINGUI_ASSERT(M)	assert(M)
+ #define WINGUI_ASSERT(M)   assert(M)
 #else
- #define WINGUI_ASSERT(M)	M
+ #define WINGUI_ASSERT(M)   M
 #endif
 
 /* A base genreic version of win32 window */
 class GenericWindow {
 public:
-	// ctor
-	GenericWindow ();
+    // ctor
+    GenericWindow ();
 
-	// dtor
-	virtual ~GenericWindow ();
+    // dtor
+    virtual ~GenericWindow ();
 
 public:
-	/* operations */
-	virtual BOOL Create (int x, int y, int cx, int cy, LPCTSTR title);
-	virtual BOOL Create (const RECT &rect, LPCTSTR title);
-	void Destroy ();
-	HWND GetHandle () const;
-	void AttachHandle (HWND hWnd);
-	HWND DetachHandle ();
-	void Show (int cmd_chow = SW_SHOW);
-	void Hide ();
-	BOOL IsValid () const;
-	LONG GetData () const;
-	void SetData (LONG data);
-	void AddChild (GenericWindow *childWnd);
-	HWND GetParent ();
-	void GetWindowRect (RECT &rt);
-	void GetClientRect (RECT &rt);
-	void Move (int x, int y,  int cx, int cy, bool repaint = true);
-	void CenterWindow (GenericWindow *pParent = NULL);
-	void SetBackgroundColor (COLORREF color);
-	void SetTitleText (LPCTSTR lpszText) {
-		::SetWindowText (m_hWnd, lpszText);
-	}
+    /* operations */
+    virtual BOOL Create (int x, int y, int cx, int cy, LPCTSTR title);
+    virtual BOOL Create (const RECT &rect, LPCTSTR title);
+    void Destroy ();
+    HWND GetHandle () const;
+    void AttachHandle (HWND hWnd);
+    HWND DetachHandle ();
+    void Show (int cmd_chow = SW_SHOW);
+    void Hide ();
+    BOOL IsValid () const;
+    LONG GetData () const;
+    void SetData (LONG data);
+    void AddChild (GenericWindow *childWnd);
+    HWND GetParent ();
+    void GetWindowRect (RECT &rt);
+    void GetClientRect (RECT &rt);
+    void Move (int x, int y,  int cx, int cy, bool repaint = true);
+    void CenterWindow (GenericWindow *pParent = NULL);
+    void SetBackgroundColor (COLORREF color);
+    void SetTitleText (LPCTSTR lpszText) {
+        ::SetWindowText (m_hWnd, lpszText);
+    }
 
-	// drag and drop support
-	void EnableDropTarget (BOOL flag_enable = TRUE);
-
-protected:
-	/* helpers */
-	void MapHandle ();
-	void UnmapHandle ();
-
-	/* overridables */
-	virtual void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
-	virtual void GetClassStyle (WNDCLASSEX &wcex);
-	virtual LRESULT HandleMessage (UINT msg, WPARAM wParam, LPARAM lParam);
-	virtual INT_PTR HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam);
-
-	// window procedure callback
-	static LRESULT CALLBACK _wndProc (HWND, UINT, WPARAM, LPARAM);
-	// dialog box window procedure callback
-	static INT_PTR _dlgProc (HWND hWndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
+    // drag and drop support
+    void EnableDropTarget (BOOL flag_enable = TRUE);
 
 protected:
-	// message handlers
-	virtual void OnCreate ();
-	virtual void OnPreDestroy () { }
-	virtual void OnDestroy () { }
-	virtual void OnEraseBackground (HDC hdc, PAINTSTRUCT &ps);
-	virtual void OnMouseDown (int shift, int button, int x, int y) { }
-	virtual void OnMouseUp (int shift, int button, int x, int y) { }
-	virtual void OnMouseMove (int shift, int button, int x, int y) { }
-	virtual void OnMouseLeave () { }
-	virtual void OnKeyPress (int virtkey, int repeatCount) { }
-	virtual void OnKeyDown (int virtkey) { }
-	virtual void OnKeyUp (int virtkey) { }
-	virtual void OnPaint (HDC hdc, PAINTSTRUCT &ps) { }
-	virtual void OnResize (int cx, int cy) { }
-	virtual void OnGotFocus () { }
-	virtual void OnLostFocus () { }
-	virtual void OnContextMenu () { }
-	virtual void OnCommand (int cmdId);
-	virtual void OnDropFiles (HDROP hdrop);
-	virtual void OnClose (BOOL &cancel) { };
+    /* helpers */
+    void MapHandle ();
+    void UnmapHandle ();
+
+    /* overridables */
+    virtual void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
+    virtual void GetClassStyle (WNDCLASSEX &wcex);
+    virtual LRESULT HandleMessage (UINT msg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam);
+
+    // window procedure callback
+    static LRESULT CALLBACK _wndProc (HWND, UINT, WPARAM, LPARAM);
+    // dialog box window procedure callback
+    static INT_PTR _dlgProc (HWND hWndDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 
 protected:
-	// data members
-	HWND m_hWnd;								// the actual window handle	
-	BOOL m_isMainWnd;							// is main window?
-	BOOL m_isDialog;							// is window a dialog box?
-	LONG m_userData;							// user owned data	
-	BOOL m_flagMouseTracking;					// flag for mouse tracking
-	HBRUSH m_hBrushBg;							// background brush
-	HPEN m_hPenBorder;							// background border pen
+    // message handlers
+    virtual void OnCreate ();
+    virtual void OnPreDestroy () { }
+    virtual void OnDestroy () { }
+    virtual void OnEraseBackground (HDC hdc, PAINTSTRUCT &ps);
+    virtual void OnMouseDown (int shift, int button, int x, int y) { }
+    virtual void OnMouseUp (int shift, int button, int x, int y) { }
+    virtual void OnMouseMove (int shift, int button, int x, int y) { }
+    virtual void OnMouseLeave () { }
+    virtual void OnKeyPress (int virtkey, int repeatCount) { }
+    virtual void OnKeyDown (int virtkey) { }
+    virtual void OnKeyUp (int virtkey) { }
+    virtual void OnPaint (HDC hdc, PAINTSTRUCT &ps) { }
+    virtual void OnResize (int cx, int cy) { }
+    virtual void OnGotFocus () { }
+    virtual void OnLostFocus () { }
+    virtual void OnContextMenu () { }
+    virtual void OnCommand (int cmdId);
+    virtual void OnDropFiles (HDROP hdrop);
+    virtual void OnClose (BOOL &cancel) { };
+
+protected:
+    // data members
+    HWND m_hWnd;                                // the actual window handle 
+    BOOL m_isMainWnd;                           // is main window?
+    BOOL m_isDialog;                            // is window a dialog box?
+    LONG m_userData;                            // user owned data  
+    BOOL m_flagMouseTracking;                   // flag for mouse tracking
+    HBRUSH m_hBrushBg;                          // background brush
+    HPEN m_hPenBorder;                          // background border pen
 };
 
 #endif /* __wingui_generic_window_h */

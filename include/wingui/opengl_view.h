@@ -28,103 +28,103 @@
 /* A view supporting open gl rendering */
 class OpenGLView : public GenericView {
 public:
-	/* constructors */
+    /* constructors */
 
-	// default construction
-	OpenGLView ();	
+    // default construction
+    OpenGLView ();  
 
-	// dtor
-	~OpenGLView ();
-
-public:
-	// operations	
-
-protected:
-	/**
-	 * SetupPixelFormat ()
-	 * Setups the pixel format that suuports OpenGL.
-	 */
-	BOOL SetupPixelFormat ();
-
-	/**
-	 * CreateGLContext ()
-	 * Creates OpenGL context to be used with this view.
-	 */
-	BOOL CreateGLContext ();
-
-	/**
-	 * DestroyGLContext ()
-	 * Destroys the OpenGL context.
-	 */
-	void DestroyGLContext ();
-
-	/**
-	 * InitGL ()
-	 * Initializes the defaults for OpenGL.
-	 */
-	virtual void InitGL ();
+    // dtor
+    ~OpenGLView ();
 
 public:
-	/**
-	 * SetupGLView ()
-	 * Setups the OpenGL view port and matrices.
-	 */
-	virtual void SetupGLView (int cx, int cy);
-
-	/**
-	 * SetPerspectiveViewingMode ()
-	 * Sets the viewing mode to perspective.
-	 */
-	void SetPerspectiveViewingMode ();
-
-	/**
-	 * SetOrthographicViewingMode ()
-	 * Sets the viewing mode to orthographic mode.
-	 */
-	void SetOrthographicViewingMode ();
-
-	BOOL GetOrtho () const {
-		return m_ortho;
-	}
-	
-	void SetOrtho (BOOL flag) {
-		m_ortho = flag;
-	}
-	
-	/**
-	 * RenderScene ()
-	 * Renders the scene. The default implementation will erase the screen with 
-	 * current clear color. Override to render / draw the models.
-	 */
-	virtual void RenderScene ();	
-		
-	////////////////////////////////// overrides //////////////////////////////////
+    // operations   
 
 protected:
-	virtual void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
-	virtual void GetClassStyle (WNDCLASSEX &wcex);	
+    /**
+     * SetupPixelFormat ()
+     * Setups the pixel format that suuports OpenGL.
+     */
+    BOOL SetupPixelFormat ();
+
+    /**
+     * CreateGLContext ()
+     * Creates OpenGL context to be used with this view.
+     */
+    BOOL CreateGLContext ();
+
+    /**
+     * DestroyGLContext ()
+     * Destroys the OpenGL context.
+     */
+    void DestroyGLContext ();
+
+    /**
+     * InitGL ()
+     * Initializes the defaults for OpenGL.
+     */
+    virtual void InitGL ();
 
 public:
-	void ResetView ();
-	void SetViewPort (GLint vpx, GLint vpy, GLsizei vpcx, GLsizei vpcy);
+    /**
+     * SetupGLView ()
+     * Setups the OpenGL view port and matrices.
+     */
+    virtual void SetupGLView (int cx, int cy);
+
+    /**
+     * SetPerspectiveViewingMode ()
+     * Sets the viewing mode to perspective.
+     */
+    void SetPerspectiveViewingMode ();
+
+    /**
+     * SetOrthographicViewingMode ()
+     * Sets the viewing mode to orthographic mode.
+     */
+    void SetOrthographicViewingMode ();
+
+    BOOL GetOrtho () const {
+        return m_ortho;
+    }
+    
+    void SetOrtho (BOOL flag) {
+        m_ortho = flag;
+    }
+    
+    /**
+     * RenderScene ()
+     * Renders the scene. The default implementation will erase the screen with 
+     * current clear color. Override to render / draw the models.
+     */
+    virtual void RenderScene ();    
+        
+    ////////////////////////////////// overrides //////////////////////////////////
 
 protected:
-	// message handlers
-	virtual void OnCreate ();
-	virtual void OnPreDestroy ();
-	virtual void OnEraseBackground (HDC hdc, PAINTSTRUCT &ps);
-	virtual void OnResize (int cx, int cy);
+    virtual void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
+    virtual void GetClassStyle (WNDCLASSEX &wcex);  
+
+public:
+    void ResetView ();
+    void SetViewPort (GLint vpx, GLint vpy, GLsizei vpcx, GLsizei vpcy);
 
 protected:
-	// data members
-	HGLRC m_hGLRC;	
-	GLdouble m_orthographicMatrix[16];
-	GLdouble m_perspectiveMatrix[16];
-	GLint m_vpLeft;
-	GLint m_vpTop;
-	GLsizei m_vpWidth;
-	GLsizei m_vpHeight;
-	BOOL m_ortho;
+    // message handlers
+    virtual void OnCreate ();
+    virtual void OnPreDestroy ();
+    virtual void OnEraseBackground (HDC hdc, PAINTSTRUCT &ps);
+    virtual void OnResize (int cx, int cy);
+
+protected:
+    // data members
+    HGLRC m_hGLRC;  
+    GLdouble m_orthographicMatrix[16];
+    GLdouble m_perspectiveMatrix[16];
+    GLint m_vpLeft;
+    GLint m_vpTop;
+    GLsizei m_vpWidth;
+    GLsizei m_vpHeight;
+    BOOL m_ortho;
 };
 
 #endif /* __wingui_opengl_view_h */

@@ -29,52 +29,52 @@
 class Font 
 {
 protected:
-	HFONT m_hFont;
+    HFONT m_hFont;
 public:
-	Font () {
-		m_hFont = NULL;
-	}
+    Font () {
+        m_hFont = NULL;
+    }
 
-	Font (LPCTSTR lpszFaceName, int size, HDC hdc) {
-		m_hFont = NULL;
-		Create (lpszFaceName, size, hdc, FW_NORMAL);
-	}
+    Font (LPCTSTR lpszFaceName, int size, HDC hdc) {
+        m_hFont = NULL;
+        Create (lpszFaceName, size, hdc, FW_NORMAL);
+    }
 
-	Font (const Font &fnt) {
-		m_hFont = NULL;
-	}
+    Font (const Font &fnt) {
+        m_hFont = NULL;
+    }
 
-	~Font () {
-		Delete ();
-	}
+    ~Font () {
+        Delete ();
+    }
 
-	BOOL Create (LPCTSTR lpszFaceName, int size, HDC hRefDC, LONG lfWieght);
-	inline BOOL Create (LPCTSTR lpszFaceName, int size, HDC hdc);
-	inline BOOL Create (LPCTSTR lpszFaceName, int size);
+    BOOL Create (LPCTSTR lpszFaceName, int size, HDC hRefDC, LONG lfWieght);
+    inline BOOL Create (LPCTSTR lpszFaceName, int size, HDC hdc);
+    inline BOOL Create (LPCTSTR lpszFaceName, int size);
 
-	operator HFONT () {
-		return m_hFont;
-	}
+    operator HFONT () {
+        return m_hFont;
+    }
 
-	void Delete () {
-		if (m_hFont) {
-			DeleteObject (m_hFont);
-			m_hFont = NULL;
-		}
-	}
+    void Delete () {
+        if (m_hFont) {
+            DeleteObject (m_hFont);
+            m_hFont = NULL;
+        }
+    }
 };
 
 inline BOOL Font::Create (LPCTSTR lpszFaceName, int size, HDC hRefDC) 
 {
-	return Create (lpszFaceName, size, hRefDC, FW_NORMAL);
+    return Create (lpszFaceName, size, hRefDC, FW_NORMAL);
 }
 
 inline BOOL Font::Create (LPCTSTR lpszFaceName, int size)
 {
-	HDC hdc = CreateCompatibleDC (NULL);
-	BOOL ret = Create (lpszFaceName, size, hdc, FW_NORMAL);
-	::DeleteDC (hdc);
-	return ret;
+    HDC hdc = CreateCompatibleDC (NULL);
+    BOOL ret = Create (lpszFaceName, size, hdc, FW_NORMAL);
+    ::DeleteDC (hdc);
+    return ret;
 }
 
 /**
@@ -82,90 +82,90 @@ inline BOOL Font::Create (LPCTSTR lpszFaceName, int size)
  */
 class Color {
 public:
-	COLORREF value;
+    COLORREF value;
 
-	Color () { }
-	Color (COLORREF rgb) : value(rgb) { }
-	Color (const Color &color) {
-		value = color.value;
-	}
+    Color () { }
+    Color (COLORREF rgb) : value(rgb) { }
+    Color (const Color &color) {
+        value = color.value;
+    }
 
-	Color SetRGB (BYTE r, BYTE g, BYTE b) {
-		value = RGB (r, g, b);
-	}
+    Color SetRGB (BYTE r, BYTE g, BYTE b) {
+        value = RGB (r, g, b);
+    }
 
-	void GetRGB (BYTE r, BYTE g, BYTE b) {
-		r = GetRValue (value);
-		g = GetGValue (value);
-		b = GetBValue (value);
-	}
-	
-	Color GetBrighter (int factor = 10) {
-		BYTE red = GetRValue(value) + factor;
-		BYTE green = GetRValue(value) + factor;
-		BYTE blue = GetRValue(value) + factor;
+    void GetRGB (BYTE r, BYTE g, BYTE b) {
+        r = GetRValue (value);
+        g = GetGValue (value);
+        b = GetBValue (value);
+    }
+    
+    Color GetBrighter (int factor = 10) {
+        BYTE red = GetRValue(value) + factor;
+        BYTE green = GetRValue(value) + factor;
+        BYTE blue = GetRValue(value) + factor;
 
-		red = red > 255 ? 255 : red;
-		green = green > 255 ? 255 : green;
-		blue = blue > 255 ? 255 : blue;
+        red = red > 255 ? 255 : red;
+        green = green > 255 ? 255 : green;
+        blue = blue > 255 ? 255 : blue;
 
-		return Color ( RGB(red, green, blue) );
-	}
+        return Color ( RGB(red, green, blue) );
+    }
 
-	Color GetDarker (float scaleFactor = 0.2f) {
-		float red = (float)GetRValue(value) / 255.0f;
-		float green = (float)GetRValue (value) / 255.0f;
-		float blue = (float)GetRValue (value) / 255.0f;
+    Color GetDarker (float scaleFactor = 0.2f) {
+        float red = (float)GetRValue(value) / 255.0f;
+        float green = (float)GetRValue (value) / 255.0f;
+        float blue = (float)GetRValue (value) / 255.0f;
 
-		red = red - 0.25f;
-		green = green - 0.25f;
-		blue = blue - 0.25f;
+        red = red - 0.25f;
+        green = green - 0.25f;
+        blue = blue - 0.25f;
 
-		red = red < 0.0f ? 0.0f : red;
-		green = green < 0.0f ? 0.0f : green;
-		blue = blue < 0.0f ? 0.0f : blue;
+        red = red < 0.0f ? 0.0f : red;
+        green = green < 0.0f ? 0.0f : green;
+        blue = blue < 0.0f ? 0.0f : blue;
 
-		return Color ( RGB((int)red, (int)green, (int)blue) );
-	}
+        return Color ( RGB((int)red, (int)green, (int)blue) );
+    }
 
-	static Color GrayColor (BYTE value) {
-		return Color (RGB (value, value, value));
-	}
-	static Color RedColor () {  
-		return Color ( RGB(255,0,0) );
-	}
-	static Color GreenColor () { 
-		return Color ( RGB(0,255,0) );
-	} 
-	static Color BlueColor () {  
-		return Color ( RGB(0,0,255) );
-	} 
+    static Color GrayColor (BYTE value) {
+        return Color (RGB (value, value, value));
+    }
+    static Color RedColor () {  
+        return Color ( RGB(255,0,0) );
+    }
+    static Color GreenColor () { 
+        return Color ( RGB(0,255,0) );
+    } 
+    static Color BlueColor () {  
+        return Color ( RGB(0,0,255) );
+    } 
 };
 
 class MemoryBitmap 
 {
 protected:
-	HBITMAP m_hBitmap;
-	HGDIOBJ m_hOldBitmap;
-	HDC m_hDC;
+    HBITMAP m_hBitmap;
+    HGDIOBJ m_hOldBitmap;
+    HDC m_hDC;
 
 public:
-	MemoryBitmap () {
-		m_hBitmap = NULL;
-		m_hOldBitmap = NULL;
-		m_hDC = NULL;
-	}
+    MemoryBitmap () {
+        m_hBitmap = NULL;
+        m_hOldBitmap = NULL;
+        m_hDC = NULL;
+    }
 
-	~MemoryBitmap () {
-		Dispose ();
-	}
+    ~MemoryBitmap () {
+        Dispose ();
+    }
 
-	HDC GetDC () const {
-		return m_hDC;
-	}
+    HDC GetDC () const {
+        return m_hDC;
+    }
 
-	BOOL Create (int cx, int cy, HDC hRefDC = NULL);
-	void Dispose ();
+    BOOL Create (int cx, int cy, HDC hRefDC = NULL);
+    void Dispose ();
 };
 
 #endif /* __WINGUI_GDI_H */

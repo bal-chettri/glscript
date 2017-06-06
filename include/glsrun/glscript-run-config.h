@@ -24,28 +24,28 @@
  #define __GLSCRIPT_RUN_CONFIG_H
 
 /* App title */
-#define GLSRUN_APP_TITLE						_T("glsrun")
+#define GLSRUN_APP_TITLE                        _T("glsrun")
 
 /* App version */
-#define GLSRUN_APP_VER_MAJ						0
-#define GLSRUN_APP_VER_MIN						0
-#define GLSRUN_APP_VER_REV						0
-#define GLSRUN_APP_VER_BUILD					8
+#define GLSRUN_APP_VER_MAJ                      0
+#define GLSRUN_APP_VER_MIN                      0
+#define GLSRUN_APP_VER_REV                      0
+#define GLSRUN_APP_VER_BUILD                    8
 
 // obfuscate strings
 #define GLSRUN_APP_OBFUSCATE
 
 #ifdef UNICODE
-#define GLSRUN_APP_OBFUSCATOR_KEY				0x91f7
+#define GLSRUN_APP_OBFUSCATOR_KEY               0x91f7
 #else
-#define GLSRUN_APP_OBFUSCATOR_KEY				0x7c
+#define GLSRUN_APP_OBFUSCATOR_KEY               0x7c
 #endif
 
 /* define obfuscated string maker */
 #ifdef GLSRUN_APP_OBFUSCATE
-#define _OT(_C)									_T(_C ^ GLSRUN_APP_OBFUSCATOR_KEY)
+#define _OT(_C)                                 _T(_C ^ GLSRUN_APP_OBFUSCATOR_KEY)
 #else
-#define _OT(_C)									_T(_C)
+#define _OT(_C)                                 _T(_C)
 #endif
 
 /* obfuscated strings */
@@ -80,31 +80,31 @@ _T('\0') \
 };
 
 /* Common dialog constants */
-#define GLSRUN_APP_CMNDLG_FILTERS				_T("glScript Files (*.gls)\0") \
-												_T("*.gls\0") \
-												_T("gls JavaScript Files (*.js)\0") \
-												_T("*.js\0") \
-												_T("gls VBScript Files (*.vbs)\0") \
-												_T("*.vbs\0") \
-												_T("All Files (*.*)\0") \
-												_T("*.*\0") \
-												_T("\0")
+#define GLSRUN_APP_CMNDLG_FILTERS               _T("glScript Files (*.gls)\0") \
+                                                _T("*.gls\0") \
+                                                _T("gls JavaScript Files (*.js)\0") \
+                                                _T("*.js\0") \
+                                                _T("gls VBScript Files (*.vbs)\0") \
+                                                _T("*.vbs\0") \
+                                                _T("All Files (*.*)\0") \
+                                                _T("*.*\0") \
+                                                _T("\0")
 
-#define GLSRUN_APP_CMNDLG_DEFEXT				_T("gls")
+#define GLSRUN_APP_CMNDLG_DEFEXT                _T("gls")
 
 /* b2code API Constants */
 #ifdef _DEBUG
-	#define WEBSITE_URL_BASE					_T("http://code.google.com/p/glscript")
+    #define WEBSITE_URL_BASE                    _T("http://code.google.com/p/glscript")
 #else
-	#define WEBSITE_URL_BASE					_T("http://code.google.com/p/glscript")
+    #define WEBSITE_URL_BASE                    _T("http://code.google.com/p/glscript")
 #endif
 
-#define SUPPORT_WEBSITE_URL						_T("v=synopsis")
-#define CHECK_FOR_UPDATES_URL					_T("v=download&show_updates=1&client_ver=%s")
-#define SUPPORT_SHARE_APP_URL					_T("v=share")
+#define SUPPORT_WEBSITE_URL                     _T("v=synopsis")
+#define CHECK_FOR_UPDATES_URL                   _T("v=download&show_updates=1&client_ver=%s")
+#define SUPPORT_SHARE_APP_URL                   _T("v=share")
 
 // default GL view size
-#define DEF_GLS_VIEW_WIDTH						480
-#define DEF_GLS_VIEW_HEIGHT						320
+#define DEF_GLS_VIEW_WIDTH                      480
+#define DEF_GLS_VIEW_HEIGHT                     320
 
 #endif /* __GLSCRIPT_RUN_CONFIG_H */

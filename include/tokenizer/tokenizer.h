@@ -1,9 +1,9 @@
 /**
- * tokenizer.h		Simple and fast string tokenizer for C++
+ * tokenizer.h      Simple and fast string tokenizer for C++
  *
- * Version:			1.0
+ * Version:         1.0
  *
- * Author:			Bal Bahadur Chettri (balu.chettri@gmail.com)
+ * Author:          Bal Bahadur Chettri (balu.chettri@gmail.com)
  *
  * Copyright (c) 2011 Bal Bahadur Chettri
  *
@@ -38,77 +38,77 @@
 /* class Tokenizer */
 class Tokenizer {
 public:
-	enum { /* Flags */
-		TokenizeSymbols = 1,
-		KeepWhiteToken = 2,
-		UnquoteString = 4,
-		TerminateAtNewLine = 8
-	}; /* Flags */
+    enum { /* Flags */
+        TokenizeSymbols = 1,
+        KeepWhiteToken = 2,
+        UnquoteString = 4,
+        TerminateAtNewLine = 8
+    }; /* Flags */
 
-	/* enum StringQuote */
-	enum StringQuote {
-		SingleQuote,
-		DoubleQuote
-	}; /* enum StringQuote */
+    /* enum StringQuote */
+    enum StringQuote {
+        SingleQuote,
+        DoubleQuote
+    }; /* enum StringQuote */
 
-	/* enum NewlinePair */
-	enum NewlinePair {
-		NewlineCRLF,
-		NewlineLFCR,
-	}; /* enum NewlinePair */
+    /* enum NewlinePair */
+    enum NewlinePair {
+        NewlineCRLF,
+        NewlineLFCR,
+    }; /* enum NewlinePair */
 
-	/* enum TokenType */
-	enum TokenType {
-		InvalidToken,
-		WordToken,
-		SymbolToken,
-		WhiteToken,
-		StringToken
-	}; /* enum TokenType */
+    /* enum TokenType */
+    enum TokenType {
+        InvalidToken,
+        WordToken,
+        SymbolToken,
+        WhiteToken,
+        StringToken
+    }; /* enum TokenType */
 
-	/* struct Token */
-	struct Token {
-		const sys_tchar *string;			/* pointer to actual string (not 0 terminated) */
-		size_t length;						/* length of string */
-		TokenType type;						/* type of token */
-	}; /* struct Token */
+    /* struct Token */
+    struct Token {
+        const sys_tchar *string;            /* pointer to actual string (not 0 terminated) */
+        size_t length;                      /* length of string */
+        TokenType type;                     /* type of token */
+    }; /* struct Token */
 
 public:
-	/* ctor */
-	Tokenizer ();
+    /* ctor */
+    Tokenizer ();
 
-	/* dtor */
-	virtual ~Tokenizer ();
+    /* dtor */
+    virtual ~Tokenizer ();
 
-	int GetFlags() const;
-	void SetFlags (int flags);
-	void SetSymbols (const sys_tchar *symbols);
-	void SetWhiteChars (const sys_tchar *white_chars);
-	void SetStringQuote (StringQuote quote);
-	void SetNewlinePair (NewlinePair newline_pair);
+    int GetFlags() const;
+    void SetFlags (int flags);
+    void SetSymbols (const sys_tchar *symbols);
+    void SetWhiteChars (const sys_tchar *white_chars);
+    void SetStringQuote (StringQuote quote);
+    void SetNewlinePair (NewlinePair newline_pair);
 
-	static bool IsWhitespaceToken (const Token &token);
+    static bool IsWhitespaceToken (const Token &token);
 
-	/* tokenizes the input string */
-	size_t Tokenize (sys_tchar **pinput, Token *token_buffer, size_t max_tokens);
+    /* tokenizes the input string */
+    size_t Tokenize (sys_tchar **pinput, Token *token_buffer, size_t max_tokens);
 
 #if _DEBUG
-	static void DumpToken (const Token &token);
-	static void DumpTokens (const Token *tokens, size_t length);
+    static void DumpToken (const Token &token);
+    static void DumpTokens (const Token *tokens, size_t length);
 #endif
 
 private:
-	inline bool IsWhite (sys_tchar ch) const;
-	inline bool IsSymbol (sys_tchar ch) const;
+    inline bool IsWhite (sys_tchar ch) const;
+    inline bool IsSymbol (sys_tchar ch) const;
 
 private:
-	int m_flags;							/* tokenizer flags */
-	const sys_tchar *m_symbols;				/* pointer to recognized symbols */
-	const sys_tchar *m_white_chars;			/* pointer to recognized white characters */
-	StringQuote m_string_quote;				/* string quote type */
-	NewlinePair m_newline_pair;				/* newline character pair */
-	static const sys_tchar *_def_symbols;
-	static const sys_tchar *_def_white_chars;
+    int m_flags;                            /* tokenizer flags */
+    const sys_tchar *m_symbols;             /* pointer to recognized symbols */
+    const sys_tchar *m_white_chars;         /* pointer to recognized white characters */
+    StringQuote m_string_quote;             /* string quote type */
+    NewlinePair m_newline_pair;             /* newline character pair */
+    static const sys_tchar *_def_symbols;
+    static const sys_tchar *_def_white_chars;
 
 }; /* class Tokenizer */
 

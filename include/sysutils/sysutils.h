@@ -27,11 +27,11 @@
 
 // define file path separator symbol
 #if defined(WIN32)
- #define SYSUTILS_PATH_SEPARATOR				_tx('\\')
+ #define SYSUTILS_PATH_SEPARATOR                _tx('\\')
 #elif defined(_LINUX_) || defined(_MACH_)
- #define SYSUTILS_PATH_SEPARATOR				_tx('/')
+ #define SYSUTILS_PATH_SEPARATOR                _tx('/')
 #else
- #define SYSUTILS_PATH_SEPARATOR				_tx('/')
+ #define SYSUTILS_PATH_SEPARATOR                _tx('/')
 #endif
 
 #ifdef __cplusplus
@@ -69,14 +69,14 @@ int sysutils_path_is_absolute (const sys_tchar *path);
  * null character
  */
 sys_tchar *sysutils_path_get_base (const sys_tchar *path, sys_tchar *base_path_buff, 
-								   size_t max_buff_length);
+                                   size_t max_buff_length);
 
 /**
  * sysutils_path_get_filename ()
  * Returns the file name portion for specifed path.
  */
 sys_tchar *sysutils_path_get_filename (const sys_tchar *path, sys_tchar *filename_buff, 
-										size_t max_buff_length);
+                                        size_t max_buff_length);
 
 
 /**

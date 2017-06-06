@@ -36,15 +36,15 @@ class MainWnd;
  */
 class FullScreenContainerWnd : public GenericWindow {
 public:
-	FullScreenContainerWnd(MainWnd &mainWindow) : mainWnd(mainWindow) {
-	}
+    FullScreenContainerWnd(MainWnd &mainWindow) : mainWnd(mainWindow) {
+    }
 
-	BOOL Create ();
-	void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
-	void OnKeyPress (int virtkey, int repeatCount);
+    BOOL Create ();
+    void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
+    void OnKeyPress (int virtkey, int repeatCount);
 
 private:
-	MainWnd &mainWnd;
+    MainWnd &mainWnd;
 };
 
 /**
@@ -53,50 +53,50 @@ private:
  */
 class MainWnd : public MainWindow, public gls::ScriptHostEvents {
 public:
-	// ctor
-	MainWnd ();
+    // ctor
+    MainWnd ();
 
-	// dtor
-	~MainWnd ();
+    // dtor
+    ~MainWnd ();
 
 public:
-	// operations
-	void OpenScript (LPCTSTR lpszScriptPath);
-	void CloseScript ();
-	bool RunScript ();
-	void UpdateUI ();
-	void EnterFullScreenMode (BOOL flag = TRUE);
-	void ToggleConsoleWindowView ();
+    // operations
+    void OpenScript (LPCTSTR lpszScriptPath);
+    void CloseScript ();
+    bool RunScript ();
+    void UpdateUI ();
+    void EnterFullScreenMode (BOOL flag = TRUE);
+    void ToggleConsoleWindowView ();
 
 protected:
-	// GLScriptHostEvents
-	void ScriptHost_OnError (gls::ScriptHost *pHost, const sys_tchar *errorMessage);
-	void ScriptHost_OnChangeState (gls::ScriptHost *pHost, gls::GLSCRIPT_HOST_STATE from_state,
-									gls::GLSCRIPT_HOST_STATE to_state);
-	void ScriptHost_OnConfigureWindow (const gls::GLSCRIPT_WINDOW_CONFIG &config);
-	void ScriptHost_OnLogMessage (const sys_wchar *message, gls::GLSCRIPT_LOGTYPE log_type);
-	void ScriptHost_OnLogClear ();
+    // GLScriptHostEvents
+    void ScriptHost_OnError (gls::ScriptHost *pHost, const sys_tchar *errorMessage);
+    void ScriptHost_OnChangeState (gls::ScriptHost *pHost, gls::GLSCRIPT_HOST_STATE from_state,
+                                    gls::GLSCRIPT_HOST_STATE to_state);
+    void ScriptHost_OnConfigureWindow (const gls::GLSCRIPT_WINDOW_CONFIG &config);
+    void ScriptHost_OnLogMessage (const sys_wchar *message, gls::GLSCRIPT_LOGTYPE log_type);
+    void ScriptHost_OnLogClear ();
 
-	// message handlers...
+    // message handlers...
 protected:
-	virtual void OnCreate ();
-	virtual void OnPreDestroy ();
-	virtual void OnResize (int cx, int cy);
-	virtual void OnGotFocus ();
-	virtual void OnDropFiles (HDROP hDrop);
-	virtual void OnCommand (int cmdId);	
-	
+    virtual void OnCreate ();
+    virtual void OnPreDestroy ();
+    virtual void OnResize (int cx, int cy);
+    virtual void OnGotFocus ();
+    virtual void OnDropFiles (HDROP hDrop);
+    virtual void OnCommand (int cmdId); 
+    
 protected:
-	// data members
-	GLView *m_pGLView;									// open gl view renders scene
-	gls::ScriptHostDriver *m_pScriptHostDriver;		// script host driver loads script host
-	BOOL m_scriptLoaded;								// script loaded flag
-	tstring m_scriptPath;								// path of the currently loaded script
-	BOOL m_paused;										// animation is puased?
-	tstring m_windowTitle;								// window's title
+    // data members
+    GLView *m_pGLView;                                  // open gl view renders scene
+    gls::ScriptHostDriver *m_pScriptHostDriver;     // script host driver loads script host
+    BOOL m_scriptLoaded;                                // script loaded flag
+    tstring m_scriptPath;                               // path of the currently loaded script
+    BOOL m_paused;                                      // animation is puased?
+    tstring m_windowTitle;                              // window's title
 
-	FullScreenContainerWnd m_fullScreenContWnd;			// full screen container window
-	ConsoleWnd m_consoleWnd;							// console window
+    FullScreenContainerWnd m_fullScreenContWnd;         // full screen container window
+    ConsoleWnd m_consoleWnd;                            // console window
 };
 
 #endif /* __GLSCRIPT_GUI_MAINWND_H */

@@ -27,7 +27,7 @@
  * This header is included by gls_activescript_host.h header file. Please do
  * not include it directly.
  *
- * Author:		Bal Bahadur Chettri
+ * Author:      Bal Bahadur Chettri
  */
 #ifndef __GLSCRIPT_ACTIVESCRIPT_SITE_H__
 #define __GLSCRIPT_ACTIVESCRIPT_SITE_H__
@@ -42,49 +42,49 @@ extern const IID *GLScript_ActiveScriptSite_IIDs [];
 
 // GLScript_ActiveScriptSite class...
 class GLScript_ActiveScriptSite : 
-	public AutomationContainedComObject<IActiveScriptSite, GLScript_ActiveScriptSite_IIDs>
+    public AutomationContainedComObject<IActiveScriptSite, GLScript_ActiveScriptSite_IIDs>
 {
 public:
-	// Constructor
-	GLScript_ActiveScriptSite (IUnknown *parent) 
-		: AutomationContainedComObject(parent) 
-	{ }
+    // Constructor
+    GLScript_ActiveScriptSite (IUnknown *parent) 
+        : AutomationContainedComObject(parent) 
+    { }
 
-	// Destructor
-	virtual ~GLScript_ActiveScriptSite () {
-		RemoveAllHostObjects ();
-	}
+    // Destructor
+    virtual ~GLScript_ActiveScriptSite () {
+        RemoveAllHostObjects ();
+    }
 
-	// IActiveScriptSite methods...
+    // IActiveScriptSite methods...
 public:
-	virtual HRESULT STDMETHODCALLTYPE GetLCID (LCID *plcid);
-	virtual HRESULT STDMETHODCALLTYPE GetItemInfo (LPCOLESTR pstrName, DWORD dwReturnMask, 
-													IUnknown **ppiunkItem, ITypeInfo **ppti);        
-	virtual HRESULT STDMETHODCALLTYPE GetDocVersionString (BSTR *pbstrVersion);        
-	virtual HRESULT STDMETHODCALLTYPE OnScriptTerminate (const VARIANT *pvarResult, 
-														 const EXCEPINFO *pexcepinfo);
-	virtual HRESULT STDMETHODCALLTYPE OnStateChange (SCRIPTSTATE ssScriptState);        
-	virtual HRESULT STDMETHODCALLTYPE OnScriptError (IActiveScriptError *pscripterror);        
-	virtual HRESULT STDMETHODCALLTYPE OnEnterScript (void);        
-	virtual HRESULT STDMETHODCALLTYPE OnLeaveScript (void);
+    virtual HRESULT STDMETHODCALLTYPE GetLCID (LCID *plcid);
+    virtual HRESULT STDMETHODCALLTYPE GetItemInfo (LPCOLESTR pstrName, DWORD dwReturnMask, 
+                                                    IUnknown **ppiunkItem, ITypeInfo **ppti);        
+    virtual HRESULT STDMETHODCALLTYPE GetDocVersionString (BSTR *pbstrVersion);        
+    virtual HRESULT STDMETHODCALLTYPE OnScriptTerminate (const VARIANT *pvarResult, 
+                                                         const EXCEPINFO *pexcepinfo);
+    virtual HRESULT STDMETHODCALLTYPE OnStateChange (SCRIPTSTATE ssScriptState);        
+    virtual HRESULT STDMETHODCALLTYPE OnScriptError (IActiveScriptError *pscripterror);        
+    virtual HRESULT STDMETHODCALLTYPE OnEnterScript (void);        
+    virtual HRESULT STDMETHODCALLTYPE OnLeaveScript (void);
 
-	// public operations ...
+    // public operations ...
 public:
-	void AddHostObject (LPCOLESTR name, IUnknown *p_com_object);
-	void RemoveHostObject (LPCOLESTR name);
-	void RemoveAllHostObjects ();
+    void AddHostObject (LPCOLESTR name, IUnknown *p_com_object);
+    void RemoveHostObject (LPCOLESTR name);
+    void RemoveAllHostObjects ();
 
 private:
-	inline GLScriptHost_Win32 *GetHostObject () {
-		return reinterpret_cast<GLScriptHost_Win32 *>(GetParent());
-	}
-	
-	/** Processes the generic COM exception info and return an error message appropriate 
-	to be displayed in a UI. */
-	LPCTSTR ProcessExceptionInfo (IActiveScriptError *pScriptError);
+    inline GLScriptHost_Win32 *GetHostObject () {
+        return reinterpret_cast<GLScriptHost_Win32 *>(GetParent());
+    }
+    
+    /** Processes the generic COM exception info and return an error message appropriate 
+    to be displayed in a UI. */
+    LPCTSTR ProcessExceptionInfo (IActiveScriptError *pScriptError);
 
 private:
-	map<wstring,IUnknown *>		m_host_objects;		// host defined COM objects
+    map<wstring,IUnknown *>     m_host_objects;     // host defined COM objects
 };
 
 #endif /* __GLSCRIPT_ACTIVESCRIPT_SITE_H__ */

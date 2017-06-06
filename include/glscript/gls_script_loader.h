@@ -39,35 +39,35 @@ namespace gls {
  */ 
 class ScriptSourceLoader : public RefObject {
 public:
-	/** Load the script code from a source */
-	virtual sys_wchar *LoadScriptSource (const sys_tchar *url) = 0;
+    /** Load the script code from a source */
+    virtual sys_wchar *LoadScriptSource (const sys_tchar *url) = 0;
 
-	/** 
-	 * Load the script code from a source asynchronously. 
-	 * @param url URL of the source from which the script source is loaded
-	 * @param callback Callback to invoke on completion of the task
-	 * @param context Pointer to contextual data passed to the callback (may be NULL)
-	 */
-	virtual bool LoadScriptSource (const sys_tchar *url, const ASYNCH_CALLBACK callback, 
-									void *context = NULL) = 0;
+    /** 
+     * Load the script code from a source asynchronously. 
+     * @param url URL of the source from which the script source is loaded
+     * @param callback Callback to invoke on completion of the task
+     * @param context Pointer to contextual data passed to the callback (may be NULL)
+     */
+    virtual bool LoadScriptSource (const sys_tchar *url, const ASYNCH_CALLBACK callback, 
+                                    void *context = NULL) = 0;
 };
 
 /** class ScriptFileSourceLoader. Script source loader that loads from a local file system. */
 class ScriptFileSourceLoader : public ScriptSourceLoader {
 public:
-	sys_wchar *LoadScriptSource (const sys_tchar *url);
+    sys_wchar *LoadScriptSource (const sys_tchar *url);
 
-	bool LoadScriptSource (const sys_tchar *url, const ASYNCH_CALLBACK callback, 
-							void *context = NULL);
+    bool LoadScriptSource (const sys_tchar *url, const ASYNCH_CALLBACK callback, 
+                            void *context = NULL);
 };
 
 /* class ScriptHTTPSourceLoader. Script source loader that loads from a HTTP URL. */
 class ScriptHTTPSourceLoader : public ScriptSourceLoader {
 public:
-	virtual sys_wchar *LoadScriptSource (const sys_tchar *url) = 0;
+    virtual sys_wchar *LoadScriptSource (const sys_tchar *url) = 0;
 
-	bool LoadScriptSource (const sys_tchar *url, const ASYNCH_CALLBACK callback, 
-							void *context = NULL);
+    bool LoadScriptSource (const sys_tchar *url, const ASYNCH_CALLBACK callback, 
+                            void *context = NULL);
 };
 
 }; // gls namespace

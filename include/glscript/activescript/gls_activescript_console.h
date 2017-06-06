@@ -33,25 +33,25 @@ extern const IID *GLScript_Console_IIDs[];
 
 // GLScript_Console class...
 class GLScript_Console : public AutomationContainedComObject<
-									_GLScript_Console, 
-									GLScript_Console_IIDs, 
-									&IID__GLScript_Console> 
+                                    _GLScript_Console, 
+                                    GLScript_Console_IIDs, 
+                                    &IID__GLScript_Console> 
 {
 public:
-	// ctor
-	GLScript_Console (IUnknown *pParent) 
-		: AutomationContainedComObject (pParent) 
-	{ }
+    // ctor
+    GLScript_Console (IUnknown *pParent) 
+        : AutomationContainedComObject (pParent) 
+    { }
 
 public:
-	// _GLScript_Conole methods...
-	HRESULT STDMETHODCALLTYPE log (VARIANT msg);
-	HRESULT STDMETHODCALLTYPE warn (VARIANT msg);
-	HRESULT STDMETHODCALLTYPE error (VARIANT msg);
-	HRESULT STDMETHODCALLTYPE clear ();
+    // _GLScript_Conole methods...
+    HRESULT STDMETHODCALLTYPE log (VARIANT msg);
+    HRESULT STDMETHODCALLTYPE warn (VARIANT msg);
+    HRESULT STDMETHODCALLTYPE error (VARIANT msg);
+    HRESULT STDMETHODCALLTYPE clear ();
 
 private:
-	HRESULT _log (const VARIANT &msg, gls::GLSCRIPT_LOGTYPE log_type);
+    HRESULT _log (const VARIANT &msg, gls::GLSCRIPT_LOGTYPE log_type);
 };
 
 #endif /* __GLSCRIPT_ACTIVESCRIPT_CONSOLE_H__ */

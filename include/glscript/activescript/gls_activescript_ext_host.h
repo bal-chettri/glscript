@@ -31,45 +31,45 @@
 // GLScript_ExtensionHost class. ActiveScript implementation of the ExtensionHost interface.
 class GLScript_ExtensionHost : public gls::ExtensionHost {
 public:
-	GLScript_ExtensionHost (GLScriptHost_Win32 *pParent);
-	~GLScript_ExtensionHost ();
+    GLScript_ExtensionHost (GLScriptHost_Win32 *pParent);
+    ~GLScript_ExtensionHost ();
 
 public:
-	/* GLExtensionHost implementation 0.1 */
-	unsigned short GetInterfaceVersion ();
-	gls::GLS_ENVIRONMENT_TYPE GetEnvironmentType (void);
-	unsigned long GetToolkitVersion ();
-	unsigned long GetPlayerVersion ();
-	bool GetScriptInfo (gls::GLS_SCRIPT_INFO *p_out_script_info);
-	gls::Extension * LoadExtension (const char *path, unsigned long load_options);
-	void *LoadLibraryExtension (const char *path);
-	gls::GLS_TIMER_PROC HookTimerProc (gls::GLS_TIMER_PROC p_timer_proc, void *pContext);
-	gls::GLS_RENDER_PROC HookRenderProc (gls::GLS_RENDER_PROC p_render_proc, void *pContext);
-	/* GLExtensionHost implementation 0.1 */
+    /* GLExtensionHost implementation 0.1 */
+    unsigned short GetInterfaceVersion ();
+    gls::GLS_ENVIRONMENT_TYPE GetEnvironmentType (void);
+    unsigned long GetToolkitVersion ();
+    unsigned long GetPlayerVersion ();
+    bool GetScriptInfo (gls::GLS_SCRIPT_INFO *p_out_script_info);
+    gls::Extension * LoadExtension (const char *path, unsigned long load_options);
+    void *LoadLibraryExtension (const char *path);
+    gls::GLS_TIMER_PROC HookTimerProc (gls::GLS_TIMER_PROC p_timer_proc, void *pContext);
+    gls::GLS_RENDER_PROC HookRenderProc (gls::GLS_RENDER_PROC p_render_proc, void *pContext);
+    /* GLExtensionHost implementation 0.1 */
 
-	/* GLExtensionHost implementation 0.2 */
-	void *GetHostObject (const char *name);
-	void *GetArrayRawData (void *pTypedArray);
-	/* GLExtensionHost implementation 0.2 */
+    /* GLExtensionHost implementation 0.2 */
+    void *GetHostObject (const char *name);
+    void *GetArrayRawData (void *pTypedArray);
+    /* GLExtensionHost implementation 0.2 */
 
 public:
-	// unloads all extensions
-	void UnloadAllExtensions ();
+    // unloads all extensions
+    void UnloadAllExtensions ();
 
-	gls::GLS_RENDER_PROC GetHookedRenderProc (void **context) {
-		*context = m_render_proc_context;
-		return m_pfn_render_proc;
-	}
+    gls::GLS_RENDER_PROC GetHookedRenderProc (void **context) {
+        *context = m_render_proc_context;
+        return m_pfn_render_proc;
+    }
 
-	gls::GLS_EXTENSION_MODULE *LoadExtensionInternal (const char *name, unsigned long load_options);	
-	gls::GLS_EXTENSION_MODULE *LookupExtension (const char *path);
-	gls::GLS_EXTENSION_MODULE *LookupExtensionByLibName (const char *libname);
+    gls::GLS_EXTENSION_MODULE *LoadExtensionInternal (const char *name, unsigned long load_options);    
+    gls::GLS_EXTENSION_MODULE *LookupExtension (const char *path);
+    gls::GLS_EXTENSION_MODULE *LookupExtensionByLibName (const char *libname);
 
 private:
-	GLScriptHost_Win32 *			m_parent;
-	gls::GLS_RENDER_PROC			m_pfn_render_proc;
-	void *							m_render_proc_context;
-	list<gls::GLS_EXTENSION_MODULE *> m_list_extensions_modules;
+    GLScriptHost_Win32 *            m_parent;
+    gls::GLS_RENDER_PROC            m_pfn_render_proc;
+    void *                          m_render_proc_context;
+    list<gls::GLS_EXTENSION_MODULE *> m_list_extensions_modules;
 };
 
 #endif /* __GLSCRIPT_ACTIVESCRIPT_EXT_HOST_H__ */

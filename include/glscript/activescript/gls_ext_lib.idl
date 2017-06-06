@@ -40,24 +40,24 @@ import "ocidl.idl";
  */
 [object, uuid(9D67C09A-FFF4-47ee-B1B8-D00C372489EA), dual, oleautomation]
 interface _GLScriptExtLib : IDispatch {
-	
-	/** 
-	 * name property. Returns the lib name of the libary.
-	 *
-	 * @return lib name of the library extension.
-	 */
-	[propget,helpstring("Returns the libname of the library.")] 
-	HRESULT name ([out, retval] BSTR *pValue);
+    
+    /** 
+     * name property. Returns the lib name of the libary.
+     *
+     * @return lib name of the library extension.
+     */
+    [propget,helpstring("Returns the libname of the library.")] 
+    HRESULT name ([out, retval] BSTR *pValue);
 
-	/** 
-	 * Version property. Short version number of the library.
-	 *
-	 * @return version number of the library.
-	 *
-	 * @remarks On successful return, the high order byte contains the minor and the low order
-	 * byte contains the major version numbers.
-	 */
-	[propget,helpstring("Returns the version number of the library.")]
-	HRESULT version ([out, retval] short *pValue);
+    /** 
+     * Version property. Short version number of the library.
+     *
+     * @return version number of the library.
+     *
+     * @remarks On successful return, the high order byte contains the minor and the low order
+     * byte contains the major version numbers.
+     */
+    [propget,helpstring("Returns the version number of the library.")]
+    HRESULT version ([out, retval] short *pValue);
 
 }/* interface _GLScriptExtLib */

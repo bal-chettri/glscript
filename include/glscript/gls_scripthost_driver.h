@@ -35,27 +35,27 @@ namespace gls {
  */
 class ScriptHostDriver : public RefObject {
 public:
-	/** ctor */
-	ScriptHostDriver ();
+    /** ctor */
+    ScriptHostDriver ();
 
 protected:
-	/** protected dtor to disallow object creation on stack */
-	~ScriptHostDriver ();
+    /** protected dtor to disallow object creation on stack */
+    ~ScriptHostDriver ();
 
 public:
-	/**
-	 * Returns the GLS script host interface. Note that ScriptHost pointer is valid till
-	 * ScriptHostDriver object is alive. You should not use the ScriptHost object after the 
-	 * ScriptHostDriver object is destroyed.
-	 */
-	ScriptHost *GetScriptHost ();
-	
+    /**
+     * Returns the GLS script host interface. Note that ScriptHost pointer is valid till
+     * ScriptHostDriver object is alive. You should not use the ScriptHost object after the 
+     * ScriptHostDriver object is destroyed.
+     */
+    ScriptHost *GetScriptHost ();
+    
 protected:
-	/** loads the script host */
-	bool LoadScriptHost ();
+    /** loads the script host */
+    bool LoadScriptHost ();
 
-	/** script host object */
-	ScriptHost *m_pGLScriptHost;
+    /** script host object */
+    ScriptHost *m_pGLScriptHost;
 };
 
 }; // gls namespace

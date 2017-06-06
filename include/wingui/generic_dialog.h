@@ -28,38 +28,38 @@
 /* A base generic dialog window */
 class GenericDialog : public GenericWindow {
 public:
-	/* ctors */
-	
-	// construct from resource id
-	GenericDialog (int resourceId);
+    /* ctors */
+    
+    // construct from resource id
+    GenericDialog (int resourceId);
 
 public:
-	// operations
-	BOOL IsModal () const {
-		return m_flagModal;
-	}
+    // operations
+    BOOL IsModal () const {
+        return m_flagModal;
+    }
 
-	INT_PTR ShowModal (GenericWindow *pParentWindow = NULL);
-	void ShowModalLess (GenericWindow *pParent = NULL);
-	void CloseDialog (INT_PTR result = 0);
-	void SetControlText (int id, LPCTSTR lpszText);
-	void GetControlText (int id, LPTSTR lpszBuff, int maxLength);
-
-protected:
-	void CenterDialog ();
+    INT_PTR ShowModal (GenericWindow *pParentWindow = NULL);
+    void ShowModalLess (GenericWindow *pParent = NULL);
+    void CloseDialog (INT_PTR result = 0);
+    void SetControlText (int id, LPCTSTR lpszText);
+    void GetControlText (int id, LPTSTR lpszBuff, int maxLength);
 
 protected:
-	virtual INT_PTR HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam);
+    void CenterDialog ();
 
-	virtual void OnCommand (int cmdId);
-	virtual INT_PTR OnInitDialog ();
-	virtual void OnOkButton () { }
-	virtual void OnCancelButton () { CloseDialog (IDCANCEL); }
+protected:
+    virtual INT_PTR HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam);
+
+    virtual void OnCommand (int cmdId);
+    virtual INT_PTR OnInitDialog ();
+    virtual void OnOkButton () { }
+    virtual void OnCancelButton () { CloseDialog (IDCANCEL); }
 
 private:
-	int m_resourceId;
-	BOOL m_flagModal;
-	GenericWindow *m_pParent;
+    int m_resourceId;
+    BOOL m_flagModal;
+    GenericWindow *m_pParent;
 };
 
 #endif /* __wingui_generic_dialog_h */

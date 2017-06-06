@@ -41,28 +41,28 @@ namespace gls {
 #endif
 
 /* define constants */
-#define GLS_EXTENSION_INTERFACE_VERSION				GLS_VERSION_MAKE_SHORT(0,1)
-#define GLS_EXTENSION_HOST_INTERFACE_VERSION		GLS_VERSION_MAKE_SHORT(0,2)
-#define GLS_EXTENSION_MAX_PATH_LEN					260
-#define GLS_EXTENSION_MAX_AUTHOR_NAME_LEN			255
-#define GLS_EXTENSION_MAX_VENDOR_NAME_LEN			255
-#define GLS_EXTENSION_MAX_LIB_NAME_LEN				32
+#define GLS_EXTENSION_INTERFACE_VERSION             GLS_VERSION_MAKE_SHORT(0,1)
+#define GLS_EXTENSION_HOST_INTERFACE_VERSION        GLS_VERSION_MAKE_SHORT(0,2)
+#define GLS_EXTENSION_MAX_PATH_LEN                  260
+#define GLS_EXTENSION_MAX_AUTHOR_NAME_LEN           255
+#define GLS_EXTENSION_MAX_VENDOR_NAME_LEN           255
+#define GLS_EXTENSION_MAX_LIB_NAME_LEN              32
 
 /* define glScript extension capabilities */
-#define GLS_EXTENSION_LIBRARY						0x00000001L
-#define GLS_EXTENSION_GUIPLUGIN						0x00000002L
-#define GLS_EXTENSION_RENDERER						0x00000004L
+#define GLS_EXTENSION_LIBRARY                       0x00000001L
+#define GLS_EXTENSION_GUIPLUGIN                     0x00000002L
+#define GLS_EXTENSION_RENDERER                      0x00000004L
 
 /* define glScript event types */
-#define GLS_EVENT_TYPE_TOOLKIT						0x00000001L
-#define GLS_EVENT_TYPE_PLAYER						0x00000001L
-#define GLS_EVENT_TYPE_SCRIPT						0x00000001L
-#define GLS_EVENT_TYPE_GUIPLUGIN					0x00000001L
+#define GLS_EVENT_TYPE_TOOLKIT                      0x00000001L
+#define GLS_EVENT_TYPE_PLAYER                       0x00000001L
+#define GLS_EVENT_TYPE_SCRIPT                       0x00000001L
+#define GLS_EVENT_TYPE_GUIPLUGIN                    0x00000001L
 
 /* define glScript event codes */
-#define GLS_EVENT_SCRIPT_LOAD						0x00000001L
-#define GLS_EVENT_SCRIPT_RUN						0x00000002L
-#define GLS_EVENT_SCRIPT_TERMINATE					0x00000003L
+#define GLS_EVENT_SCRIPT_LOAD                       0x00000001L
+#define GLS_EVENT_SCRIPT_RUN                        0x00000002L
+#define GLS_EVENT_SCRIPT_TERMINATE                  0x00000003L
 
 /* Define function types */
 typedef void (* GLS_TIMER_PROC) (void *p_context);
@@ -70,59 +70,59 @@ typedef void (* GLS_RENDER_PROC) (void *p_context);
 
 /** GLS_ENVIRONMENT_TYPE enum. glScript environment types */
 enum GLS_ENVIRONMENT_TYPE {
-	GLS_ENVIRONMENT_TOOLKIT = 0,					/** Toolkit environment */
-	GLS_ENVIRONMENT_PLAYER = 1						/** Player environment */
+    GLS_ENVIRONMENT_TOOLKIT = 0,                    /** Toolkit environment */
+    GLS_ENVIRONMENT_PLAYER = 1                      /** Player environment */
 };
 
 /** GLS_SCRIPT_INFO structure */
 struct GLS_SCRIPT_INFO {
-	/** flag indicates if the script has a valid path */
-	bool has_path;
+    /** flag indicates if the script has a valid path */
+    bool has_path;
 
-	/** source path of the script */
-	char *path;
+    /** source path of the script */
+    char *path;
 
-	/** extension of the script file name */
-	char *extension;
+    /** extension of the script file name */
+    char *extension;
 
-	/** mime-type of the script */
-	char *mime_type;
+    /** mime-type of the script */
+    char *mime_type;
 
-	/** flag indicates if the script is modified since loaded */
-	bool is_dirty;
+    /** flag indicates if the script is modified since loaded */
+    bool is_dirty;
 };
 
 
 /** GLS_EVENT struct */
 struct GLS_EVENT {
-	/** event type */
-	int type;
-	/** event code */
-	int code;
-	/** event data 1 */
-	void *data1;
-	/** event data 2 */
-	void *data2;
+    /** event type */
+    int type;
+    /** event code */
+    int code;
+    /** event data 1 */
+    void *data1;
+    /** event data 2 */
+    void *data2;
 #ifdef WIN32
-	/** Win32 window handle */
-	HWND hWnd;
-	/** Win32 msg */
-	UINT msg;
-	/** Win32 msg parameter 1 */
-	WPARAM wParam;
-	/** Win32 msg parameter 2 */
-	LPARAM lParam;
+    /** Win32 window handle */
+    HWND hWnd;
+    /** Win32 msg */
+    UINT msg;
+    /** Win32 msg parameter 1 */
+    WPARAM wParam;
+    /** Win32 msg parameter 2 */
+    LPARAM lParam;
 #endif
 };
 
 
 /** GLS_EXTENSION_LIB_INFO struct */
 struct GLS_EXTENSION_LIB_INFO {
-	/** extension library name e.g. 'obj' for gls_obj. keep enough space for ext name. */
-	char name [GLS_EXTENSION_MAX_LIB_NAME_LEN + 5];
-	
-	/** library version number  */
-	unsigned short version;
+    /** extension library name e.g. 'obj' for gls_obj. keep enough space for ext name. */
+    char name [GLS_EXTENSION_MAX_LIB_NAME_LEN + 5];
+    
+    /** library version number  */
+    unsigned short version;
 };
 
 
@@ -132,57 +132,57 @@ struct GLS_EXTENSION_LIB_INFO {
  * interface.
  */
 class Extension {
-	/* GLS EXTENSION INTERFACE ver 0.1 { */
-public:	
+    /* GLS EXTENSION INTERFACE ver 0.1 { */
+public: 
 
-	/** Returns version number of the interface */
-	virtual unsigned short GetInterfaceVersion () = 0;
+    /** Returns version number of the interface */
+    virtual unsigned short GetInterfaceVersion () = 0;
  
-	/** Returns version number of the extension */
-	virtual unsigned long GetExtensionVersion () = 0;
-	
-	/** Returns capabilities of the extension */
-	virtual unsigned long GetCapabilities () = 0;
+    /** Returns version number of the extension */
+    virtual unsigned long GetExtensionVersion () = 0;
+    
+    /** Returns capabilities of the extension */
+    virtual unsigned long GetCapabilities () = 0;
 
-	/** Returns author's name */
-	virtual const wchar_t *GetAuthorName () = 0;
+    /** Returns author's name */
+    virtual const wchar_t *GetAuthorName () = 0;
 
-	/** Returns vendor's name */
-	virtual const wchar_t *GetVendorName () = 0;
+    /** Returns vendor's name */
+    virtual const wchar_t *GetVendorName () = 0;
 
-	/** Creates and returns the plugin window */
-	virtual void *CreatePluginWindow () = 0;
+    /** Creates and returns the plugin window */
+    virtual void *CreatePluginWindow () = 0;
 
-	/** 
-	 * Handles the glScript event 
-	 * @para p_event Pointer to the GLS_EVENT structure that contains the event details.
-	 */
-	virtual long HandleEvent (GLS_EVENT *p_event) = 0;
-	
-	/** 
-	 * Returns information about library extension's library.
-	 * @param p_lib_info Pointer to GLS_EXTENSION_LIB_INFO structure that will contain
-	 * the lib information on return.
-	 */
-	virtual void GetLibInfo (GLS_EXTENSION_LIB_INFO *p_lib_info) = 0;
+    /** 
+     * Handles the glScript event 
+     * @para p_event Pointer to the GLS_EVENT structure that contains the event details.
+     */
+    virtual long HandleEvent (GLS_EVENT *p_event) = 0;
+    
+    /** 
+     * Returns information about library extension's library.
+     * @param p_lib_info Pointer to GLS_EXTENSION_LIB_INFO structure that will contain
+     * the lib information on return.
+     */
+    virtual void GetLibInfo (GLS_EXTENSION_LIB_INFO *p_lib_info) = 0;
 
-	/** 
-	 * Returns lib or library interface of the library extension. 
-	 * @return If the extension supports GLS_EXTENSION_LIBRARY capability, returns the lib interface,
-	 * otherwise NULL. 
-	 * @remarks On Win platforms the lib interface is actually _GLScriptExtLib interface. Note that
-	 * _GLScriptExtLib is a COM interface and you must take care of releasing the interface when done
-	 * with it. 
-	 */
-	virtual void *GetLibInterface () = 0;
+    /** 
+     * Returns lib or library interface of the library extension. 
+     * @return If the extension supports GLS_EXTENSION_LIBRARY capability, returns the lib interface,
+     * otherwise NULL. 
+     * @remarks On Win platforms the lib interface is actually _GLScriptExtLib interface. Note that
+     * _GLScriptExtLib is a COM interface and you must take care of releasing the interface when done
+     * with it. 
+     */
+    virtual void *GetLibInterface () = 0;
 
-	/** Return the timer callback procedure. @see GetRenderProc */
-	virtual GLS_TIMER_PROC GetTimerProc () = 0;
+    /** Return the timer callback procedure. @see GetRenderProc */
+    virtual GLS_TIMER_PROC GetTimerProc () = 0;
 
-	/** Returns the render callback procedure. @see GetTimerProc */
-	virtual GLS_RENDER_PROC GetRenderProc () = 0;
+    /** Returns the render callback procedure. @see GetTimerProc */
+    virtual GLS_RENDER_PROC GetRenderProc () = 0;
 
-	/* } GLS_EXTENSION_INTERFACE ver 0.1 */
+    /* } GLS_EXTENSION_INTERFACE ver 0.1 */
 }; /* Extension */
 
 
@@ -191,26 +191,26 @@ public:
  * extension. 
  */
 struct GLS_EXTENSION_MODULE {
-	/** full path of the extension */
-	char path [GLS_EXTENSION_MAX_PATH_LEN + 1];
+    /** full path of the extension */
+    char path [GLS_EXTENSION_MAX_PATH_LEN + 1];
 
-	/** interface version number */
-	unsigned short interfaceVersion;
-	
-	/** capability bitmask of the extension */
-	unsigned long capabilities;
+    /** interface version number */
+    unsigned short interfaceVersion;
+    
+    /** capability bitmask of the extension */
+    unsigned long capabilities;
 
-	/** OS specific handle to the extension module */
-	void *hModule;
+    /** OS specific handle to the extension module */
+    void *hModule;
 
-	/** extension interface */
-	Extension *pExtInterface;
+    /** extension interface */
+    Extension *pExtInterface;
 
-	/** extension's lib info */
-	GLS_EXTENSION_LIB_INFO libInfo;
+    /** extension's lib info */
+    GLS_EXTENSION_LIB_INFO libInfo;
 
-	/** extension's lib interface */
-	void *pLibInterface;
+    /** extension's lib interface */
+    void *pLibInterface;
 };
 
 
@@ -221,83 +221,83 @@ struct GLS_EXTENSION_MODULE {
  * other extensions.
  */ 
 class ExtensionHost {
-	/* GLS EXTENSION HOST INTERFACE ver 0.1 { */
+    /* GLS EXTENSION HOST INTERFACE ver 0.1 { */
 public:
-	/** Returns version number of the interface */
-	virtual unsigned short GetInterfaceVersion () = 0;
+    /** Returns version number of the interface */
+    virtual unsigned short GetInterfaceVersion () = 0;
 
-	/** Returns environment type in which the extension is loaded */
-	virtual GLS_ENVIRONMENT_TYPE GetEnvironmentType (void) = 0;
+    /** Returns environment type in which the extension is loaded */
+    virtual GLS_ENVIRONMENT_TYPE GetEnvironmentType (void) = 0;
 
-	/** Returns the toolkit's version */
-	virtual unsigned long GetToolkitVersion () = 0;
+    /** Returns the toolkit's version */
+    virtual unsigned long GetToolkitVersion () = 0;
 
-	/** Returns the player's version */
-	virtual unsigned long GetPlayerVersion () = 0;
+    /** Returns the player's version */
+    virtual unsigned long GetPlayerVersion () = 0;
 
-	/** 
-	 * Returns information about the active / running script 
-	 * @param p_out_script_info Pointer to GLS_SCRIPT_INFO structure where the 
-	 * details of running script is returned.
-	 */
-	virtual bool GetScriptInfo (GLS_SCRIPT_INFO *p_out_script_info) = 0;
+    /** 
+     * Returns information about the active / running script 
+     * @param p_out_script_info Pointer to GLS_SCRIPT_INFO structure where the 
+     * details of running script is returned.
+     */
+    virtual bool GetScriptInfo (GLS_SCRIPT_INFO *p_out_script_info) = 0;
 
-	/** 
-	 * Loads an extension.
-	 * @param path Path or name of the extension is load
-	 * @param load_options Bitmask of extension loading options
-	 */
-	virtual Extension *LoadExtension (const char *path, unsigned long load_options) = 0;
+    /** 
+     * Loads an extension.
+     * @param path Path or name of the extension is load
+     * @param load_options Bitmask of extension loading options
+     */
+    virtual Extension *LoadExtension (const char *path, unsigned long load_options) = 0;
 
-	/** 
-	 * LoadLibraryExtension () method. Loads a library extension.
-	 * @param path Path or name of library extension to load
-	 * @return On success, returns lib interface of the library extension, otherwise NULL. 
-	 * @remarks On Windows, the return value is _GLScriptExtLib interface. The return value, 
-	 * if not NULL, may be casted to _GLScriptExtLib * for use. Note that _GLScriptExtLib is a 
-	 * COM interface so you must take care of relesing the interface when done with it.
-	 */
-	virtual void *LoadLibraryExtension (const char *path) = 0;
+    /** 
+     * LoadLibraryExtension () method. Loads a library extension.
+     * @param path Path or name of library extension to load
+     * @return On success, returns lib interface of the library extension, otherwise NULL. 
+     * @remarks On Windows, the return value is _GLScriptExtLib interface. The return value, 
+     * if not NULL, may be casted to _GLScriptExtLib * for use. Note that _GLScriptExtLib is a 
+     * COM interface so you must take care of relesing the interface when done with it.
+     */
+    virtual void *LoadLibraryExtension (const char *path) = 0;
 
-	/** 
-	 * Hook timer callback procedure
-	 * @param p_timer_proc Pointer the the timer procedure callback to hook
-	 * @param pContext Pointer to contextual data that will be passed back to the 
-	 *        timer procedure callback
-	 */
-	virtual GLS_TIMER_PROC HookTimerProc (GLS_TIMER_PROC p_timer_proc, void *pContext) = 0;
+    /** 
+     * Hook timer callback procedure
+     * @param p_timer_proc Pointer the the timer procedure callback to hook
+     * @param pContext Pointer to contextual data that will be passed back to the 
+     *        timer procedure callback
+     */
+    virtual GLS_TIMER_PROC HookTimerProc (GLS_TIMER_PROC p_timer_proc, void *pContext) = 0;
 
-	/** 
-	 * Hooks render callback procedure 
-	 * @param p_render_proc Pointer the the render procedure callback to hook
-	 * @param pContext Pointer to contextual data that will be passed back to the 
-	 *        render procedure callback
-	 */
-	virtual GLS_RENDER_PROC HookRenderProc (GLS_RENDER_PROC p_render_proc, void *pContext) = 0;
+    /** 
+     * Hooks render callback procedure 
+     * @param p_render_proc Pointer the the render procedure callback to hook
+     * @param pContext Pointer to contextual data that will be passed back to the 
+     *        render procedure callback
+     */
+    virtual GLS_RENDER_PROC HookRenderProc (GLS_RENDER_PROC p_render_proc, void *pContext) = 0;
 
-	/* } GLS EXTENSION HOST INTERFACE ver 0.1 */
+    /* } GLS EXTENSION HOST INTERFACE ver 0.1 */
 
-	/* GLS EXTENSION HOST INTERFACE ver 0.2 { */
+    /* GLS EXTENSION HOST INTERFACE ver 0.2 { */
 
-	/**
-	 * Returns the host defined object
-	 * @param name Name of the object to access.
-	 * @return On Win32 platforms, returned value is an IDispatch interface of the object.
-	 *         The interface must be released after use.
-	 */
-	virtual void *GetHostObject (const char *name) = 0;
+    /**
+     * Returns the host defined object
+     * @param name Name of the object to access.
+     * @return On Win32 platforms, returned value is an IDispatch interface of the object.
+     *         The interface must be released after use.
+     */
+    virtual void *GetHostObject (const char *name) = 0;
 
-	/**
-	 * Returns a base pointer to the arrays's internal data elements.
-	 * @param pTypedArray gls typed array object for which to access the internal raw data.
-	 *        On Win32 platforms, this must be the _GLScript_Array interface returned by 
-	 *        one of the array creation methods of gls object.
-	 * @remarks The returned pointer to array's raw data is only valid till the array object
-	 *          exists.
-	 */
-	virtual void *GetArrayRawData (void *pTypedArray) = 0;
+    /**
+     * Returns a base pointer to the arrays's internal data elements.
+     * @param pTypedArray gls typed array object for which to access the internal raw data.
+     *        On Win32 platforms, this must be the _GLScript_Array interface returned by 
+     *        one of the array creation methods of gls object.
+     * @remarks The returned pointer to array's raw data is only valid till the array object
+     *          exists.
+     */
+    virtual void *GetArrayRawData (void *pTypedArray) = 0;
 
-	/* } GLS EXTENSION HOST INTERFACE ver 0.2 */
+    /* } GLS EXTENSION HOST INTERFACE ver 0.2 */
 }; /* ExtensionHost */
 
 
@@ -312,7 +312,7 @@ public:
  * @return Returns a pointer to the extension module instance if successfuly, otherwise NULL.
  */
 GLS_EXTENSION_MODULE *gls_extension_load (const char *name, unsigned long load_options, 
-										  ExtensionHost *pHost);
+                                          ExtensionHost *pHost);
 
 /**
  * gls_extension_unload () function. Unloads a gls extension module loaded with gls_extension_load API. 
