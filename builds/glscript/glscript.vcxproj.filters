@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="source\glscript">
+      <UniqueIdentifier>{d047b70d-3cfc-485a-b223-7948f39a4b72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\glscript\activescript">
+      <UniqueIdentifier>{c7f0bf6b-6d08-4539-a168-ee791b8fec55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="include\glscript">
+      <UniqueIdentifier>{dc387363-bdeb-4660-acf8-7a28e88faa10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\glscript\activescript">
+      <UniqueIdentifier>{1bffbb47-da73-4439-83f8-3a497b495430}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\glscript\activescript\IDLs">
+      <UniqueIdentifier>{45e4d910-f272-44a8-86e6-86e8b922c462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\glscript\activescript\IID_defs">
+      <UniqueIdentifier>{add1cae9-8974-4149-affb-605208d49ca0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\glscript\activescript\headers">
+      <UniqueIdentifier>{066ca768-3fdb-4b8a-adcd-d73e1901f0a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\com">
+      <UniqueIdentifier>{d4e12a2c-aaea-4b08-a426-aa675378f39f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\tokenizer">
+      <UniqueIdentifier>{9d8d5976-3ce2-49d8-9c83-b93ceff1fc5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\sysutils">
+      <UniqueIdentifier>{b6ad5f91-7a1f-4b8d-8eed-5833582382d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\asynch">
+      <UniqueIdentifier>{e93d67d4-8485-4e95-975e-8a81cc703ff6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\sysport">
+      <UniqueIdentifier>{c47c72fa-8865-4f02-af41-bca86768213b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{620e4511-c499-4656-b379-0181eb72c909}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\gls_extension.cpp">
+      <Filter>source\glscript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\gls_script_loader.cpp">
+      <Filter>source\glscript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\gls_script_prep_block.cpp">
+      <Filter>source\glscript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\gls_script_preprocessor.cpp">
+      <Filter>source\glscript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\gls_script_source.cpp">
+      <Filter>source\glscript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\gls_scripthost_driver.cpp">
+      <Filter>source\glscript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\activescript\gls_activescript_array.cpp">
+      <Filter>source\glscript\activescript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\activescript\gls_activescript_console.cpp">
+      <Filter>source\glscript\activescript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\activescript\gls_activescript_context.cpp">
+      <Filter>source\glscript\activescript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\activescript\gls_activescript_engine.cpp">
+      <Filter>source\glscript\activescript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\activescript\gls_activescript_ext_host.cpp">
+      <Filter>source\glscript\activescript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\activescript\gls_activescript_host.cpp">
+      <Filter>source\glscript\activescript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\activescript\gls_activescript_marshal.cpp">
+      <Filter>source\glscript\activescript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\activescript\gls_activescript_site.cpp">
+      <Filter>source\glscript\activescript</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\glscript\activescript\gls_activescript_interfaces_i.c">
+      <Filter>include\glscript\activescript\IID_defs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\glscript\activescript\gls_core_i.c">
+      <Filter>include\glscript\activescript\IID_defs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\glscript\activescript\gls_ext_lib_i.c">
+      <Filter>include\glscript\activescript\IID_defs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\tokenizer\tokenizer.cpp">
+      <Filter>include\tokenizer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\sysutils\sysutils.cpp">
+      <Filter>include\sysutils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\asynch\asynch.c">
+      <Filter>include\asynch</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_extension.h">
+      <Filter>include\glscript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_macros.h">
+      <Filter>include\glscript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_obj.h">
+      <Filter>include\glscript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_script_loader.h">
+      <Filter>include\glscript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_script_preprocessor.h">
+      <Filter>include\glscript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_script_source.h">
+      <Filter>include\glscript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_scripthost.h">
+      <Filter>include\glscript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_scripthost_driver.h">
+      <Filter>include\glscript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_types.h">
+      <Filter>include\glscript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\activescript\gls_activescript_array.h">
+      <Filter>include\glscript\activescript\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\activescript\gls_activescript_console.h">
+      <Filter>include\glscript\activescript\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\activescript\gls_activescript_context.h">
+      <Filter>include\glscript\activescript\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\activescript\gls_activescript_engine.h">
+      <Filter>include\glscript\activescript\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\activescript\gls_activescript_ext_host.h">
+      <Filter>include\glscript\activescript\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\activescript\gls_activescript_host.h">
+      <Filter>include\glscript\activescript\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\activescript\gls_activescript_marshal.h">
+      <Filter>include\glscript\activescript\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\activescript\gls_activescript_site.h">
+      <Filter>include\glscript\activescript\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\activescript\gls_glbinds.h">
+      <Filter>include\glscript\activescript\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\com\class_factory.h">
+      <Filter>include\com</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\com\dispatch.h">
+      <Filter>include\com</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\tokenizer\tokenizer.h">
+      <Filter>include\tokenizer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sysutils\sysutils.h">
+      <Filter>include\sysutils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\asynch\asynch.h">
+      <Filter>include\asynch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\sysport\sysport.h">
+      <Filter>include\sysport</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="..\..\include\glscript\activescript\gls_activescript_interfaces.idl">
+      <Filter>include\glscript\activescript\IDLs</Filter>
+    </Midl>
+    <Midl Include="..\..\include\glscript\activescript\gls_core.idl">
+      <Filter>include\glscript\activescript\IDLs</Filter>
+    </Midl>
+    <Midl Include="..\..\include\glscript\activescript\gls_ext_lib.idl">
+      <Filter>include\glscript\activescript\IDLs</Filter>
+    </Midl>
+  </ItemGroup>
+</Project>
