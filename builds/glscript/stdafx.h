@@ -52,6 +52,5 @@
 #include <list>
 #include <vector>
 #include <map>
-using namespace std;
 
 #endif /* __stdafx_h */

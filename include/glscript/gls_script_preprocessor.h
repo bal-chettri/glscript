@@ -162,8 +162,8 @@ private:
     ScriptPreprocessor  *m_pPreprocessor;                   /** script preprocessor (not addref'ed) */
     tstring             m_language;                         /** block's 'language' value */
 
-    vector<PreprocessorCommand> m_commands;                 /** commands */
-    vector<ScriptSource *> m_inc_sources;                   /** include sources */
+    std::vector<PreprocessorCommand> m_commands;            /** commands */
+    std::vector<ScriptSource *> m_inc_sources;              /** include sources */
 };
 
 /**
@@ -238,7 +238,7 @@ private:
     ScriptSource *m_pFlattenedScriptSource;
 
     /** preprocessor blocks */
-    vector<PreprocessorBlock> m_blocks; 
+    std::vector<PreprocessorBlock> m_blocks; 
         
     /** search paths for 'include' directive */
     std::vector<tstring> m_search_paths;

@@ -84,7 +84,7 @@ private:
     LPCTSTR ProcessExceptionInfo (IActiveScriptError *pScriptError);
 
 private:
-    map<wstring,IUnknown *>     m_host_objects;     // host defined COM objects
+    std::map<std::wstring,IUnknown *>     m_host_objects;     // host defined COM objects
 };
 
 #endif /* __GLSCRIPT_ACTIVESCRIPT_SITE_H__ */

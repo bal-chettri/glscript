@@ -584,7 +584,7 @@ BOOL GLScriptHost_Win32::GetScriptEngineCLSIDFromFileExtension (LPCTSTR lpszExte
     DWORD data_len;
     DWORD data_type;
     tstring language_name;
-    wstring clsid_name;
+    std::wstring clsid_name;
 
     // get language_name for .extension
     if (RegOpenKeyEx (HKEY_CLASSES_ROOT, lpszExtension, 0, KEY_READ, &key) == ERROR_SUCCESS) {

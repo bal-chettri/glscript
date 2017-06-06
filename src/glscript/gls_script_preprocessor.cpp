@@ -180,7 +180,7 @@ const sys_wchar *ScriptPreprocessor::FindBlockEnd (const sys_wchar *pCode) {
 // ProcessBlocks(). Parses each block found and processes it.
 int ScriptPreprocessor::ProcessBlocks () {
     // initialize iterator
-    vector<PreprocessorBlock>::iterator 
+    std::vector<PreprocessorBlock>::iterator 
         it = m_blocks.begin(),
         it_end = m_blocks.end();
 
@@ -248,7 +248,7 @@ int ScriptPreprocessor::FlattenBlocks () {
     const sys_wchar *pCodeEnd = m_pScriptSource->GetCode() + m_pScriptSource->GetLength();
 
     // calculate the length of expanded code
-    vector<PreprocessorBlock>::iterator 
+    std::vector<PreprocessorBlock>::iterator 
         it = m_blocks.begin(),
         it_end = m_blocks.end();
 
@@ -317,7 +317,7 @@ int ScriptPreprocessor::FlattenBlocks () {
 ///////////////////////////////////////////////////////////////////////////////
 //
 size_t ScriptPreprocessor::GetBlocksLength () const {
-    vector<PreprocessorBlock>::const_iterator it, it_end;
+    std::vector<PreprocessorBlock>::const_iterator it, it_end;
 
     it = m_blocks.begin();
     it_end = m_blocks.end();

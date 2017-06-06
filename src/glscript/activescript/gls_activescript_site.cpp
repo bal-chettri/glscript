@@ -71,7 +71,7 @@ HRESULT STDMETHODCALLTYPE GLScript_ActiveScriptSite::GetItemInfo (LPCOLESTR pstr
 
     // find the named object in the map and return the IUnknwon interface if found
     if (dwReturnMask & SCRIPTINFO_IUNKNOWN) {
-        map<wstring, IUnknown *>::iterator pos = m_host_objects.find (pstrName);        
+        std::map<std::wstring, IUnknown *>::iterator pos = m_host_objects.find (pstrName);        
         if ( pos != m_host_objects.end() ) {
             *ppiunkItem = pos->second;
         }
@@ -139,7 +139,7 @@ HRESULT STDMETHODCALLTYPE GLScript_ActiveScriptSite::OnLeaveScript (void) {
 void GLScript_ActiveScriptSite::AddHostObject (LPCOLESTR name, IUnknown *p_com_object) {
     ASSERT (p_com_object != NULL);
 
-    map<wstring, IUnknown *>::iterator pos = m_host_objects.find (name);
+    std::map<std::wstring, IUnknown *>::iterator pos = m_host_objects.find (name);
     ASSERT (pos == m_host_objects.end ());
 
     p_com_object->AddRef ();
@@ -147,7 +147,7 @@ void GLScript_ActiveScriptSite::AddHostObject (LPCOLESTR name, IUnknown *p_com_o
 }
 
 void GLScript_ActiveScriptSite::RemoveHostObject (LPCOLESTR name) {
-    map<wstring, IUnknown *>::iterator pos = m_host_objects.find (name);
+    std::map<std::wstring, IUnknown *>::iterator pos = m_host_objects.find (name);
     ASSERT (pos != m_host_objects.end ());
 
     IUnknown *p_com_object = pos->second;
@@ -158,7 +158,7 @@ void GLScript_ActiveScriptSite::RemoveHostObject (LPCOLESTR name) {
 }
 
 void GLScript_ActiveScriptSite::RemoveAllHostObjects () {
-    map<wstring, IUnknown *>::iterator 
+    std::map<std::wstring, IUnknown *>::iterator 
         pos = m_host_objects.begin (),
         pos_end = m_host_objects.end ();
 

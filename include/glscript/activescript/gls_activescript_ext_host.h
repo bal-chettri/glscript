@@ -69,7 +69,7 @@ private:
     GLScriptHost_Win32 *            m_parent;
     gls::GLS_RENDER_PROC            m_pfn_render_proc;
     void *                          m_render_proc_context;
-    list<gls::GLS_EXTENSION_MODULE *> m_list_extensions_modules;
+    std::list<gls::GLS_EXTENSION_MODULE *> m_list_extensions_modules;
 };
 
 #endif /* __GLSCRIPT_ACTIVESCRIPT_EXT_HOST_H__ */

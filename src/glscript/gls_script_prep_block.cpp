@@ -60,7 +60,7 @@ PreprocessorBlock::~PreprocessorBlock () {
 ///////////////////////////////////////////////////////////////////////////////
 //
 size_t PreprocessorBlock::GetExpandedLength () const {
-    vector<ScriptSource *>::const_iterator 
+    std::vector<ScriptSource *>::const_iterator 
         it = m_inc_sources.begin(),
         it_end = m_inc_sources.end();
 
@@ -148,7 +148,7 @@ int PreprocessorBlock::ParseBlock () {
 ///////////////////////////////////////////////////////////////////////////////
 //
 int PreprocessorBlock::ProcessBlock () {    
-    vector<PreprocessorCommand>::iterator it, it_end;
+    std::vector<PreprocessorCommand>::iterator it, it_end;
 
     for (it = m_commands.begin(); it != m_commands.end(); it++) {
         PreprocessorCommand &cmd = (*it);
@@ -180,7 +180,7 @@ int PreprocessorBlock::ProcessBlock () {
 int PreprocessorBlock::ExpandBlock (sys_wchar **p_pCodeBuffer) {
     sys_wchar *pCodeBuffer = *p_pCodeBuffer;
 
-    vector<ScriptSource *>::const_iterator 
+    std::vector<ScriptSource *>::const_iterator 
         it = m_inc_sources.begin(),
         it_end = m_inc_sources.end();
 
@@ -280,7 +280,7 @@ int PreprocessorBlock::ProcessCommand_Language (PreprocessorCommand &cmd) {
 //
 int PreprocessorBlock::ProcessCommand_Include (PreprocessorCommand &cmd) {      
     // get token ULR    
-    vector<tstring> url_forms;
+    std::vector<tstring> url_forms;
     const sys_tchar *urlToken;
     
     // get all url forms
@@ -296,7 +296,7 @@ int PreprocessorBlock::ProcessCommand_Include (PreprocessorCommand &cmd) {
 
         url_forms.push_back ( strTempURL );             // relative to current source's base URL
 
-        vector<tstring>::iterator 
+        std::vector<tstring>::iterator 
             it = m_pPreprocessor->m_search_paths.begin(),
             it_end = m_pPreprocessor->m_search_paths.end();
         for (; it != it_end; it++) {
@@ -313,7 +313,7 @@ int PreprocessorBlock::ProcessCommand_Include (PreprocessorCommand &cmd) {
     delete urlToken; // free the URL token when done
 
     // try to preprocess the included file...
-    vector<tstring>::iterator it = url_forms.begin(), it_end = url_forms.end();
+    std::vector<tstring>::iterator it = url_forms.begin(), it_end = url_forms.end();
     int preproces_status;
 
     for (; it != it_end; it++) {
@@ -335,7 +335,7 @@ int PreprocessorBlock::ProcessCommand_Include (PreprocessorCommand &cmd) {
 ///////////////////////////////////////////////////////////////////////////////
 // cleanup block
 void PreprocessorBlock::Cleanup () {
-    vector<ScriptSource *>::iterator 
+    std::vector<ScriptSource *>::iterator 
         it = m_inc_sources.begin(),
         it_end = m_inc_sources.end();
 

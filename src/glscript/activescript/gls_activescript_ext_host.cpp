@@ -148,7 +148,7 @@ void *GLScript_ExtensionHost::GetArrayRawData (void *pTypedArray) {
 // public methods...
 
 void GLScript_ExtensionHost::UnloadAllExtensions () {
-    list<GLS_EXTENSION_MODULE *>::iterator 
+    std::list<GLS_EXTENSION_MODULE *>::iterator 
             it = m_list_extensions_modules.begin(),
             it_end = m_list_extensions_modules.end();
 
@@ -203,7 +203,7 @@ GLS_EXTENSION_MODULE *GLScript_ExtensionHost::LoadExtensionInternal (const char 
 }
 
 GLS_EXTENSION_MODULE *GLScript_ExtensionHost::LookupExtension (const char *path) {
-    list<GLS_EXTENSION_MODULE *>::iterator 
+    std::list<GLS_EXTENSION_MODULE *>::iterator 
             it = m_list_extensions_modules.begin(),
             it_end = m_list_extensions_modules.end();
 
@@ -218,7 +218,7 @@ GLS_EXTENSION_MODULE *GLScript_ExtensionHost::LookupExtension (const char *path)
 }
 
 GLS_EXTENSION_MODULE *GLScript_ExtensionHost::LookupExtensionByLibName (const char *libname) {
-    list<GLS_EXTENSION_MODULE *>::iterator 
+    std::list<GLS_EXTENSION_MODULE *>::iterator 
             it = m_list_extensions_modules.begin(),
             it_end = m_list_extensions_modules.end();
 
