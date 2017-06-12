@@ -23,16 +23,16 @@
 #ifndef __GLSCRIPT_GUI_ABOUTDLG_H
  #define __GLSCRIPT_GUI_ABOUTDLG_H
 
-#include <wingui/generic_dialog.h>
+#include <wingui/dialog.h>
 
-class AboutDialog : public GenericDialog {
+class AboutDialog : public wingui::Dialog {
 public:
     AboutDialog ();
     // ~AboutDialog ();
 
 protected:
     INT_PTR OnInitDialog ();
-    void OnCommand (int cmdId);
+    void OnCommand (int cmdId, int notifMsg);
     void OpenURL (LPCTSTR lpszUrl);
 };
 

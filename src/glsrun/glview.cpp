@@ -146,11 +146,11 @@ void GLView::OnKeyPress (int virtKey, int repeatCount) {
 }
 
 void GLView::OnResize (int cx, int cy) {
-    OpenGLView::OnResize (cx, cy);
+    wingui::OpenGLView::OnResize (cx, cy);
 
     PostRenderSceneEvent ();
 }
 
 void GLView::OnCommand (int cmdid) {
-    OpenGLView::OnCommand (cmdid);  
+    wingui::OpenGLView::OnCommand (cmdid, 0);  
 }

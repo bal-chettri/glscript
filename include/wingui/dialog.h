@@ -23,15 +23,18 @@
 #ifndef __wingui_generic_dialog_h
   #define __wingui_generic_dialog_h
 
-#include "generic_window.h"
+#include "window.h"
+
+namespace wingui {
 
 /* A base generic dialog window */
-class GenericDialog : public GenericWindow {
+class Dialog : public Window 
+{
 public:
     /* ctors */
     
     // construct from resource id
-    GenericDialog (int resourceId);
+    Dialog (int resourceId);
 
 public:
     // operations
@@ -39,27 +42,53 @@ public:
         return m_flagModal;
     }
 
-    INT_PTR ShowModal (GenericWindow *pParentWindow = NULL);
-    void ShowModalLess (GenericWindow *pParent = NULL);
+    // INT_PTR ShowModal (Window *pParentWindow = NULL);
+    // #TODO: Move szTtile to ctor. 
+    INT_PTR ShowModal (Window *pParentWindow = NULL, const char *szTitle = NULL);
+
+    void ShowModalLess (Window *pParent = NULL);
     void CloseDialog (INT_PTR result = 0);
+    virtual void CenterDialog();
+
+    // Returns handle to the dialogbox control
+    inline HWND GetControl (int controlId) {
+        return GetDlgItem (GetHandle(), controlId);
+    }
+    
     void SetControlText (int id, LPCTSTR lpszText);
     void GetControlText (int id, LPTSTR lpszBuff, int maxLength);
+    int GetControlInt (int id);
+    float GetControlFloat (int id);
 
-protected:
-    void CenterDialog ();
+    wingui_tstring GetControlString(int id)
+    {
+        HWND hCtrl = GetControl(id);
+        int length = GetWindowTextLength(hCtrl);
+        if (length > 0)
+        {
+            TCHAR *pBuffer = new TCHAR[length + 1];
+            GetDlgItemText(GetHandle(), id, pBuffer, length + 1);
+            wingui_tstring str(pBuffer);
+            delete [] pBuffer;
+            return str;
+        }
+        return wingui_tstring(_T(""));
+    }
 
 protected:
     virtual INT_PTR HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam);
 
-    virtual void OnCommand (int cmdId);
+    virtual void OnCommand (int cmdId, int notifMsg);
     virtual INT_PTR OnInitDialog ();
-    virtual void OnOkButton () { }
-    virtual void OnCancelButton () { CloseDialog (IDCANCEL); }
+    virtual void OnOkButton () { CloseDialog (IDOK); }
+    virtual void OnCancelButton () { CloseDialog (IDCANCEL); }  
 
 private:
     int m_resourceId;
     BOOL m_flagModal;
-    GenericWindow *m_pParent;
+    Window *m_pParent;
 };
+
+}; // wingui namespace
 
 #endif /* __wingui_generic_dialog_h */

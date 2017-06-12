@@ -22,35 +22,44 @@
 //
 #include "stdafx.h"
 
-#include <wingui/wingui_gdi.h>
+#include <wingui/gdi.h>
 
-BOOL Font::Create (LPCTSTR lpszFaceName, int size, HDC hRefDC, LONG lfWeight) 
+namespace wingui {
+
+BOOL Font::Create (LPCTSTR lpszFaceName, int size, LONG lfWeight, HDC hRefDC) 
 {
-    Delete ();
+    Delete();
 
     LOGFONT logfont;
-    memset (&logfont, 0, sizeof(logfont));
+    memset(&logfont, 0, sizeof(logfont));
     logfont.lfCharSet = DEFAULT_CHARSET;
     logfont.lfHeight = size;
+#ifdef WINGUI_ANTIALIASED_FONT
+    logfont.lfQuality = ANTIALIASED_QUALITY;
+    // logfont.lfQuality = CLEARTYPE_QUALITY;
+    // logfont.lfQuality = CLEARTYPE_NATURAL_QUALITY;
+#endif
     logfont.lfWeight = lfWeight;
-    lstrcpyn (logfont.lfFaceName, lpszFaceName,
-            sizeof(logfont.lfFaceName) - 1);
+    lstrcpyn(logfont.lfFaceName, lpszFaceName, sizeof(logfont.lfFaceName) - 1);
 
     HDC hdc = hRefDC == NULL ? ::GetDC (NULL) : hRefDC;
     if (!hdc) return FALSE;
     
     // lfHeight must be scaled based on passed DC units
     POINT pt, ptOrg = {0, 0};
-    pt.y = ::GetDeviceCaps (hdc, LOGPIXELSY) * logfont.lfHeight;
+    pt.y = ::GetDeviceCaps(hdc, LOGPIXELSY) * logfont.lfHeight;
     pt.y/= 72;    // 72 points/inch, 10 decipoints/point
-    ::DPtoLP (hdc, &pt, 1);
-    ::DPtoLP (hdc, &ptOrg, 1);
+    ::DPtoLP(hdc, &pt, 1);
+    ::DPtoLP(hdc, &ptOrg, 1);
     logfont.lfHeight = -abs(pt.y - ptOrg.y);
 
-    if (hRefDC == NULL) ::ReleaseDC (NULL, hdc);
+    if (hRefDC == NULL) 
+    {
+        ::ReleaseDC (NULL, hdc);
+    }
 
     // create the point font
-    m_hFont = ::CreateFontIndirect (&logfont);
+    m_hFont = ::CreateFontIndirect(&logfont);
     return m_hFont != NULL;
 }
 
@@ -93,3 +102,5 @@ void MemoryBitmap::Dispose ()
         m_hDC = NULL;
     }
 }
+
+}; // wingui namespace

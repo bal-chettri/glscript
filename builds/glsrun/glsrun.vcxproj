@@ -37,11 +37,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\..\bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</IgnoreImportLibrary>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\..\bin\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</IgnoreImportLibrary>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
@@ -67,8 +67,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;psapi.lib;ComCtl32.lib;glscript.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(ProjectDir)..\..\bin\$(ProjectName).exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -90,8 +89,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;psapi.lib;ComCtl32.lib;glscript.lib;Uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(ProjectDir)..\..\bin\$(ProjectName).exe</OutputFile>
-      <AdditionalLibraryDirectories>..\..\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -112,22 +110,25 @@
     <ClCompile Include="..\..\src\glsrun\consolewnd.cpp" />
     <ClCompile Include="..\..\src\glsrun\glview.cpp" />
     <ClCompile Include="..\..\src\glsrun\mainwnd.cpp" />
-    <ClCompile Include="..\..\src\wingui\generic_dialog.cpp" />
-    <ClCompile Include="..\..\src\wingui\generic_view.cpp" />
-    <ClCompile Include="..\..\src\wingui\generic_window.cpp" />
+    <ClCompile Include="..\..\src\wingui\dialog.cpp" />
+    <ClCompile Include="..\..\src\wingui\view.cpp" />
+    <ClCompile Include="..\..\src\wingui\window.cpp" />
     <ClCompile Include="..\..\src\wingui\main_window.cpp" />
     <ClCompile Include="..\..\src\wingui\opengl_view.cpp" />
-    <ClCompile Include="..\..\src\wingui\wingui_gdi.cpp" />
+    <ClCompile Include="..\..\src\wingui\gdi.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\wingui\layout.h" />
+    <ClInclude Include="..\..\include\wingui\object.h" />
+    <ClInclude Include="..\..\include\wingui\types.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="..\..\include\wingui\generic_dialog.h" />
-    <ClInclude Include="..\..\include\wingui\generic_view.h" />
-    <ClInclude Include="..\..\include\wingui\generic_window.h" />
+    <ClInclude Include="..\..\include\wingui\dialog.h" />
+    <ClInclude Include="..\..\include\wingui\view.h" />
+    <ClInclude Include="..\..\include\wingui\window.h" />
     <ClInclude Include="..\..\include\wingui\main_window.h" />
     <ClInclude Include="..\..\include\wingui\opengl_view.h" />
-    <ClInclude Include="..\..\include\wingui\wingui_gdi.h" />
+    <ClInclude Include="..\..\include\wingui\gdi.h" />
     <ClInclude Include="..\..\include\glsrun\aboutdlg.h" />
     <ClInclude Include="..\..\include\glsrun\consolewnd.h" />
     <ClInclude Include="..\..\include\glsrun\glscript-run-config.h" />

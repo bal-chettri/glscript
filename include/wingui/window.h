@@ -23,41 +23,74 @@
 #ifndef __wingui_generic_window_h
   #define __wingui_generic_window_h
 
-#if defined (DEBUG) || defined(_DEBUG)
- #define WINGUI_ASSERT(M)   assert(M)
-#else
- #define WINGUI_ASSERT(M)   M
-#endif
+#include "Object.h"
+
+namespace wingui {
+
+struct MBS2WST
+{
+    explicit MBS2WST (LPCSTR lpszText)
+    {
+        size_t count = strlen(lpszText);
+        lpwszText = new WCHAR[count + 1];
+        mbstowcs(lpwszText, lpszText, count);
+        lpwszText[count] = L'\0';
+    }
+    ~MBS2WST ()
+    {
+        delete lpwszText;
+    }
+
+    inline operator LPWSTR() { return lpwszText; }
+    inline operator LPCWSTR() const { return lpwszText; }
+
+    LPWSTR lpwszText;
+};
+
+enum MouseButton
+{
+    kMouseButtonLeft,
+    kMouseButtonRight,
+    kMouseButtonMiddle
+};
 
 /* A base genreic version of win32 window */
-class GenericWindow {
+class Window : public Object
+{
 public:
     // ctor
-    GenericWindow ();
+    Window ();
 
     // dtor
-    virtual ~GenericWindow ();
+    virtual ~Window ();
 
 public:
     /* operations */
-    virtual BOOL Create (int x, int y, int cx, int cy, LPCTSTR title);
+    virtual BOOL Create (int x, int y, int cx, int cy, LPCTSTR title, Window *pParent = NULL);
     virtual BOOL Create (const RECT &rect, LPCTSTR title);
-    void Destroy ();
+    virtual void Destroy ();
+
     HWND GetHandle () const;
     void AttachHandle (HWND hWnd);
     HWND DetachHandle ();
+    void AttachHandleEx (HWND hWnd, BOOL mapHandle);
+    HWND DetachHandleEx (BOOL unmapHandle);
+    void MapProc ();
+    void UnmapProc ();
+
     void Show (int cmd_chow = SW_SHOW);
     void Hide ();
     BOOL IsValid () const;
+    BOOL IsVisible () const;
     LONG GetData () const;
     void SetData (LONG data);
-    void AddChild (GenericWindow *childWnd);
+    void AddChild (Window *childWnd);
+    void RemoveChild (Window *childWnd);
     HWND GetParent ();
     void GetWindowRect (RECT &rt);
     void GetClientRect (RECT &rt);
     void Move (int x, int y,  int cx, int cy, bool repaint = true);
-    void CenterWindow (GenericWindow *pParent = NULL);
-    void SetBackgroundColor (COLORREF color);
+    void CenterWindow (Window *pParent = NULL);
     void SetTitleText (LPCTSTR lpszText) {
         ::SetWindowText (m_hWnd, lpszText);
     }
@@ -68,12 +101,12 @@ public:
 protected:
     /* helpers */
     void MapHandle ();
-    void UnmapHandle ();
+    void UnmapHandle ();    
 
     /* overridables */
     virtual void GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle);
     virtual void GetClassStyle (WNDCLASSEX &wcex);
-    virtual LRESULT HandleMessage (UINT msg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT HandleMessage (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
     virtual INT_PTR HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam);
 
     // window procedure callback
@@ -83,10 +116,10 @@ protected:
 
 protected:
     // message handlers
-    virtual void OnCreate ();
+    virtual void OnCreate () { }
     virtual void OnPreDestroy () { }
     virtual void OnDestroy () { }
-    virtual void OnEraseBackground (HDC hdc, PAINTSTRUCT &ps);
+    virtual void OnEraseBackground (HDC hdc, PAINTSTRUCT &ps) { }
     virtual void OnMouseDown (int shift, int button, int x, int y) { }
     virtual void OnMouseUp (int shift, int button, int x, int y) { }
     virtual void OnMouseMove (int shift, int button, int x, int y) { }
@@ -99,9 +132,15 @@ protected:
     virtual void OnGotFocus () { }
     virtual void OnLostFocus () { }
     virtual void OnContextMenu () { }
-    virtual void OnCommand (int cmdId);
+    virtual void OnCommand (int cmdId, int notifMsg);
     virtual void OnDropFiles (HDROP hdrop);
     virtual void OnClose (BOOL &cancel) { };
+    virtual LRESULT OnNotify (LPNMHDR lpNotificHdr, WPARAM wParam, LPARAM lParam) 
+    { 
+        return ::DefWindowProc (lpNotificHdr->hwndFrom, WM_NOTIFY, wParam, lParam);
+    }
+    virtual void OnHScroll (int scrollPos) { }
+    virtual void OnVScroll (int scrollPos) { }
 
 protected:
     // data members
@@ -110,8 +149,9 @@ protected:
     BOOL m_isDialog;                            // is window a dialog box?
     LONG m_userData;                            // user owned data  
     BOOL m_flagMouseTracking;                   // flag for mouse tracking
-    HBRUSH m_hBrushBg;                          // background brush
-    HPEN m_hPenBorder;                          // background border pen
+    WNDPROC m_prevWndProc;
 };
+
+}; // wingui namspace
 
 #endif /* __wingui_generic_window_h */

@@ -26,7 +26,7 @@
 #include <wingui/opengl_view.h>
 #include <glscript/gls_scripthost_driver.h>
 
-class GLView : public OpenGLView {
+class GLView : public wingui::OpenGLView {
 public:
     GLView (gls::ScriptHostDriver *pScriptHostDriver);
     virtual ~GLView ();

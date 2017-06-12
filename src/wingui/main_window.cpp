@@ -112,7 +112,7 @@ void MainWindow::UpdateUI () {
 // overridables
 void MainWindow::GetClassStyle (WNDCLASSEX &wcex) {
     // fill in defaults
-    GenericWindow::GetClassStyle (wcex);
+    Window::GetClassStyle (wcex);
 
     wcex.lpszClassName = _T("_gls_main_window");
     wcex.lpszMenuName = MAKEINTRESOURCE(m_resourceId);
@@ -130,11 +130,11 @@ BOOL MainWindow::CreateStatusbar () {
 }
 
 void MainWindow::OnCreate () {
-    GenericWindow::OnCreate ();
+    Window::OnCreate ();
 
     UpdateUI ();
 }
 
 void MainWindow::OnResize (int cx, int cy) {
-    GenericWindow::OnResize (cx, cy);
+    Window::OnResize (cx, cy);
 }

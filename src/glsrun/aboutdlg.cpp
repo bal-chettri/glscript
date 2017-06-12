@@ -46,7 +46,7 @@ LPCTSTR WebAPIFactory::GetSupportPageURL ( LPTSTR lpszBuff ) {
 }
 
 LPCTSTR WebAPIFactory::GetUpdatesPageURL ( LPTSTR lpszBuff ) {
-    TCHAR lpszFilePath [MAX_PATH];
+    // TCHAR lpszFilePath [MAX_PATH];
     TCHAR verBuff[100];
 
     // get product verion number
@@ -76,7 +76,7 @@ LPCTSTR WebAPIFactory::GetSharePageURL ( LPTSTR lpszBuff ) {
 
 static LPCTSTR unobfuscate (LPCTSTR lpsz_obfuscated, LPTSTR buff);
 
-AboutDialog::AboutDialog () : GenericDialog (IDD_ABOUT)
+AboutDialog::AboutDialog () : wingui::Dialog(IDD_ABOUT)
 {
 }
 
@@ -113,10 +113,10 @@ INT_PTR AboutDialog::OnInitDialog () {
     LPCTSTR desc = unobfuscate (_desc, strbuff);
     ::SetDlgItemText ( GetHandle(), IDC_ABOUT_DESC, desc );
     
-    return ::GenericDialog::OnInitDialog ();
+    return wingui::Dialog::OnInitDialog ();
 }
 
-void AboutDialog::OnCommand (int cmdId) {
+void AboutDialog::OnCommand (int cmdId, int notifMsg) {
     TCHAR urlBuff [512];    
 
     switch ( cmdId ) {
@@ -137,7 +137,7 @@ void AboutDialog::OnCommand (int cmdId) {
         break;
 
     default:
-        GenericDialog::OnCommand (cmdId);
+        wingui::Dialog::OnCommand (cmdId, notifMsg);
     }
 }
 

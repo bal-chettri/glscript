@@ -45,22 +45,22 @@
     <ClCompile Include="..\..\src\glsrun\mainwnd.cpp">
       <Filter>src\glsrun</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\wingui\generic_dialog.cpp">
-      <Filter>src\wingui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\wingui\generic_view.cpp">
-      <Filter>src\wingui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\wingui\generic_window.cpp">
-      <Filter>src\wingui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\wingui\main_window.cpp">
       <Filter>src\wingui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\wingui\opengl_view.cpp">
       <Filter>src\wingui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\wingui\wingui_gdi.cpp">
+    <ClCompile Include="..\..\src\wingui\dialog.cpp">
+      <Filter>src\wingui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\wingui\view.cpp">
+      <Filter>src\wingui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\wingui\window.cpp">
+      <Filter>src\wingui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\wingui\gdi.cpp">
       <Filter>src\wingui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,22 +71,10 @@
     <ClInclude Include="stdafx.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\wingui\generic_dialog.h">
-      <Filter>include\wingui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\wingui\generic_view.h">
-      <Filter>include\wingui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\wingui\generic_window.h">
-      <Filter>include\wingui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\wingui\main_window.h">
       <Filter>include\wingui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\wingui\opengl_view.h">
-      <Filter>include\wingui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\wingui\wingui_gdi.h">
       <Filter>include\wingui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\include\glsrun\aboutdlg.h">
@@ -103,6 +91,27 @@
     </ClInclude>
     <ClInclude Include="..\..\include\glsrun\mainwnd.h">
       <Filter>include\glsrun</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wingui\window.h">
+      <Filter>include\wingui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wingui\view.h">
+      <Filter>include\wingui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wingui\dialog.h">
+      <Filter>include\wingui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wingui\gdi.h">
+      <Filter>include\wingui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wingui\layout.h">
+      <Filter>include\wingui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wingui\object.h">
+      <Filter>include\wingui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wingui\types.h">
+      <Filter>include\wingui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -34,7 +34,7 @@ class MainWnd;
  * FullScreenContainerWnd class.
  * Implements the full screen container window class.
  */
-class FullScreenContainerWnd : public GenericWindow {
+class FullScreenContainerWnd : public wingui::Window {
 public:
     FullScreenContainerWnd(MainWnd &mainWindow) : mainWnd(mainWindow) {
     }
@@ -74,7 +74,7 @@ protected:
     void ScriptHost_OnChangeState (gls::ScriptHost *pHost, gls::GLSCRIPT_HOST_STATE from_state,
                                     gls::GLSCRIPT_HOST_STATE to_state);
     void ScriptHost_OnConfigureWindow (const gls::GLSCRIPT_WINDOW_CONFIG &config);
-    void ScriptHost_OnLogMessage (const sys_wchar *message, gls::GLSCRIPT_LOGTYPE log_type);
+    void ScriptHost_OnLogMessage (const sys_tchar *message, gls::GLSCRIPT_LOGTYPE log_type);
     void ScriptHost_OnLogClear ();
 
     // message handlers...
@@ -84,7 +84,7 @@ protected:
     virtual void OnResize (int cx, int cy);
     virtual void OnGotFocus ();
     virtual void OnDropFiles (HDROP hDrop);
-    virtual void OnCommand (int cmdId); 
+    virtual void OnCommand (int cmdId, int notifMsg); 
     
 protected:
     // data members

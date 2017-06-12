@@ -25,7 +25,10 @@
 
 #include <wingui/opengl_view.h>
 
+namespace wingui {
+
 OpenGLView::OpenGLView () {
+    m_hDC = NULL;
     m_hGLRC = NULL;
     m_vpLeft = 0;
     m_vpTop = 0;
@@ -225,7 +228,16 @@ void OpenGLView::SetViewPort (GLint vpx, GLint vpy, GLsizei vpcx, GLsizei vpcy) 
 
 /* message handlers */
 void OpenGLView::OnCreate () {
-    GenericView::OnCreate ();
+    View::OnCreate ();    
+
+    // set style bits for a view
+    LONG style = ::GetWindowLong(m_hWnd, GWL_STYLE);        
+    style&= ~WS_CAPTION; // remove title bar
+    // style&= ~WS_VISIBLE; // set auto visible FALSE
+    ::SetWindowLong(m_hWnd, GWL_STYLE, style);
+
+    // cache window DC for performance
+    m_hDC = ::GetDC (m_hWnd);
 
     WINGUI_ASSERT (
         SetupPixelFormat () &&
@@ -236,10 +248,17 @@ void OpenGLView::OnCreate () {
 }
 
 void OpenGLView::OnPreDestroy () {
-    if (m_hGLRC != NULL)
+    if (m_hGLRC != NULL) {
         DestroyGLContext ();
+    }
     
-    GenericView::OnPreDestroy ();
+    // release cached DC
+    if (m_hDC != NULL) {
+        ::ReleaseDC (m_hWnd, m_hDC);
+        m_hDC = NULL;
+    }
+
+    View::OnPreDestroy ();
 }
 
 void OpenGLView::OnEraseBackground (HDC hdc, PAINTSTRUCT &ps) {
@@ -250,7 +269,10 @@ void OpenGLView::OnEraseBackground (HDC hdc, PAINTSTRUCT &ps) {
 }
 
 void OpenGLView::OnResize (int cx, int cy) {
-    GenericView::OnResize (cx, cy);
+    View::OnResize (cx, cy);
 
     SetupGLView (cx, cy);
 }
+
+}; // namespace wingui
+

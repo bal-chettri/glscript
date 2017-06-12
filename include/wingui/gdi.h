@@ -23,6 +23,7 @@
 #ifndef __WINGUI_GDI_H
  #define __WINGUI_GDI_H
 
+namespace wingui {
 /**
  * Font class
  */
@@ -37,7 +38,7 @@ public:
 
     Font (LPCTSTR lpszFaceName, int size, HDC hdc) {
         m_hFont = NULL;
-        Create (lpszFaceName, size, hdc, FW_NORMAL);
+        Create (lpszFaceName, size, FW_NORMAL, hdc);
     }
 
     Font (const Font &fnt) {
@@ -48,11 +49,11 @@ public:
         Delete ();
     }
 
-    BOOL Create (LPCTSTR lpszFaceName, int size, HDC hRefDC, LONG lfWieght);
+    BOOL Create (LPCTSTR lpszFaceName, int size, LONG lfWieght, HDC hRefDC);
     inline BOOL Create (LPCTSTR lpszFaceName, int size, HDC hdc);
     inline BOOL Create (LPCTSTR lpszFaceName, int size);
 
-    operator HFONT () {
+    inline operator HFONT() const {
         return m_hFont;
     }
 
@@ -66,13 +67,13 @@ public:
 
 inline BOOL Font::Create (LPCTSTR lpszFaceName, int size, HDC hRefDC) 
 {
-    return Create (lpszFaceName, size, hRefDC, FW_NORMAL);
+    return Create (lpszFaceName, size, FW_NORMAL, hRefDC);
 }
 
 inline BOOL Font::Create (LPCTSTR lpszFaceName, int size)
 {
     HDC hdc = CreateCompatibleDC (NULL);
-    BOOL ret = Create (lpszFaceName, size, hdc, FW_NORMAL);
+    BOOL ret = Create (lpszFaceName, size, FW_NORMAL, hdc);
     ::DeleteDC (hdc);
     return ret;
 }
@@ -167,5 +168,7 @@ public:
     BOOL Create (int cx, int cy, HDC hRefDC = NULL);
     void Dispose ();
 };
+
+}; // wingui namespace
 
 #endif /* __WINGUI_GDI_H */

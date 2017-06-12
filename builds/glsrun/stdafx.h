@@ -54,4 +54,7 @@
 #include <vector>
 #include <map>
 
+#pragma warning (disable:4996)
+#pragma warning (disable:4355)
+
 #endif /* __stdafx_h */

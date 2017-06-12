@@ -23,10 +23,10 @@
 #ifndef __wingui_main_window_h
  #define __wingui_main_window_h
 
-#include "generic_window.h"
+#include "window.h"
 
 /* An SDI style main window for implementing app's main window */
-class MainWindow : public GenericWindow {
+class MainWindow : public wingui::Window {
 public:
     /* ctors */
     

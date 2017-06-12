@@ -23,10 +23,10 @@
 #ifndef __GLSCRIPT_RUN_CONSOLE_WND_H
  #define __GLSCRIPT_RUN_CONSOLE_WND_H
 
-#include <wingui/generic_window.h>
-#include <wingui/wingui_gdi.h>
+#include <wingui/window.h>
+#include <wingui/gdi.h>
 
-class ConsoleWnd : public GenericWindow {
+class ConsoleWnd : public wingui::Window {
 public:
     enum LogType {
         logMessage,
@@ -77,7 +77,7 @@ protected:
 
 private:
     HMENU m_hContextMenu;
-    Font m_hFont;
+    wingui::Font m_hFont;
     HWND m_hWndEdit;
     WNDPROC m_prevEditWndProc;
     static LRESULT CALLBACK EditWindowProc (HWND hWnd, UINT msg, WPARAM, LPARAM);

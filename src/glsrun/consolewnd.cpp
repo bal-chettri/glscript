@@ -78,7 +78,7 @@ ConsoleWnd::~ConsoleWnd () {
 }
 
 BOOL ConsoleWnd::Create () {
-    return GenericWindow::Create (0, 0, 500, 200, _T("Console"));
+    return Window::Create (0, 0, 500, 200, _T("Console"));
 }
 
 // Log. General method to log of any type.

@@ -43,7 +43,7 @@ BOOL FullScreenContainerWnd::Create () {
     int cx, cy;
     cx = ::GetSystemMetrics (SM_CXSCREEN);
     cy = ::GetSystemMetrics (SM_CYSCREEN);
-    return GenericWindow::Create (0, 0, cx, cy, NULL);
+    return Window::Create (0, 0, cx, cy, NULL);
 }
 
 void FullScreenContainerWnd::GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle) {
@@ -128,7 +128,7 @@ bool MainWnd::RunScript () {
     sysutils_path_get_base (inc_path, base_inc_path, sizeof(base_inc_path)/sizeof(base_inc_path[0]) );
     _tcscat (base_inc_path, _tx("include\\"));
 
-    vector<tstring> search_paths;
+    std::vector<wingui_tstring> search_paths;
     search_paths.push_back (base_inc_path);
     pScriptSource = ScriptPreprocessor::PreprocessScript (m_scriptPath.c_str(), NULL, 
                                                             search_paths, ret);
@@ -272,7 +272,7 @@ void MainWnd::OnCreate () {
     EnableDropTarget (TRUE);
 
     // create the open gl view
-    m_pGLView->Create (0, 0, DEF_GLS_VIEW_WIDTH, DEF_GLS_VIEW_HEIGHT);
+    m_pGLView->Create (0, 0, DEF_GLS_VIEW_WIDTH, DEF_GLS_VIEW_HEIGHT, this);
     AddChild (m_pGLView);
     m_pGLView->Show ();
 
@@ -356,7 +356,7 @@ void MainWnd::OnDropFiles (HDROP hDrop) {
 }
 
 // OnCommand. Handles command messages.
-void MainWnd::OnCommand (int cmdId) {
+void MainWnd::OnCommand (int cmdId, int notifMsg) {
     switch (cmdId) {
 
     case ID_FILE_OPENSCRIPT:
@@ -404,7 +404,7 @@ void MainWnd::OnCommand (int cmdId) {
     break;
 
     default:
-        MainWindow::OnCommand (cmdId);
+        MainWindow::OnCommand (cmdId, notifMsg);
     }
 }
 
@@ -471,7 +471,8 @@ void MainWnd::ScriptHost_OnConfigureWindow (const GLSCRIPT_WINDOW_CONFIG &config
     m_pGLView->Show ();
 }
 
-void MainWnd::ScriptHost_OnLogMessage (const sys_wchar *message, GLSCRIPT_LOGTYPE log_type) {
+void MainWnd::ScriptHost_OnLogMessage (const sys_tchar *message, gls::GLSCRIPT_LOGTYPE log_type)
+{
     if (m_consoleWnd.GetHandle() == NULL) {
         m_consoleWnd.Create ();
     }

@@ -22,40 +22,48 @@
 //
 #include "stdafx.h"
 #include <assert.h>
-#include <wingui/generic_dialog.h>
+#include <wingui/dialog.h>
+#include <math.h>
 
 extern HINSTANCE _hAppInstance;
 
-GenericDialog::GenericDialog (int resourceId) {
+namespace wingui {
+
+Dialog::Dialog (int resourceId) {
     m_resourceId = resourceId;
     m_flagModal = FALSE;
     m_pParent = NULL;
 
-    GenericWindow::m_isDialog = TRUE;
+    Window::m_isDialog = TRUE;
 }
 
-INT_PTR GenericDialog::ShowModal (GenericWindow *pParent) {
+INT_PTR Dialog::ShowModal (Window *pParent, const char *szTitle) {
     m_flagModal = TRUE;
     m_pParent = pParent;
 
     return ::DialogBoxParam (_hAppInstance, MAKEINTRESOURCE(m_resourceId),
                                 pParent ? pParent->GetHandle() : NULL,
-                                (DLGPROC)GenericWindow::_dlgProc, 
+                                (DLGPROC)Window::_dlgProc, 
                                 (LPARAM) this );    
 }
 
-void GenericDialog::ShowModalLess (GenericWindow *pParent)
+void Dialog::ShowModalLess (Window *pParent)
 {
-    if (!m_hWnd) {
+    if (m_hWnd == NULL) 
+    {
         m_flagModal = FALSE;
         m_pParent = pParent;
         ::CreateDialogParam ( _hAppInstance, MAKEINTRESOURCE(m_resourceId),
                                     pParent ? pParent->GetHandle() : NULL, 
                                     (DLGPROC)_dlgProc, (LPARAM) this );
     }
+    else
+    {
+        Show(SW_SHOW);
+    }
 }
 
-void GenericDialog::CloseDialog (INT_PTR result) {
+void Dialog::CloseDialog (INT_PTR result) {
     if (IsModal()) {
         ::EndDialog (m_hWnd, result);
     } else {
@@ -63,20 +71,8 @@ void GenericDialog::CloseDialog (INT_PTR result) {
     }
 }
 
-void GenericDialog::SetControlText (int id, LPCTSTR lpszText) {
-    WINGUI_ASSERT (
-        ::SetDlgItemText (m_hWnd, id, lpszText)
-        );
-}
-
-void GenericDialog::GetControlText (int id, LPTSTR lpszBuff, int maxLength) {
-    WINGUI_ASSERT (
-        GetDlgItemText (m_hWnd, id, lpszBuff, maxLength)
-        );
-}
-
-void GenericDialog::CenterDialog () {
-    HWND m_hWndDlg = m_hWnd;
+void Dialog::CenterDialog() 
+{
     HWND hWndParent = NULL;
 
     if (m_pParent) hWndParent = m_pParent->GetHandle();
@@ -84,7 +80,7 @@ void GenericDialog::CenterDialog () {
 
     if (hWndParent) {
         RECT rectDlg, rectParent;
-        ::GetWindowRect ( m_hWndDlg, &rectDlg );
+        ::GetWindowRect ( GetHandle(), &rectDlg );
         ::GetWindowRect ( hWndParent, &rectParent );
 
         POINT offset = {
@@ -92,19 +88,46 @@ void GenericDialog::CenterDialog () {
             rectParent.top + (rectParent.bottom - rectParent.top) / 2 - (rectDlg.bottom - rectDlg.top) / 2
         };
 
-        ::MoveWindow (m_hWndDlg, offset.x, offset.y, rectDlg.right - rectDlg.left,
+        ::MoveWindow (GetHandle(), offset.x, offset.y, rectDlg.right - rectDlg.left,
                         rectDlg.bottom - rectDlg.top, 
-                        IsWindowVisible(m_hWndDlg) );
+                        IsWindowVisible(GetHandle()) );
     }
 }
 
-INT_PTR GenericDialog::HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam) {
+void Dialog::SetControlText (int id, LPCTSTR lpszText) {
+    WINGUI_ASSERT (
+        ::SetDlgItemText (m_hWnd, id, lpszText)
+        );
+}
+
+void Dialog::GetControlText (int id, LPTSTR lpszBuff, int maxLength) {
+    ::GetDlgItemText (m_hWnd, id, lpszBuff, maxLength);
+}
+
+int Dialog::GetControlInt (int id)
+{
+    BOOL translated = FALSE;
+    return (int)::GetDlgItemInt(m_hWnd, id, &translated, TRUE);
+}
+
+float Dialog::GetControlFloat (int id)
+{
+    TCHAR buff[30];
+    GetControlText(id, buff, 30);
+#ifdef UNICODE
+    return (float)_wtof(buff);
+#else
+    return(float)atof(buff);
+#endif
+}
+
+INT_PTR Dialog::HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
     case WM_INITDIALOG:
         return OnInitDialog ();
 
     default:
-        return GenericWindow::HandleDialogMessage (msg, wParam, lParam);
+        return Window::HandleDialogMessage (msg, wParam, lParam);
     }
 
     return TRUE;
@@ -112,16 +135,18 @@ INT_PTR GenericDialog::HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lPar
 
 /* message handlers */
 
-void GenericDialog::OnCommand (int cmdId) {
-    if (cmdId == IDOK)
+void Dialog::OnCommand (int cmdId, int notifMsg) {
+    if (cmdId == IDOK) {
         OnOkButton ();
-    else if (cmdId == IDCANCEL)
+    } else if (cmdId == IDCANCEL) {
         OnCancelButton ();
-    else
-        GenericWindow::OnCommand (cmdId);
+    } else {
+        Window::OnCommand (cmdId, notifMsg);
+    }
 }
 
-INT_PTR GenericDialog::OnInitDialog () {
+INT_PTR Dialog::OnInitDialog () 
+{
     // Set WS_EX_LAYERED on this window 
     /*SetWindowLong(m_hWnd, 
               GWL_EXSTYLE, 
@@ -131,7 +156,7 @@ INT_PTR GenericDialog::OnInitDialog () {
     SetLayeredWindowAttributes(m_hWnd, 0, (255 * 50) / 100, LWA_ALPHA);
     */
 
-    CenterDialog ();
+    CenterDialog();
 
     if (!IsModal () && !::IsWindowVisible(m_hWnd)) {
         ::ShowWindow (m_hWnd, SW_SHOW);
@@ -140,3 +165,5 @@ INT_PTR GenericDialog::OnInitDialog () {
 
     return TRUE;
 }
+
+}; // wingui namespace

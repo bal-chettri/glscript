@@ -23,10 +23,13 @@
 #ifndef __wingui_opengl_view_h
   #define __wingui_opengl_view_h
 
-#include "generic_view.h"
+#include "view.h"
+#include <GL/gl.h>
+
+namespace wingui {
 
 /* A view supporting open gl rendering */
-class OpenGLView : public GenericView {
+class OpenGLView : public View {
 public:
     /* constructors */
 
@@ -98,6 +101,8 @@ public:
      */
     virtual void RenderScene ();    
         
+    inline HDC GetCachedDC() const { return m_hDC; }
+
     ////////////////////////////////// overrides //////////////////////////////////
 
 protected:
@@ -117,6 +122,7 @@ protected:
 
 protected:
     // data members
+    HDC m_hDC;
     HGLRC m_hGLRC;  
     GLdouble m_orthographicMatrix[16];
     GLdouble m_perspectiveMatrix[16];
@@ -126,5 +132,7 @@ protected:
     GLsizei m_vpHeight;
     BOOL m_ortho;
 };
+
+}; // namespace wingui
 
 #endif /* __wingui_opengl_view_h */

@@ -22,32 +22,30 @@
 //
 #include "stdafx.h"
 #include <assert.h>
-#include <wingui/generic_window.h>
+#include <wingui/window.h>
 
 extern HINSTANCE _hAppInstance;
 
-GenericWindow::GenericWindow () {
+namespace wingui {
+
+Window::Window () {
     m_hWnd = NULL;
     m_isMainWnd = FALSE;
     m_isDialog = FALSE;
     m_userData = 0;
     m_flagMouseTracking = FALSE;
-    m_hBrushBg = NULL;
-    m_hPenBorder = NULL;
+    m_prevWndProc = NULL;
 }
 
-GenericWindow::~GenericWindow () {
-    WINGUI_ASSERT (m_hWnd == NULL);
-
-    if (m_hBrushBg)
-        ::DeleteObject (m_hBrushBg);
-
-    if (m_hPenBorder)
-        ::DeleteObject (m_hPenBorder);
+Window::~Window () {
+    if (m_hWnd != NULL) {
+        ::DestroyWindow (m_hWnd);
+    }
 }
 
 /* operations */
-BOOL GenericWindow::Create (int x, int y, int cx, int cy, LPCTSTR title) {
+BOOL Window::Create (int x, int y, int cx, int cy, LPCTSTR title, Window *pParent) 
+{
     WINGUI_ASSERT (m_hWnd == NULL);
 
     WNDCLASSEX wcex;
@@ -60,7 +58,7 @@ BOOL GenericWindow::Create (int x, int y, int cx, int cy, LPCTSTR title) {
     // get additional window class attributes
     GetClassStyle (wcex);
 
-    // register the window class only onece 
+    // register the window class only once  
     WNDCLASSEX dummyClassInfo;
     if (!::GetClassInfoEx (_hAppInstance, wcex.lpszClassName, &dummyClassInfo))
     {
@@ -72,35 +70,40 @@ BOOL GenericWindow::Create (int x, int y, int cx, int cy, LPCTSTR title) {
     GetCreateStyle (dwStyle, dwExStyle);
 
     // create the window
-    m_hWnd = ::CreateWindowEx ( dwExStyle, wcex.lpszClassName, title, dwStyle, 
-                                x, y, cx, cy, NULL, NULL, 
-                                wcex.hInstance, this );
-    if (m_hWnd == NULL)
+    m_hWnd = ::CreateWindowEx (dwExStyle, wcex.lpszClassName, title, dwStyle, 
+                                x, y, cx, cy, 
+                                pParent ? pParent->GetHandle() : NULL, 
+                                NULL, 
+                                wcex.hInstance, 
+                                this);
+    if (m_hWnd == NULL) {
         return FALSE;
+    }
 
+    // send the OnCreate message only after the window has been created successfully
     OnCreate ();
 
     return TRUE;
 }
 
-BOOL GenericWindow::Create (const RECT &rect, LPCTSTR title) {
+BOOL Window::Create (const RECT &rect, LPCTSTR title) {
     return Create (rect.left, rect.top, 
                     rect.right - rect.left, 
                     rect.bottom - rect.top, 
                     title );
 }
 
-void GenericWindow::Destroy () {
-    WINGUI_ASSERT (m_hWnd != NULL);
-    ::DestroyWindow (m_hWnd);
-    // hWnd is set to NULL when WM_NCDESTROY message is received
+void Window::Destroy () {
+    if (m_hWnd != NULL) {
+        ::DestroyWindow (m_hWnd);
+    }
 }
 
-HWND GenericWindow::GetHandle () const {
+HWND Window::GetHandle () const {
     return m_hWnd;
 }
 
-void GenericWindow::AttachHandle (HWND hWnd) {
+void Window::AttachHandle (HWND hWnd) {
     // handle can only be attached if window is not yet created
     WINGUI_ASSERT ( m_hWnd == NULL );
 
@@ -109,48 +112,86 @@ void GenericWindow::AttachHandle (HWND hWnd) {
 
     m_hWnd = hWnd;
     
+    // attaching an external window handle also maps the window handle to this object 
+    // automatically
     MapHandle ();
 }
 
-HWND GenericWindow::DetachHandle () {
+HWND Window::DetachHandle () {
     WINGUI_ASSERT ( m_hWnd != NULL );
 
     HWND hDetached = m_hWnd;
     
-    UnmapHandle();  
+    UnmapHandle();
     
     m_hWnd = NULL;
 
     return hDetached;
 }
 
-void GenericWindow::Show (int cmd_show) {
-    ::ShowWindow (m_hWnd, cmd_show);
-    ::UpdateWindow (m_hWnd);
+void Window::AttachHandleEx (HWND hWnd, BOOL mapHandle) {
+    // handle can only be attached if window is not yet created
+    WINGUI_ASSERT ( m_hWnd == NULL );
+
+    // verify if the window is valid
+    WINGUI_ASSERT ( ::IsWindow(hWnd) );
+
+    m_hWnd = hWnd;
+    
+    if (mapHandle) {
+        MapHandle ();
+    }
 }
 
-void GenericWindow::Hide () {
-    WINGUI_ASSERT (
-        ::ShowWindow (m_hWnd, SW_HIDE)
-        );
+HWND Window::DetachHandleEx (BOOL unmapHandle) {
+    WINGUI_ASSERT ( m_hWnd != NULL );
+
+    HWND hDetached = m_hWnd;
+    
+    if (unmapHandle) {
+        UnmapHandle();  
+    }
+    
+    m_hWnd = NULL;
+
+    return hDetached;
 }
 
-BOOL GenericWindow::IsValid () const {
+void Window::Show (int cmd_show) 
+{
+    if (cmd_show != SW_SHOW || !IsVisible()) {
+        ::ShowWindow (m_hWnd, cmd_show);
+    }
+}
+
+void Window::Hide () 
+{
+    ::ShowWindow (m_hWnd, SW_HIDE);     
+}
+
+BOOL Window::IsValid () const 
+{
     return m_hWnd && ::IsWindow (m_hWnd);
 }
 
-LONG GenericWindow::GetData () const {
+BOOL Window::IsVisible () const 
+{
+    return ::IsWindowVisible(m_hWnd); 
+}
+
+LONG Window::GetData () const 
+{
     return m_userData;
 }
 
-void GenericWindow::SetData (LONG data) {
+void Window::SetData (LONG data)
+{
     m_userData = data;
 }
 
-void GenericWindow::AddChild (GenericWindow *pChildWnd) {
-    WINGUI_ASSERT (
-        this->IsValid()&& pChildWnd->IsValid ()
-        );
+void Window::AddChild (Window *pChildWnd) {
+    WINGUI_ASSERT (this->IsValid());
+    WINGUI_ASSERT (pChildWnd && pChildWnd->IsValid());
     
     // First, set WS_CHILD style bit on the window to make a child
     LONG style = GetWindowLong ( pChildWnd->GetHandle(), GWL_STYLE );
@@ -158,36 +199,56 @@ void GenericWindow::AddChild (GenericWindow *pChildWnd) {
     ::SetWindowLong ( pChildWnd->GetHandle(), GWL_STYLE, style );
 
     // set the parent to this window
-    ::SetParent ( pChildWnd->GetHandle(), m_hWnd );
+    ::SetParent ( pChildWnd->GetHandle(), GetHandle() );
 }
 
-HWND GenericWindow::GetParent () {
+void Window::RemoveChild (Window *pChildWnd)
+{
+    // hide the child window before we remove it from the window heirarchy
+    pChildWnd->Hide();
+
+    // remove from view hierarchy
+    ::SetParent (pChildWnd->GetHandle(), NULL);
+
+    // remove WS_CHILD style from the the view
+    LONG style = ::GetWindowLong (pChildWnd->GetHandle(), GWL_STYLE);
+    style&= ~WS_CHILD;
+    ::SetWindowLong ( pChildWnd->GetHandle(), GWL_STYLE, style );
+}
+
+HWND Window::GetParent () 
+{
     return ::GetParent(m_hWnd);
 }
 
-void GenericWindow::GetWindowRect (RECT &rt) {
+void Window::GetWindowRect (RECT &rt)
+{
     WINGUI_ASSERT (
         ::GetWindowRect (m_hWnd, &rt)
     );
 }
 
-void GenericWindow::GetClientRect (RECT &rt) {
+void Window::GetClientRect (RECT &rt) 
+{
     WINGUI_ASSERT (
         ::GetClientRect (m_hWnd, &rt)
     );
 }
 
-void GenericWindow::Move (int x, int y, int cx, int cy, bool repaint) {
-    ::MoveWindow (GetHandle(), x, y, cx, cy, repaint ? TRUE : FALSE);   
+void Window::Move (int x, int y, int cx, int cy, bool repaint) 
+{
+    ::MoveWindow (GetHandle(), x, y, cx, cy, repaint ? TRUE : FALSE);
 }
 
-void GenericWindow::CenterWindow (GenericWindow *pParent) {
+void Window::CenterWindow (Window *pParent)
+{
     HWND hWndParent = NULL;
 
     if (pParent) hWndParent = pParent->GetHandle();
     if (!hWndParent) hWndParent = ::GetDesktopWindow ();
 
-    if (hWndParent) {
+    if (hWndParent) 
+    {
         RECT rectDlg, rectParent;
         ::GetWindowRect ( m_hWnd, &rectDlg );
         //::GetClientRect ( m_hWnd, &rectDlg );
@@ -206,34 +267,37 @@ void GenericWindow::CenterWindow (GenericWindow *pParent) {
     }
 }
 
-void GenericWindow::SetBackgroundColor (COLORREF color) {
-    if (m_hBrushBg != NULL) {
-        ::DeleteObject (m_hBrushBg);
-    }
-
-    if (m_hPenBorder != NULL) {
-        ::DeleteObject (m_hPenBorder);
-    }
-
-    m_hBrushBg = ::CreateSolidBrush (color);
-    m_hPenBorder = ::CreatePen (PS_SOLID, 1, color);
-}
-
-void GenericWindow::EnableDropTarget (BOOL flag_enable) {
+void Window::EnableDropTarget (BOOL flag_enable) {
     ::DragAcceptFiles (m_hWnd, flag_enable);
 }
 
 /* helpers */
-void GenericWindow::MapHandle () {
+void Window::MapHandle () {
     ::SetWindowLongPtr (m_hWnd, GWLP_USERDATA, (__int3264)(LONG_PTR)this);
 }
 
-void GenericWindow::UnmapHandle () {
+void Window::UnmapHandle () {
     ::SetWindowLongPtr ( m_hWnd , GWLP_USERDATA, 0L );
 }
 
+void Window::MapProc ()
+{
+    WINGUI_ASSERT(m_hWnd != NULL && m_prevWndProc == NULL);
+    m_prevWndProc = (WNDPROC)(ptrdiff_t)::GetWindowLongPtr (m_hWnd, GWLP_WNDPROC);
+    ::SetWindowLongPtr (m_hWnd, GWLP_WNDPROC, (__int3264)(LONG_PTR)_wndProc);
+
+    WNDPROC test = (WNDPROC)(ptrdiff_t)::GetWindowLongPtr (m_hWnd, GWLP_WNDPROC);
+}
+
+void Window::UnmapProc ()
+{
+    WINGUI_ASSERT(m_prevWndProc != NULL);
+    ::SetWindowLongPtr (m_hWnd, GWLP_WNDPROC, (__int3264)(LONG_PTR)m_prevWndProc);
+    m_prevWndProc = NULL;
+}
+
 /* overridables */
-void GenericWindow::GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle) {
+void Window::GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle) {
     dwStyle = WS_OVERLAPPEDWINDOW;
     dwExStyle = 0;
 }
@@ -243,7 +307,7 @@ void GenericWindow::GetCreateStyle (DWORD &dwStyle, DWORD &dwExStyle) {
  * Window class name must be changed in the lpszClassName member if overriden
  * for custom style attributes and all attributes below must be filled in.
  */
-void GenericWindow::GetClassStyle (WNDCLASSEX &wcex) {
+void Window::GetClassStyle (WNDCLASSEX &wcex) {
     wcex.lpszClassName = _T("_gls_window");
     wcex.cbSize = sizeof(wcex);
     wcex.style = 0; // CS_HREDRAW | CS_VREDRAW;
@@ -252,13 +316,13 @@ void GenericWindow::GetClassStyle (WNDCLASSEX &wcex) {
     wcex.hIcon = LoadIcon (NULL, IDI_APPLICATION);
     wcex.hIconSm = LoadIcon (NULL, IDI_APPLICATION);
     wcex.hCursor = LoadCursor (NULL, IDC_ARROW);
-    wcex.hbrBackground =  NULL; // CreateSolidBrush(RGB(100,100,100));
+    wcex.hbrBackground = CreateSolidBrush(RGB(48,66,97)); // (HBRUSH)COLOR_WINDOW;
     wcex.lpszMenuName = NULL;
     wcex.hInstance = _hAppInstance;
 }
 
-LRESULT GenericWindow::HandleMessage (UINT msg, WPARAM wParam, LPARAM lParam) {
-    switch (msg) {  
+LRESULT Window::HandleMessage (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    switch (msg) {
     case WM_MOUSEMOVE:
         if (!m_flagMouseTracking) {
             // register for mouse out message (TME_LEAVE)
@@ -278,41 +342,33 @@ LRESULT GenericWindow::HandleMessage (UINT msg, WPARAM wParam, LPARAM lParam) {
         break;
 
     case WM_LBUTTONDOWN:
-        OnMouseDown (0, 0, LOWORD(lParam), HIWORD(lParam));
+        OnMouseDown (0, kMouseButtonLeft, LOWORD(lParam), HIWORD(lParam));
         break;
-
     case WM_LBUTTONUP:
-        OnMouseUp (0, 0, LOWORD(lParam), HIWORD(lParam));
+        OnMouseUp (0, kMouseButtonLeft, LOWORD(lParam), HIWORD(lParam));
         break;
 
     case WM_RBUTTONDOWN:
-        OnMouseDown (0, 1, LOWORD(lParam), HIWORD(lParam));
+        OnMouseDown (0, kMouseButtonRight, LOWORD(lParam), HIWORD(lParam));
         break;
-
     case WM_RBUTTONUP:
-        OnMouseUp (0, 1, LOWORD(lParam), HIWORD(lParam));
+        OnMouseUp (0, kMouseButtonRight, LOWORD(lParam), HIWORD(lParam));
         OnContextMenu ( );
         break;
 
-    case WM_ERASEBKGND:
-        // we'll erase the background during the WM_PAINT message as necessary
-        // to support dynamic background color for views
-        // return FALSE to indicate we didn't erase the background here.
-        return FALSE;
+    case WM_MBUTTONDOWN:
+        OnMouseDown (0, kMouseButtonMiddle, LOWORD(lParam), HIWORD(lParam));
+        break;
+    case WM_MBUTTONUP:
+        OnMouseUp (0, kMouseButtonMiddle, LOWORD(lParam), HIWORD(lParam));
+        OnContextMenu ( );
+        break;
 
     case WM_PAINT: 
-        {
+        if (m_prevWndProc == NULL) {
             PAINTSTRUCT ps;
             HDC hdc = ::BeginPaint (m_hWnd, &ps);
-
-            // erase the background if required
-            if (ps.fErase) {
-                OnEraseBackground (hdc, ps);
-                ps.fErase = FALSE;
-            }
-
             OnPaint (hdc, ps);
-
             ::EndPaint (m_hWnd, &ps);
         }
         break;
@@ -360,19 +416,20 @@ LRESULT GenericWindow::HandleMessage (UINT msg, WPARAM wParam, LPARAM lParam) {
         break;
 
     case WM_COMMAND:
-        OnCommand ( LOWORD(wParam) );
+        OnCommand (LOWORD(wParam), HIWORD(wParam));
         break;
 
     case WM_CONTEXTMENU:
-        OnContextMenu ( );
+        OnContextMenu ();
         break;
 
     case WM_CLOSE:
         {
             BOOL cancel = FALSE;
             OnClose (cancel);
-            if (cancel == FALSE) 
+            if (cancel == FALSE) {
                 DestroyWindow (m_hWnd);
+            }
         }
         break;
 
@@ -380,15 +437,49 @@ LRESULT GenericWindow::HandleMessage (UINT msg, WPARAM wParam, LPARAM lParam) {
         OnDropFiles ((HDROP)wParam);
         break;
 
+    case WM_NOTIFY:
+        {
+            LPNMHDR lpNotificHdr = (LPNMHDR)lParam;     
+            LONG_PTR ptr = ::GetWindowLongPtr (lpNotificHdr->hwndFrom, GWLP_USERDATA);
+            Window *pWnd = (Window *) ptr;      
+            if (pWnd != NULL) {
+                return pWnd->OnNotify (lpNotificHdr, wParam, lParam);
+            }
+            break;
+        }
+
+    case WM_HSCROLL:
+        {
+            if (LOWORD(wParam) == SB_THUMBPOSITION || LOWORD(wParam) == SB_THUMBTRACK) {
+                OnHScroll (HIWORD(wParam));
+            }
+            break;
+        }
+    case WM_VSCROLL:
+        {
+            if (LOWORD(wParam) == SB_THUMBPOSITION || LOWORD(wParam) == SB_THUMBTRACK) {
+                OnVScroll (HIWORD(wParam));
+            }
+            break;
+        }
+
     default:
-        return ::DefWindowProc (m_hWnd, msg, wParam, lParam);
+        if (m_prevWndProc) {
+            return CallWindowProc (m_prevWndProc, hWnd, msg, wParam, lParam);
+        } else {
+            return ::DefWindowProc (m_hWnd, msg, wParam, lParam);
+        }
     }
 
-    return 0;
+    if (m_prevWndProc) {
+        return CallWindowProc (m_prevWndProc, hWnd, msg, wParam, lParam);
+    } else {
+        return 0;
+    }
 }
 
-INT_PTR GenericWindow::HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam) {
-    switch (msg) {  
+INT_PTR Window::HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lParam) {
+    switch (msg) {
     case WM_MOUSEMOVE:
         if (!m_flagMouseTracking) {
             // register for mouse out message (TME_LEAVE)
@@ -407,64 +498,52 @@ INT_PTR GenericWindow::HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lPar
         m_flagMouseTracking = FALSE;
         break;
 
-    case WM_LBUTTONDOWN:
-        OnMouseDown (0, 0, LOWORD(lParam), HIWORD(lParam));
-        break;
-
-    case WM_LBUTTONUP:
-        OnMouseUp (0, 0, LOWORD(lParam), HIWORD(lParam));
-        break;
-
-    case WM_RBUTTONDOWN:
-        OnMouseDown (0, 0, LOWORD(lParam), HIWORD(lParam));
-        break;
-
-    case WM_RBUTTONUP:
-        OnMouseUp (0, 0, LOWORD(lParam), HIWORD(lParam));
-        OnContextMenu ( );
-        break;
-
-    case WM_CHAR:
-        OnKeyPress ( (int)wParam, LOWORD(lParam) );
-        break;
-
-    case WM_KEYDOWN:
-        OnKeyDown ( (int)wParam );
-        break;
-
-    case WM_NCDESTROY:
-        OnPreDestroy ();
-        m_hWnd = NULL;
-        break;
-
-    case WM_DESTROY:
-        OnDestroy ();
-        break;
-
-    case WM_SIZE:
-        {
-            int cx, cy;
-            cx = LOWORD(lParam);
-            cy = HIWORD(lParam);
-            OnResize (cx, cy);
+    case WM_PAINT: 
+        if (m_prevWndProc == NULL) {
+            PAINTSTRUCT ps;
+            HDC hdc = ::BeginPaint (m_hWnd, &ps);
+            OnPaint (hdc, ps);
+            ::EndPaint (m_hWnd, &ps);
         }
         break;
 
-    case WM_SETFOCUS:
-        OnGotFocus ();
-        break;
-
-    case WM_KILLFOCUS:
-        OnLostFocus ();
-        break;
-
-    case WM_COMMAND:
-        OnCommand ( LOWORD(wParam) );
-        break;
-
-    case WM_CONTEXTMENU:
+    case WM_LBUTTONDOWN: OnMouseDown (0, 0, LOWORD(lParam), HIWORD(lParam)); break;
+    case WM_LBUTTONUP: OnMouseUp (0, 0, LOWORD(lParam), HIWORD(lParam)); break;
+    case WM_RBUTTONDOWN: OnMouseDown (0, 0, LOWORD(lParam), HIWORD(lParam)); break;
+    case WM_RBUTTONUP: 
+        OnMouseUp (0, 0, LOWORD(lParam), HIWORD(lParam));
         OnContextMenu ( );
         break;
+    case WM_CONTEXTMENU: OnContextMenu ( ); break;
+
+    case WM_CHAR: OnKeyPress ( (int)wParam, LOWORD(lParam) ); break;
+    case WM_KEYDOWN: OnKeyDown ( (int)wParam ); break;
+
+    case WM_NCDESTROY:      
+        OnPreDestroy ();
+        m_hWnd = NULL; 
+        break;
+    case WM_DESTROY: 
+        OnDestroy ();
+        break;
+
+    case WM_SIZE: OnResize (LOWORD(lParam), HIWORD(lParam)); break;
+
+    case WM_SETFOCUS: OnGotFocus (); break;
+    case WM_KILLFOCUS: OnLostFocus (); break;
+
+    case WM_COMMAND: OnCommand (LOWORD(wParam), HIWORD(wParam)); break;
+    
+    case WM_NOTIFY:
+        {
+            LPNMHDR lpNotificHdr = (LPNMHDR)lParam;     
+            LONG_PTR ptr = ::GetWindowLongPtr (lpNotificHdr->hwndFrom, GWLP_USERDATA);
+            Window *pWnd = (Window *) ptr;      
+            if (pWnd != NULL) {
+                return pWnd->OnNotify (lpNotificHdr, wParam, lParam);
+            }
+            break;
+        }
 
     default:
         return FALSE;
@@ -474,86 +553,64 @@ INT_PTR GenericWindow::HandleDialogMessage (UINT msg, WPARAM wParam, LPARAM lPar
 }
 
 // static 
-LRESULT CALLBACK GenericWindow::_wndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    GenericWindow *pWnd = NULL;
+LRESULT CALLBACK Window::_wndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    Window *pWnd = NULL;
 
     if (msg == WM_CREATE) {
-        // get GenericWindow object
+        // get Window object
         CREATESTRUCT *cs = (CREATESTRUCT *) lParam;
-        pWnd = (GenericWindow *)cs->lpCreateParams;
+        pWnd = (Window *)cs->lpCreateParams;
         WINGUI_ASSERT (pWnd);
 
-        // bind HWND with the Sim8085IdeWindow object 
-        ::SetWindowLongPtr ( hWnd, GWLP_USERDATA, (__int3264)(LONG_PTR)pWnd);
+        // map handle to this window object
+        ::SetWindowLongPtr (hWnd, GWLP_USERDATA, (__int3264)(LONG_PTR)pWnd);
     } else {
         // get window object from window handle
         LONG_PTR ptr = ::GetWindowLongPtr (hWnd, GWLP_USERDATA);
-        pWnd = (GenericWindow *) ptr;
+        pWnd = (Window *) ptr;
     }
 
-    if (pWnd) {
-        return pWnd->HandleMessage (msg, wParam, lParam);
+    if (pWnd && pWnd->GetHandle()) {
+        return pWnd->HandleMessage (hWnd, msg, wParam, lParam);
+    } else {
+        return ::DefWindowProc (hWnd, msg, wParam, lParam);
     }
-
-    return ::DefWindowProc (hWnd, msg, wParam, lParam);
 }
 
 // static 
-INT_PTR GenericWindow::_dlgProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-    GenericWindow *pThis = NULL;
+INT_PTR Window::_dlgProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+    Window *pThis = NULL;
 
-    if (msg == WM_INITDIALOG) {         
-        // map dialog window handle to its GenericWindow object
-        pThis = (GenericWindow *) lParam;       
+    if (msg == WM_INITDIALOG) {
+        // map dialog window handle to its Window object
+        pThis = (Window *) lParam;
+        WINGUI_ASSERT (pThis);
         ::SetWindowLongPtr ( hWnd, GWLP_USERDATA, (__int3264)(LONG_PTR)pThis);
         pThis->m_hWnd = hWnd;
-    }
-    else {
+    } else {
         // get window object from window handle
         LONG_PTR ptr = ::GetWindowLongPtr (hWnd, GWLP_USERDATA);
-        pThis = (GenericWindow *) ptr;
+        pThis = (Window *) ptr;
     }
 
     if (pThis) {
         return pThis->HandleDialogMessage (msg, wParam, lParam);
+    } else {
+        return FALSE;
     }
-
-    return FALSE;
 }
 
 // default message handlers...
 
-void GenericWindow::OnCreate () {
-    // set window properties
-    SetBackgroundColor ( RGB(250,250,255) );
-}
-
-void GenericWindow::OnEraseBackground (HDC hdcDraw, PAINTSTRUCT &ps) {
-    HGDIOBJ hOldBrush, hOldPen;
-    RECT rt;
-
-    GetClientRect (rt);
-
-    hOldBrush = ::SelectObject (hdcDraw, m_hBrushBg);
-    hOldPen = ::SelectObject (hdcDraw, m_hPenBorder );
-
-    // Erase background
-    //::Rectangle (hdcDraw, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
-    ::Rectangle (hdcDraw, rt.left, rt.top, rt.right, rt.bottom);
-
-    // do cleanup
-    ::SelectObject (hdcDraw, hOldBrush);
-    ::SelectObject (hdcDraw, hOldPen);
-}
-
-void GenericWindow::OnCommand (int cmdId) {
+void Window::OnCommand (int cmdId, int notifMsg) 
+{
     if (!m_isMainWnd) {
         // forward command messages upwards in the window hierarchy
         ::SendMessage ( this->GetParent(), WM_COMMAND, (WPARAM)cmdId, 0 );
     }
 }
 
-void GenericWindow::OnDropFiles (HDROP hdrop) {
+void Window::OnDropFiles (HDROP hdrop) {
     /*const UINT QUERY_FILE_COUNT = 0xFFFFFFFF;
 
     list<wstring> list_files;
@@ -584,3 +641,4 @@ void GenericWindow::OnDropFiles (HDROP hdrop) {
     */
 }
  
+}; // wingui namespace
