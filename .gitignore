@@ -23,3 +23,21 @@
 
 # Subversion file
 *.svn
+
+# Executable files
+*.dll
+*.exe
+
+# VC++ files
+*.exp
+*.lib
+*.tlb
+*.pdb
+*.sdf
+*.opensdf
+*.suo
+
+# Intermediate generated files
+*_i.c
+*_p.c
+dlldata.c
