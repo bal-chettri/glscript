@@ -51,7 +51,7 @@ DIRECTORY STRUCTURE:
 NOTES ON HOW TO BUILD:
 
 Requirements:
-- You will require Visual Studio 2005 or later to build glScript.
+- You will require Visual Studio 2010 or later to build glScript.
 
 i. Go to \builds\glscript folder and open glscript.sln. Select build configuration
    (DEBUG/RELEASE). Build the project. This will create glscript.lib and glscript.tlb 
