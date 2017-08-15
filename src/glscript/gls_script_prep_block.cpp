@@ -23,13 +23,14 @@
 #include "stdafx.h"
 #include <glscript/gls_script_preprocessor.h>
 #include <glscript/gls_script_loader.h>
+#include <glscript/gls_string_utils.h>
 #include <sysutils/sysutils.h>
 
 using namespace gls;
 
 // prototypes for internal helper functions ..
-static int TokenEqualsTo (const Tokenizer::Token &token, const sys_tchar *str);
-static sys_tchar *GetTokenString (const Tokenizer::Token &token);
+static int TokenEqualsTo (const Tokenizer<wchar_t>::Token &token, const sys_wchar *str);
+static sys_wchar *GetTokenString (const Tokenizer<wchar_t>::Token &token);
 
 // PreprocessorBlock class definition...
 
@@ -42,7 +43,7 @@ PreprocessorBlock::PreprocessorBlock (const sys_wchar *block_start,
 {
     m_pBlockStart = block_start;
     m_pBlockEnd = block_end;
-    m_language = _tx("");
+    m_language = L"";
     m_pScriptSource = pScriptSource; // script source object is not addref'ed
     m_pPreprocessor = pPrep; // script preprocessor (not addref'ed)
 }
@@ -78,8 +79,12 @@ size_t PreprocessorBlock::GetExpandedLength () const {
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-const tstring &PreprocessorBlock::GetLanguage () const {
+const tstring PreprocessorBlock::GetLanguage () const {
+#ifdef UNICODE
     return m_language;
+#else
+    return tstring(WS2MBS(m_language.c_str()));
+#endif
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -92,19 +97,22 @@ int PreprocessorBlock::ParseBlock () {
     // clear all commands before we parse the new block
     m_commands.clear ();
     
-    Tokenizer tokenizer;
-    Tokenizer::Token tokens[10]; // max tokens per preprocessor line
+    Tokenizer<wchar_t> tokenizer;
+    Tokenizer<wchar_t>::Token tokens[10]; // max tokens per preprocessor line
 
     // set tokenizer flags
     tokenizer.SetFlags (
-        Tokenizer::TerminateAtNewLine | 
-        Tokenizer::TokenizeSymbols | 
-        Tokenizer::KeepWhiteToken |
-        Tokenizer::UnquoteString
+        Tokenizer<wchar_t>::TerminateAtNewLine | 
+        Tokenizer<wchar_t>::TokenizeSymbols | 
+        Tokenizer<wchar_t>::KeepWhiteToken |
+        Tokenizer<wchar_t>::UnquoteString
         );
 
+    tokenizer.SetSymbols(L"~~!@#$%^&*()_+-={}[]:\";'<>?,./|\\");
+    tokenizer.SetWhiteChars(L"\r\n\f\t ");
+
     // input begins at the start of the block
-    sys_tchar *input = (sys_tchar *)(m_pBlockStart + 2);
+    sys_wchar *input = (sys_wchar *)(m_pBlockStart + 2);
 
     // terminate the block temporarily so that we don't tokenize reset of the block #>
     sys_wchar temp = *(m_pBlockEnd - 1);
@@ -114,14 +122,14 @@ int PreprocessorBlock::ParseBlock () {
     while (input <= (m_pBlockEnd - 1)) {
         // tokenize the current line
         size_t count_tokens;
-        count_tokens = tokenizer.Tokenize (&input, tokens, sizeof(tokens)/sizeof(tokens[0]));
+        count_tokens = tokenizer.Tokenize(&input, tokens, sizeof(tokens)/sizeof(tokens[0]));
         
         // skip all leading white tokens
         size_t index = 0;
         size_t num_tokens = count_tokens;
 
         while (index < count_tokens && 
-                Tokenizer::IsWhitespaceToken(tokens[index])) 
+                Tokenizer<wchar_t>::IsWhitespaceToken(tokens[index])) 
         {
             ++index;
             --num_tokens;
@@ -202,13 +210,13 @@ int PreprocessorBlock::ExpandBlock (sys_wchar **p_pCodeBuffer) {
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-int PreprocessorBlock::ParseCommand (const Tokenizer::Token *tokens, size_t num_tokens) {
+int PreprocessorBlock::ParseCommand (const Tokenizer<wchar_t>::Token *tokens, size_t num_tokens) {
     int ret;
     
-    if ( TokenEqualsTo(tokens[0], _tx("include")) ) {
+    if ( TokenEqualsTo(tokens[0], L"include") ) {
         ret = ParseCommand_Include (tokens, num_tokens);
     }
-    else if ( TokenEqualsTo(tokens[0], _tx("language")) ) {
+    else if ( TokenEqualsTo(tokens[0], L"language") ) {
         ret = ParseCommand_Language (tokens, num_tokens);
     } 
     else {
@@ -222,19 +230,19 @@ int PreprocessorBlock::ParseCommand (const Tokenizer::Token *tokens, size_t num_
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-int PreprocessorBlock::ParseCommand_Include (const Tokenizer::Token *tokens, size_t count_tokens) {
+int PreprocessorBlock::ParseCommand_Include (const Tokenizer<wchar_t>::Token *tokens, size_t count_tokens) {
     // include "url"
     if (count_tokens < 3) {
         return kPrepErrorSyntaxParse; 
     }   
 
-    if ( tokens[1].type != Tokenizer::WhiteToken || tokens[2].type != Tokenizer::StringToken ) {
+    if ( tokens[1].type != Tokenizer<wchar_t>::WhiteToken || tokens[2].type != Tokenizer<wchar_t>::StringToken ) {
         return kPrepErrorSyntaxParse;
     }
 
     PreprocessorCommand command;
     command.type = kPrepCommandTypeInclude;
-    memcpy (&command.token, &tokens[2], sizeof(Tokenizer::Token));
+    memcpy (&command.token, &tokens[2], sizeof(Tokenizer<wchar_t>::Token));
 
     m_commands.push_back (command);
     return kPrepErrorNone;
@@ -244,19 +252,19 @@ int PreprocessorBlock::ParseCommand_Include (const Tokenizer::Token *tokens, siz
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-int PreprocessorBlock::ParseCommand_Language (const Tokenizer::Token *tokens, size_t count_tokens) {
+int PreprocessorBlock::ParseCommand_Language (const Tokenizer<wchar_t>::Token *tokens, size_t count_tokens) {
     // language "lang"
     if (count_tokens < 3) {
         return kPrepErrorSyntaxParse; 
     }
 
-    if ( tokens[1].type != Tokenizer::WhiteToken || tokens[2].type != Tokenizer::StringToken ) {
+    if ( tokens[1].type != Tokenizer<wchar_t>::WhiteToken || tokens[2].type != Tokenizer<wchar_t>::StringToken ) {
         return kPrepErrorSyntaxParse;
     }
 
     PreprocessorCommand command;
     command.type = kPrepCommandTypeLanguage;
-    memcpy (&command.token, &tokens[2], sizeof(Tokenizer::Token));
+    memcpy (&command.token, &tokens[2], sizeof(Tokenizer<wchar_t>::Token));
 
     m_commands.push_back (command);
     return kPrepErrorNone;
@@ -267,7 +275,7 @@ int PreprocessorBlock::ParseCommand_Language (const Tokenizer::Token *tokens, si
 ///////////////////////////////////////////////////////////////////////////////
 //
 int PreprocessorBlock::ProcessCommand_Language (PreprocessorCommand &cmd) {
-    sys_tchar *buff = GetTokenString (cmd.token);
+    sys_wchar *buff = GetTokenString (cmd.token);
     m_language = buff;
     delete buff;
 
@@ -280,19 +288,27 @@ int PreprocessorBlock::ProcessCommand_Language (PreprocessorCommand &cmd) {
 //
 int PreprocessorBlock::ProcessCommand_Include (PreprocessorCommand &cmd) {      
     // get token ULR    
+    const wchar_t *urlToken = GetTokenString(cmd.token);
+#ifdef UNICODE
+    tstring strUrlToken = urlToken;
+#else
+    tstring strUrlToken = WS2MBS(urlToken);
+#endif
+
+    // get all url forms    
     std::vector<tstring> url_forms;
-    const sys_tchar *urlToken;
-    
-    // get all url forms
-    urlToken = GetTokenString (cmd.token);
-    if ( sysutils_path_is_absolute(urlToken) ) {
+
+    if ( sysutils_path_is_absolute(strUrlToken.c_str()) ) 
+    {
         // token URL is an absolute URL path so no path resolution
-        url_forms.push_back ( tstring(urlToken) );
-    } else {
+        url_forms.push_back ( strUrlToken );
+    } 
+    else
+    {
         // make full URL path to file to preprocess
         tstring strTempURL;
         strTempURL = m_pScriptSource->GetBaseURL();     // relative to current source's base URL
-        strTempURL+= urlToken;                          // append relative token URL path
+        strTempURL+= strUrlToken;                       // append relative token URL path
 
         url_forms.push_back ( strTempURL );             // relative to current source's base URL
 
@@ -306,7 +322,7 @@ int PreprocessorBlock::ProcessCommand_Include (PreprocessorCommand &cmd) {
             if ( strTempURL.substr(strTempURL.length () - 1, 1) != kPathSep ) {
                 strTempURL+= kPathSep;
             }
-            strTempURL+= urlToken;
+            strTempURL+= strUrlToken;
             url_forms.push_back ( strTempURL );
         }
     }
@@ -354,34 +370,34 @@ void PreprocessorBlock::Cleanup () {
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-static int TokenEqualsTo (const Tokenizer::Token &token, const sys_tchar *str) {
+static int TokenEqualsTo (const Tokenizer<wchar_t>::Token &token, const sys_wchar *str) {
     size_t i = 0;
     while (i < token.length && *str) {
         if (token.string[i++] != *str)
             return false;
         ++str;
     }
-    return (i == token.length && *str == _tx('\0'));
+    return (i == token.length && *str == L'\0');
 }
 ///////////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-static sys_tchar *GetTokenString (const Tokenizer::Token &token) {
-    sys_tchar *temp;
+static sys_wchar *GetTokenString (const Tokenizer<wchar_t>::Token &token) {
+    sys_wchar *temp;
     if (token.length == 0) {
-        temp = new sys_tchar [ 2 ];
+        temp = new sys_wchar[ 2 ];
     } else {
-        temp = new sys_tchar [ token.length + 1 ];
+        temp = new sys_wchar[ token.length + 1 ];
     }
     
     if (token.length == 0) {
         // whitespace token is trimmed to 0 length string
-        temp[0] = Tokenizer::IsWhitespaceToken(token) ? _tx(' ') : _tx('\0');
+        temp[0] = Tokenizer<wchar_t>::IsWhitespaceToken(token) ? L' ' : L'\0';
         temp[1] = _tx('\0');
     } else {
-        _tcsncpy (temp, token.string, token.length);        
+        wcsncpy(temp, token.string, token.length);
         temp[token.length] = _tx('\0');
     }
 

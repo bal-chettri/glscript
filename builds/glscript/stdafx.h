@@ -43,6 +43,7 @@
 #include <commctrl.h>
 
 #include <tchar.h>
+#include <wchar.h>
 #include <string.h>
 #include <stdio.h>
 

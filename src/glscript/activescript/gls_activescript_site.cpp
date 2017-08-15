@@ -214,27 +214,27 @@ LPCTSTR GLScript_ActiveScriptSite::ProcessExceptionInfo (IActiveScriptError *pSc
     length+= (LEN_BUFF_EXTRA);
 
     // allocate wide character buffer for the error message
-    sys_wchar *wide_buffer = new sys_tchar [length + 1];
+    sys_wchar *wide_buffer = new sys_wchar[length + 1];
     if (wide_buffer == NULL) {
         return NULL; // failed to allocate memory
     }
 
     // format the error message
-    wsprintf (wide_buffer, L"Error: %u", pExcepInfo->wCode);
+    swprintf(wide_buffer, L"Error: %u", pExcepInfo->wCode);
     if (bHasSourcePosInfo) {
-        wsprintf (wide_buffer + wcslen(wide_buffer), L", Line: %u, Char: %d\r\n", 
+        swprintf(wide_buffer + wcslen(wide_buffer), L", Line: %u, Char: %d\r\n", 
                     line_pos, char_pos);
     } else {
-        wsprintf (wide_buffer + wcslen(wide_buffer), L"\r\n");
+        swprintf(wide_buffer + wcslen(wide_buffer), L"\r\n");
     }
     if (pExcepInfo->bstrSource) {
-        wsprintf (wide_buffer + wcslen(wide_buffer), L"%s\r\n", pExcepInfo->bstrSource);
+        swprintf(wide_buffer + wcslen(wide_buffer), L"%s\r\n", pExcepInfo->bstrSource);
     }
     if (pExcepInfo->bstrDescription) {
-        wsprintf (wide_buffer + wcslen(wide_buffer), L"%s\r\n", pExcepInfo->bstrDescription);
+        swprintf(wide_buffer + wcslen(wide_buffer), L"%s\r\n", pExcepInfo->bstrDescription);
     }
     if (bHasErrorText) {
-        wsprintf (wide_buffer + wcslen(wide_buffer), L"%s\r\n", bstrErrorText);
+        swprintf(wide_buffer + wcslen(wide_buffer), L"%s\r\n", bstrErrorText);
         // free error source text when done
         ::SysFreeString (bstrErrorText);
     }
@@ -253,7 +253,7 @@ LPCTSTR GLScript_ActiveScriptSite::ProcessExceptionInfo (IActiveScriptError *pSc
         }
 
         // convert to ascii format
-        wcstombs (ascii_buffer, wide_buffer, wcslen(length);
+        wcstombs (ascii_buffer, wide_buffer, wcslen(wide_buffer));
         ascii_buffer [length] = '\0';
 
         // delete the wide buffer

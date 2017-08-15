@@ -24,6 +24,7 @@
 
 #if defined(WIN32)
 #include <glscript/activescript/gls_activescript_host.h>
+#include <glscript/gls_string_utils.h>
 
 using namespace gls;
 
@@ -219,8 +220,12 @@ bool GLScriptHost_Win32::ExecuteScriptConfigurationPhase () {
 
     BSTR window_title;
     m_engine.get_windowTitle (&window_title);
-    ::_tcsncpy (windowConfig.title, window_title, ::SysStringLen(window_title));
-    ::SysFreeString (window_title);
+#ifdef UNICODE
+    wcsncpy(windowConfig.title, window_title, SysStringLen(window_title));
+#else
+    strncpy(windowConfig.title, WS2MBS(window_title), ::SysStringLen(window_title));
+#endif
+    SysFreeString (window_title);
 
     m_engine.get_windowWidth (&windowConfig.wincx);
     m_engine.get_windowHeight (&windowConfig.wincy);
@@ -330,13 +335,10 @@ bool GLScriptHost_Win32::InvokeScriptMethod (const sys_tchar *method_name, GLSCR
     
     // convert method name to wide string format
     OLECHAR *oleszMethod;
-    #if defined(UNICODE) || defined(_UNICODE)
+    #if defined(UNICODE)
         oleszMethod = (OLECHAR *)method_name;
     #else
-        wchar_t wMethod[255]; // #TODO: use proper array size
-        ::mbstowcs (wMethod, method_name, sys_strlen(method_name));
-        wMethod [sys_strlen(method_name)] = '\0';
-        oleszMethod = wMethod;
+        oleszMethod = (OLECHAR *)(const wchar_t *)MBS2WS(method_name);
     #endif
 
     // get DISPID of the method to invoke
@@ -558,29 +560,29 @@ BOOL GLScriptHost_Win32::GetScriptEngineCLSID (LPCLSID pclsid) {
 }
 
 // Returns script engine's CLSID from language name e.g. vbscript or javascript
-BOOL GLScriptHost_Win32::GetScriptEngineCLSIDFromProgID (LPCTSTR lpszExtension, LPCLSID clsid) {
+BOOL GLScriptHost_Win32::GetScriptEngineCLSIDFromProgID (LPCTSTR lpszExtension, LPCLSID clsid)
+{
     HRESULT hr;
 
     // get the CLSID using extension name as PROGID
     #ifdef UNICODE
-        hr = ::CLSIDFromProgID (lpszExtension, clsid);
-    #else
-        OLECHAR olesz_buff[255];
-        ::mbstowcs (olesz_buff, lpszExtension, lstrlen(lpszExtension);
-        hr = ::CLSIDFromProgID (olesz_buff, clsid);
+        hr = CLSIDFromProgID(lpszExtension, clsid);
+    #else        
+        hr = CLSIDFromProgID(MBS2WS(lpszExtension), clsid);
     #endif
     
     return SUCCEEDED(hr);
 }
 
 // Returns script engine's CLSID from file extension name like .js, .vbs
-BOOL GLScriptHost_Win32::GetScriptEngineCLSIDFromFileExtension (LPCTSTR lpszExtension, LPCLSID clsid) {
+BOOL GLScriptHost_Win32::GetScriptEngineCLSIDFromFileExtension (LPCTSTR lpszExtension, LPCLSID clsid)
+{
     // local vars
     HKEY key;
     TCHAR data[255];
-    #if !defined(_UNICODE) && !defined(UNICODE)
+#if !defined(_UNICODE) && !defined(UNICODE)
     WCHAR wcsdata[255];
-    #endif
+#endif
     DWORD data_len;
     DWORD data_type;
     tstring language_name;

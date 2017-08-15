@@ -26,9 +26,9 @@
 #include <glscript/gls_types.h>
 #include <glscript/gls_obj.h>
 #include <glscript/gls_script_source.h>
+#include <glscript/gls_tokenizer.h>
 
 #include <asynch/asynch.h>
-#include <tokenizer/tokenizer.h>
 #include <sysport/sysport.h>
 
 #include <vector>
@@ -39,7 +39,8 @@ namespace gls {
 /**
  * PreprocessorError enumeration. Defines preprocessor error codes.
  */
-enum /* PreprocessorError */ {
+enum /* PreprocessorError */
+{
     kPrepErrorNone,                             /** no error (success) */
     kPrepErrorOutOfMemory,                      /** memory allocation error */
     kPrepErrorSyntaxParse,                      /** syntax error while parsing */
@@ -56,7 +57,8 @@ enum /* PreprocessorError */ {
 /**
  * PreprocessorCommandType enumeration. Defines preprocessor command type constants.
  */
-enum PreprocessorCommandType {
+enum PreprocessorCommandType
+{
     kPrepCommandTypeInvalid = -1,               /** invalid command type */
     kPrepCommandTypeLanguage,                   /** language directive */
     kPrepCommandTypeInclude                     /** include directive */
@@ -65,9 +67,10 @@ enum PreprocessorCommandType {
 /**
  * PreprocessorCommand structure. Stores preprocessor command information.
  */
-struct PreprocessorCommand {
+struct PreprocessorCommand
+{
     PreprocessorCommandType type;               /** type of the directive */
-    Tokenizer::Token token;                     /** token for command's parameter */
+    Tokenizer<wchar_t>::Token token;            /** token for command's parameter */
 };
 
 class ScriptPreprocessor;
@@ -126,7 +129,7 @@ public:
     size_t GetExpandedLength() const;
 
     /** Returns the language set for the block */
-    const tstring &GetLanguage () const;
+    const tstring GetLanguage () const;
 
     /** parses the block */
     int ParseBlock ();
@@ -141,13 +144,13 @@ public:
 private:
 
     /** Parses the command tokens */
-    int ParseCommand (const Tokenizer::Token *tokens, size_t count_tokens);
+    int ParseCommand (const Tokenizer<wchar_t>::Token *tokens, size_t count_tokens);
     
     /** Parses the 'include' command tokens */
-    int ParseCommand_Include (const Tokenizer::Token *tokens, size_t count_tokens);
+    int ParseCommand_Include (const Tokenizer<wchar_t>::Token *tokens, size_t count_tokens);
     
     /** Parses the 'language' command tokens */
-    int ParseCommand_Language (const Tokenizer::Token *tokens, size_t count_tokens);
+    int ParseCommand_Language (const Tokenizer<wchar_t>::Token *tokens, size_t count_tokens);
 
     int ProcessCommand_Include (PreprocessorCommand &cmd);
     int ProcessCommand_Language (PreprocessorCommand &cmd);
@@ -156,12 +159,11 @@ private:
 
     // private data members...
 private:
-    const sys_wchar     *m_pBlockStart;                     /** start of the block */
-    const sys_wchar     *m_pBlockEnd;                       /** end of the block */
-    ScriptSource        *m_pScriptSource;                   /** script source object (not addref'ed) */
-    ScriptPreprocessor  *m_pPreprocessor;                   /** script preprocessor (not addref'ed) */
-    tstring             m_language;                         /** block's 'language' value */
-
+    const sys_wchar *       m_pBlockStart;                  /** start of the block */
+    const sys_wchar *       m_pBlockEnd;                    /** end of the block */
+    ScriptSource *          m_pScriptSource;                /** script source object (not addref'ed) */
+    ScriptPreprocessor *    m_pPreprocessor;                /** script preprocessor (not addref'ed) */
+    std::wstring            m_language;                     /** block's 'language' value */
     std::vector<PreprocessorCommand> m_commands;            /** commands */
     std::vector<ScriptSource *> m_inc_sources;              /** include sources */
 };
@@ -172,7 +174,8 @@ private:
  * Preprocesses the script source and generates a flattened or expanded script source.
  * The flattened script source may then be passed to the scripting host for execution.
  */
-class ScriptPreprocessor : public RefObject {
+class ScriptPreprocessor : public RefObject
+{
     // private methods...
 private:        
 

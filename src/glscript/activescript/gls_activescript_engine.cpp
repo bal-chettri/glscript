@@ -26,6 +26,7 @@
 #include <glscript/gls_macros.h>
 #include <glscript/activescript/gls_activescript_host.h>
 #include <glscript/activescript/gls_activescript_marshal.h>
+#include <glscript/gls_string_utils.h>
 #include <math.h>
 
 using namespace gls;
@@ -99,7 +100,7 @@ HRESULT STDMETHODCALLTYPE GLScript_Engine::get_version (short *pValue) {
     if (!pValue) {
         return E_POINTER;
     }
-    *pValue = GLS_VERSION;
+    *pValue = GLS_VERSON_SHORT;
     return NOERROR;
 }
 
@@ -395,7 +396,11 @@ HRESULT STDMETHODCALLTYPE GLScript_Engine::require (BSTR bstr_path, VARIANT var_
         // failed to load the extension. notify the host about the error.
         if (pHost->m_pEventListener != NULL) {
             tstring str_error (_T("Failed to load the extension '"));
+#ifdef UNICODE
             str_error+= bstr_path;
+#else
+            str_error+= WS2MBS(bstr_path);
+#endif
             str_error+= _T("'.");
 
             pHost->RaiseHostError (str_error.c_str());

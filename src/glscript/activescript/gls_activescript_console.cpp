@@ -68,9 +68,9 @@ HRESULT GLScript_Console::_log (const VARIANT &msg, GLSCRIPT_LOGTYPE log_type) {
             #if defined(_UNICODE) || defined(UNICODE)
                 message = msg.bstrVal;
             #else
-                UINT length = SysStringLength (msg.bstrVal);
+                UINT length = SysStringLen(msg.bstrVal);
                 message = new sys_char [length + 1];
-                wcstombcs (message, msg.bstrVal, length);
+                wcstombs(message, msg.bstrVal, length);
                 message [length] = '\0';
             #endif
             

@@ -116,7 +116,7 @@ int ScriptPreprocessor::FindBlocks () {
     // clear all prep blocks first
     m_blocks.clear ();
 
-    const sys_tchar *pCode = m_pScriptSource->GetCode ();
+    const sys_wchar *pCode = m_pScriptSource->GetCode ();
     const sys_wchar *pBlockStart, *pBlockEnd;
 
     // find all preprocessor blocks in the script
@@ -404,7 +404,7 @@ ScriptPreprocessor *ScriptPreprocessor::CreatePreprocessor (
     ScriptSource *script_source;
     script_source = new ScriptSource (url_base, url_file_name, 
                                         script_code, 
-                                         sys_tstrlen(script_code), 
+                                         wcslen(script_code), 
                                          true /* auto_free_code */
                                          );
     

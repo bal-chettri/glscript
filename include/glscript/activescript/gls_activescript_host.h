@@ -94,7 +94,7 @@ protected:
     /** Generates a host error message to the event listener */
     inline void RaiseHostError (LPCTSTR lpszErrorMessage);
 
-    /** Retursn the CLSID of script engine to use for the current script source */
+    /** Returns the CLSID of script engine to use for the current script source */
     BOOL GetScriptEngineCLSID (LPCLSID pclsid);
 
     /** Returns the script engine CLSID from the language name */

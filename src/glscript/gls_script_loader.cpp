@@ -38,7 +38,7 @@
 #define getfilelength(_H)
 #endif
 
-#if defined(DEBUG) || defineed(_DEBUG)
+#if defined(DEBUG) || defined(_DEBUG)
 #define ASSERT assert
 #else
 #define ASSERT

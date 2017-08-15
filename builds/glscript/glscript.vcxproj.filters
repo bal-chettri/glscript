@@ -33,9 +33,6 @@
     <Filter Include="include\com">
       <UniqueIdentifier>{d4e12a2c-aaea-4b08-a426-aa675378f39f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\tokenizer">
-      <UniqueIdentifier>{9d8d5976-3ce2-49d8-9c83-b93ceff1fc5b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\sysutils">
       <UniqueIdentifier>{b6ad5f91-7a1f-4b8d-8eed-5833582382d8}</UniqueIdentifier>
     </Filter>
@@ -104,14 +101,14 @@
     <ClCompile Include="..\..\include\glscript\activescript\gls_ext_lib_i.c">
       <Filter>include\glscript\activescript\IID_defs</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\include\tokenizer\tokenizer.cpp">
-      <Filter>include\tokenizer</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\include\sysutils\sysutils.cpp">
       <Filter>include\sysutils</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\asynch\asynch.c">
       <Filter>include\asynch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\glscript\gls_string_utils.cpp">
+      <Filter>source\glscript</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,9 +175,6 @@
     <ClInclude Include="..\..\include\com\dispatch.h">
       <Filter>include\com</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\tokenizer\tokenizer.h">
-      <Filter>include\tokenizer</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\include\sysutils\sysutils.h">
       <Filter>include\sysutils</Filter>
     </ClInclude>
@@ -189,6 +183,12 @@
     </ClInclude>
     <ClInclude Include="..\..\include\sysport\sysport.h">
       <Filter>include\sysport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_tokenizer.h">
+      <Filter>include\glscript</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\glscript\gls_string_utils.h">
+      <Filter>include\glscript</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
